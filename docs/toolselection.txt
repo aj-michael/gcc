@@ -2,3 +2,6 @@ We have chosen to implement our compiler in Java because it is the most familiar
 language to each of us. We expect this program to be very complicated so we
 would rather spend time on the high level concepts as opposed to learning the
 lower level syntax of a language that we are not as familiar with.
+
+Our lexer code is in src/main/java/edu/rosehulman/gcc/Main.java and
+src/main/java/edu/rosehulman/gcc/Lexer.java.
