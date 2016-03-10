@@ -12,7 +12,7 @@ parser code {:
 :};
 
 scan with {:
-  return lexer.yylex();
+  return lexer.next_token();
 :};
 
 terminal PLUS, EQ, EQEQ, INT, BOOLEAN;

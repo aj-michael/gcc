@@ -7,4 +7,5 @@ gradle-app.setting
 .gradletasknamecache
 .DS_Store
 /*.java
+/spec/*.java
 *~
