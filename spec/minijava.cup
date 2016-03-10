@@ -1,0 +1,29 @@
+package edu.rosehulman.gcc.generated;
+
+import java_cup.runtime.*;
+
+parser code {:
+  Lexer lexer;
+
+  public parser(Lexer lexer) {
+    this.lexer = lexer;
+  }
+
+:};
+
+scan with {:
+  return lexer.yylex();
+:};
+
+terminal PLUS, EQ, EQEQ, INT, BOOLEAN;
+terminal Integer INTEGER_LITERAL;
+terminal String ID;
+terminal Boolean BOOLEAN_LITERAL;
+terminal String STRING_LITERAL;
+
+/*non terminal Object Program, MainClassDecl, ClassDecl, ClassVarDecl, MethodDecl, Formal, Type, Stmt, Expr;*/
+non terminal Type;
+
+Type ::= INT
+      | BOOLEAN
+      | ID;
