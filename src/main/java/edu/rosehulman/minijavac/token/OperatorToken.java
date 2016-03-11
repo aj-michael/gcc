@@ -1,4 +1,4 @@
-package edu.rosehulman.gcc.token;
+package edu.rosehulman.minijavac.token;
 
 import java.util.HashMap;
 import java.util.Map;

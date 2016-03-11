@@ -1,4 +1,4 @@
-package edu.rosehulman.gcc.generated;
+package edu.rosehulman.minijavac.generated;
 
 import java_cup.runtime.*;
 

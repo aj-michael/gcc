@@ -1,4 +1,4 @@
-group 'edu.rosehulman.gcc'
+group 'edu.rosehulman.minijavac'
 version '0.0.0'
 
 apply plugin: 'java'
@@ -26,7 +26,7 @@ task copyGenerated(type: Copy) {
     outputs.upToDateWhen { false }
     from 'src/main/flex'
     from '.'
-    into 'src/main/java/edu/rosehulman/gcc/generated'
+    into 'src/main/java/edu/rosehulman/minijavac/generated'
     include '*.java'
 }
 
@@ -49,7 +49,7 @@ task generate {
     tasks.findByName('cleanGenerated').mustRunAfter 'copyGenerated'
 }
 
-mainClassName = 'edu.rosehulman.gcc.Main'
+mainClassName = 'edu.rosehulman.minijavac.Main'
 
 repositories {
     mavenCentral()

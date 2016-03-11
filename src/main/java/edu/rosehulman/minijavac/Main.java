@@ -1,10 +1,10 @@
-package edu.rosehulman.gcc;
+package edu.rosehulman.minijavac;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 
-import edu.rosehulman.gcc.token.Token;
+import edu.rosehulman.minijavac.token.Token;
 
 import java.io.File;
 import java.io.IOException;

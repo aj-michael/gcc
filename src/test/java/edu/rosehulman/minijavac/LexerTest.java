@@ -1,10 +1,10 @@
-package edu.rosehulman.gcc;
+package edu.rosehulman.minijavac;
 
 import com.google.common.collect.ImmutableList;
-import edu.rosehulman.gcc.token.IntegerToken;
-import edu.rosehulman.gcc.token.OperatorToken;
-import edu.rosehulman.gcc.token.Token;
-import edu.rosehulman.gcc.token.TokenSort;
+import edu.rosehulman.minijavac.token.IntegerToken;
+import edu.rosehulman.minijavac.token.OperatorToken;
+import edu.rosehulman.minijavac.token.Token;
+import edu.rosehulman.minijavac.token.TokenSort;
 import org.junit.Assert;
 import org.junit.Test;
 
