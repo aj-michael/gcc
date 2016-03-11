@@ -1,0 +1,6 @@
+ReservedWord, extends
+ReservedWord, static
+ID, foo
+Operator, +
+Integer, 4
+Delimiter, ;

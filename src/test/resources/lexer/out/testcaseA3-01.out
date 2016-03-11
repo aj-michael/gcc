@@ -1,0 +1,9 @@
+ReservedWord, System.out.println
+Delimiter, (
+Integer, 404
+Integer, 15
+Integer, 1337
+Operator, !
+Delimiter, )
+Delimiter, ;
+Delimiter, ;

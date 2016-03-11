@@ -1,0 +1,16 @@
+ReservedWord, public
+ReservedWord, int
+ID, cubeVolume
+Delimiter, (
+ReservedWord, int
+ID, sideLength
+Delimiter, )
+Delimiter, {
+ReservedWord, return
+ID, sideLength
+Operator, *
+ID, sideLength
+Operator, *
+ID, sideLength
+Delimiter, ;
+Delimiter, }

@@ -1,0 +1,1 @@
+extends static foo + 4;

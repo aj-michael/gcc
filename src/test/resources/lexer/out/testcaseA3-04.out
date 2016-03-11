@@ -1,0 +1,10 @@
+Integer, 3
+Operator, +
+Integer, 4
+Operator, <=
+Delimiter, =
+Integer, 3
+Operator, +
+Integer, 4
+Operator, <=
+Delimiter, =

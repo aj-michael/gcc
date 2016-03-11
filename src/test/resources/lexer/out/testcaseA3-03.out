@@ -1,0 +1,12 @@
+ReservedWord, public
+ReservedWord, static
+ReservedWord, void
+ReservedWord, main
+ReservedWord, class
+ID, Foo
+Delimiter, {
+Delimiter, }
+Delimiter, {
+Delimiter, (
+Delimiter, }
+Delimiter, )
