@@ -57,7 +57,7 @@ repositories {
 
 dependencies {
     compile 'com.google.guava:guava:19.0'
-    compile 'de.jflex:jflex:1.6.1'
+    compile 'com.github.vbmacher:java-cup-runtime:11b'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
