@@ -7,7 +7,7 @@ gradle-app.setting
 .gradletasknamecache
 .DS_Store
 /*.java
-/spec/*.java
+/src/main/flex/*.java
 *~
 gradle
 gradlew

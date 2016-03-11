@@ -15,23 +15,23 @@ buildscript {
 }
 
 task generateLexer << {
-    jflex.Main.generate(new File('spec/minijava.flex'))
+    jflex.Main.generate(new File('src/main/flex/minijava.flex'))
 }
 
 task generateParser << {
-    java_cup.Main.main(['spec/minijava.cup'] as String[])
+    java_cup.Main.main(['src/main/cup/minijava.cup'] as String[])
 }
 
 task copyGenerated(type: Copy) {
     outputs.upToDateWhen { false }
-    from 'spec'
+    from 'src/main/flex'
     from '.'
     into 'src/main/java/edu/rosehulman/gcc/generated'
     include '*.java'
 }
 
 task cleanGenerated(type: Delete) {
-    delete fileTree('spec') {
+    delete fileTree('src/main/flex') {
         include '*.java'
     }
     delete fileTree('.') {
