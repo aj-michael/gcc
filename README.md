@@ -8,4 +8,4 @@ Build with `gradle clean build`.
 
 ## Run instructions
 
-Run with `java -jar build/libs/gcc-0.0.0.jar testfile1`
+Run with `java -jar build/libs/gcc-0.0.0.jar sample_inputs/testfile1.java`
