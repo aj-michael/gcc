@@ -58,4 +58,6 @@ public class LexerTest {
         testOperator(tokens.get(4), OperatorToken.Operator.PLUS, "plus");
         testInteger(tokens.get(5), 12);
     }
+
+
 }
