@@ -4,6 +4,51 @@ version '0.0.0'
 apply plugin: 'java'
 apply plugin: 'application'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'de.jflex', name: 'jflex', version: '1.6.1'
+        classpath group: 'com.github.vbmacher', name: 'java-cup', version: '11b'
+    }
+}
+
+task generateLexer << {
+    jflex.Main.generate(new File('spec/minijava.flex'))
+}
+
+task generateParser << {
+    java_cup.Main.main(['spec/minijava.cup'] as String[])
+}
+
+task copyGenerated(type: Copy) {
+    outputs.upToDateWhen { false }
+    from 'spec'
+    from '.'
+    into 'src/main/java/edu/rosehulman/gcc/generated'
+    include '*.java'
+}
+
+task cleanGenerated(type: Delete) {
+    delete fileTree('spec') {
+        include '*.java'
+    }
+    delete fileTree('.') {
+        include '*.java'
+    }
+}
+
+task generate {
+    dependsOn 'generateLexer'
+    dependsOn 'generateParser'
+    dependsOn 'copyGenerated'
+    dependsOn 'cleanGenerated'
+    tasks.findByName('generateParser').mustRunAfter 'generateLexer'
+    tasks.findByName('copyGenerated').mustRunAfter 'generateParser'
+    tasks.findByName('cleanGenerated').mustRunAfter 'copyGenerated'
+}
+
 mainClassName = 'edu.rosehulman.gcc.Main'
 
 repositories {

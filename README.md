@@ -4,7 +4,7 @@ A Java compiler for the modern age.
 
 ## Build instructions
 
-Build with `gradle clean build`.
+Build with `gradle clean generate build`.
 
 ## Run instructions
 

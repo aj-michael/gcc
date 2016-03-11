@@ -9,3 +9,6 @@ gradle-app.setting
 /*.java
 /spec/*.java
 *~
+gradle
+gradlew
+gradlew.bat
