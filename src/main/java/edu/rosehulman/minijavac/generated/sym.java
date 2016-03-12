@@ -8,21 +8,23 @@ package edu.rosehulman.minijavac.generated;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int INT = 5;
-  public static final int EQEQ = 4;
-  public static final int BOOLEAN_LITERAL = 9;
-  public static final int BOOLEAN = 6;
-  public static final int STRING_LITERAL = 10;
+  public static final int MINUS = 3;
+  public static final int INT = 6;
+  public static final int EQEQ = 5;
+  public static final int BOOLEAN_LITERAL = 10;
+  public static final int BOOLEAN = 7;
+  public static final int STRING_LITERAL = 11;
   public static final int EOF = 0;
   public static final int PLUS = 2;
-  public static final int EQ = 3;
-  public static final int ID = 8;
+  public static final int EQ = 4;
+  public static final int ID = 9;
   public static final int error = 1;
-  public static final int INTEGER_LITERAL = 7;
+  public static final int INTEGER_LITERAL = 8;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "PLUS",
+  "MINUS",
   "EQ",
   "EQEQ",
   "INT",

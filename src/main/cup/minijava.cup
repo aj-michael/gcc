@@ -15,7 +15,7 @@ scan with {:
   return lexer.next_token();
 :};
 
-terminal PLUS, EQ, EQEQ, INT, BOOLEAN;
+terminal PLUS, MINUS, EQ, EQEQ, INT, BOOLEAN;
 terminal Integer INTEGER_LITERAL;
 terminal String ID;
 terminal Boolean BOOLEAN_LITERAL;

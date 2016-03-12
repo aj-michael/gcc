@@ -1,23 +1,22 @@
 package edu.rosehulman.minijavac;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.Files;
+import java_cup.runtime.Symbol;
 
-import edu.rosehulman.minijavac.token.Token;
-
-import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+
+import edu.rosehulman.minijavac.generated.Lexer;
+import edu.rosehulman.minijavac.generated.sym;
 
 public class Main {
     public static void main(String args[]) throws IOException {
-        for(String arg : args) {
-            File file = new File(arg);
-            String text = Files.toString(file, Charsets.UTF_8).trim();
-            Lexer lexer = new Lexer(text);
-            ImmutableList<Token> tokens = lexer.getTokens();
-            for(Token token : tokens) {
-                System.out.println(token);
+        for (String arg : args) {
+            Reader reader = new FileReader(arg);
+            Lexer lexer = new Lexer(reader);
+            Symbol token = lexer.next_token();
+            while (token.sym != sym.EOF) {
+                System.out.println(token.toString());
             }
         }
     }

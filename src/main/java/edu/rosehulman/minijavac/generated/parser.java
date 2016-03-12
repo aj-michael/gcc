@@ -40,7 +40,7 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\006\000\010\007\007\010\006\012\004\001\002\000" +
+    "\000\006\000\010\010\007\011\006\013\004\001\002\000" +
     "\004\002\ufffe\001\002\000\004\002\010\001\002\000\004" +
     "\002\uffff\001\002\000\004\002\001\001\002\000\004\002" +
     "\000\001\002" });

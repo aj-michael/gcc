@@ -3,6 +3,8 @@ package edu.rosehulman.minijavac.generated;
 import java_cup.runtime.*;
 
 %%
+
+%public
 %class Lexer
 %unicode
 %line
@@ -22,13 +24,9 @@ import java_cup.runtime.*;
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
-WhiteSpace     = {LineTerminator} | [ \t\f]
-
-/* comments */
+WhiteSpace     = {LineTerminator} | [ \t\f] | {Comment}
 Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
-
 TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
-// Comment can be the last line of the file, without line terminator.
 EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
 DocumentationComment = "/**" {CommentContent} "*"+ "/"
 CommentContent       = ( [^*] | \*+ [^/*] )*
@@ -56,6 +54,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
   "="                            { return symbol(sym.EQ); }
   "=="                           { return symbol(sym.EQEQ); }
   "+"                            { return symbol(sym.PLUS); }
+  "-"                            { return symbol(sym.MINUS); }
 
   /* comments */
   {Comment}                      { /* ignore */ }
