@@ -8,6 +8,7 @@ gradle-app.setting
 .DS_Store
 /*.java
 /src/main/flex/*.java
+/src/main/java/edu/rosehulman/minijavac/generated
 *~
 gradle
 gradlew

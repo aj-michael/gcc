@@ -4,7 +4,7 @@ A Java compiler for a worse version of Java.
 
 ## Build instructions
 
-Build with `gradle clean generate build`.
+Build with `gradle build -x test`.
 
 ## Run instructions
 

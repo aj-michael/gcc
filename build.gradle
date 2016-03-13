@@ -48,6 +48,7 @@ task generate {
     tasks.findByName('copyGenerated').mustRunAfter 'generateParser'
     tasks.findByName('cleanGenerated').mustRunAfter 'copyGenerated'
 }
+compileJava.dependsOn generate
 
 mainClassName = 'edu.rosehulman.minijavac.Main'
 
