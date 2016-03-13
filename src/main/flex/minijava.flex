@@ -68,6 +68,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 "<"                            { return symbol(sym.Operator, yytext()); }
 "<="                           { return symbol(sym.Operator, yytext()); }
 ">="                           { return symbol(sym.Operator, yytext()); }
+">"                            { return symbol(sym.Operator, yytext()); }
 "=="                           { return symbol(sym.Operator, yytext()); }
 "!="                           { return symbol(sym.Operator, yytext()); }
 "&&"                           { return symbol(sym.Operator, yytext()); }
