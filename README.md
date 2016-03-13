@@ -2,6 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/aj-michael/minijavac.svg)](https://travis-ci.org/aj-michael/minijavac)
 [![Code Coverage](https://img.shields.io/codecov/c/github/aj-michael/minijavac.svg)](https://codecov.io/github/aj-michael/minijavac)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/aj-michael/minijavac/master/LICENSE)
 
 A Java compiler for a worse version of Java.
 
