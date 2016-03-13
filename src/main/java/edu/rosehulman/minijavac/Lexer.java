@@ -1,40 +1,29 @@
 package edu.rosehulman.minijavac;
 
 import com.google.common.collect.ImmutableList;
-import edu.rosehulman.minijavac.token.IntegerToken;
-import edu.rosehulman.minijavac.token.OperatorToken;
-import edu.rosehulman.minijavac.token.Token;
+import edu.rosehulman.minijavac.generated.sym;
+import java_cup.runtime.Symbol;
+
+import java.io.IOException;
+import java.io.Reader;
 
 public class Lexer {
 
     private ImmutableList<Token> tokens;
 
-    public Lexer(String input) {
-         this.tokens = this.parse(input);
+    public Lexer(Reader reader) throws IOException {
+         this.tokens = this.lex(reader);
     }
 
-    private ImmutableList<Token> parse(String input) {
-        ImmutableList.Builder<Token> tokens = new ImmutableList.Builder<Token>();
-        String currentToken = "";
-        for(char c: input.toCharArray()) {
-            if(c == '+' || c == '-') {
-                if(!currentToken.isEmpty()) {
-                    Token token = new IntegerToken(currentToken);
-                    tokens.add(token);
-                    currentToken = "";
-                }
-                Token token = new OperatorToken(Character.toString(c));
-                tokens.add(token);
-            } else {
-                currentToken += c;
-            }
+    private ImmutableList<Token> lex(Reader reader) throws IOException {
+        edu.rosehulman.minijavac.generated.Lexer lexer =
+                new edu.rosehulman.minijavac.generated.Lexer(reader);
+        Symbol symbol = lexer.next_token();
+        ImmutableList.Builder<Token> tokens = new ImmutableList.Builder<>();
+        while (symbol.sym != sym.EOF) {
+            tokens.add(new Token(symbol));
+            symbol = lexer.next_token();
         }
-
-        if(!currentToken.isEmpty()) {
-            Token token = new IntegerToken(currentToken);
-            tokens.add(token);
-        }
-
         return tokens.build();
     }
 
