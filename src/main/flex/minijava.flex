@@ -28,8 +28,8 @@ WhiteSpace     = {LineTerminator} | [ \t\f] | {Comment}
 Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
 TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
-DocumentationComment = "/**" {CommentContent} "*"+ "/"
-CommentContent       = ( [^*] | \*+ [^/*] )*
+DocumentationComment = "/**" {CommentContent}? "*"+ "/"
+CommentContent       = [^/] ( [^*] | \*+ [^/*] )*
 
 Identifier = [:jletter:] [:jletterdigit:]*
 
@@ -87,18 +87,11 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 "["                            { return symbol(sym.Delimiter, yytext()); }
 "]"                            { return symbol(sym.Delimiter, yytext()); }
 
-/* literals */
 {DecIntegerLiteral}            { return symbol(sym.Integer, new Integer(yytext())); }
-
-/* identifiers */
 {Identifier}                   { return symbol(sym.ID, yytext()); }
-
-/* whitespace */
 {WhiteSpace}                   { /* ignore */ }
-
-/* comments */
 {Comment}                      { /* ignore */ }
 
-/* error fallback */
+/* Error fallback */
 [^]                              { throw new Error("Illegal character <"+
                                                     yytext()+">"); }
