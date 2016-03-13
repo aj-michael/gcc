@@ -15,15 +15,11 @@ scan with {:
   return lexer.next_token();
 :};
 
-terminal PLUS, MINUS, EQ, EQEQ, INT, BOOLEAN;
-terminal Integer INTEGER_LITERAL;
-terminal String ID;
-terminal Boolean BOOLEAN_LITERAL;
-terminal String STRING_LITERAL;
+terminal Integer Integer;
+terminal String ID, ReservedWord, Operator, Delimiter;
 
 /*non terminal Object Program, MainClassDecl, ClassDecl, ClassVarDecl, MethodDecl, Formal, Type, Stmt, Expr;*/
 non terminal Type;
 
-Type ::= INT
-      | BOOLEAN
+Type ::= Integer
       | ID;

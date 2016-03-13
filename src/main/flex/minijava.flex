@@ -40,41 +40,63 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 %%
 
 /* keywords */
-<YYINITIAL> "boolean"            { return symbol(sym.BOOLEAN); }
+"class"              { return symbol(sym.ReservedWord, yytext()); }
+"public"             { return symbol(sym.ReservedWord, yytext()); }
+"static"             { return symbol(sym.ReservedWord, yytext()); }
+"extends"            { return symbol(sym.ReservedWord, yytext()); }
+"void"               { return symbol(sym.ReservedWord, yytext()); }
+"int"                { return symbol(sym.ReservedWord, yytext()); }
+"boolean"            { return symbol(sym.ReservedWord, yytext()); }
+"if"                 { return symbol(sym.ReservedWord, yytext()); }
+"else"               { return symbol(sym.ReservedWord, yytext()); }
+"while"              { return symbol(sym.ReservedWord, yytext()); }
+"return"             { return symbol(sym.ReservedWord, yytext()); }
+"null"               { return symbol(sym.ReservedWord, yytext()); }
+"true"               { return symbol(sym.ReservedWord, yytext()); }
+"false"              { return symbol(sym.ReservedWord, yytext()); }
+"this"               { return symbol(sym.ReservedWord, yytext()); }
+"new"                { return symbol(sym.ReservedWord, yytext()); }
+"String"             { return symbol(sym.ReservedWord, yytext()); }
+"main"               { return symbol(sym.ReservedWord, yytext()); }
+"System.out.println" { return symbol(sym.ReservedWord, yytext()); }
 
-<YYINITIAL> {
-  /* identifiers */ 
-  {Identifier}                   { return symbol(sym.ID); }
- 
-  /* literals */
-  {DecIntegerLiteral}            { return symbol(sym.INTEGER_LITERAL, new Integer(yytext())); }
-  \"                             { string.setLength(0); yybegin(STRING); }
+/* operators */
+"+"                            { return symbol(sym.Operator, yytext()); }
+"-"                            { return symbol(sym.Operator, yytext()); }
+"*"                            { return symbol(sym.Operator, yytext()); }
+"/"                            { return symbol(sym.Operator, yytext()); }
+"<"                            { return symbol(sym.Operator, yytext()); }
+"<="                           { return symbol(sym.Operator, yytext()); }
+">="                           { return symbol(sym.Operator, yytext()); }
+"=="                           { return symbol(sym.Operator, yytext()); }
+"!="                           { return symbol(sym.Operator, yytext()); }
+"&&"                           { return symbol(sym.Operator, yytext()); }
+"||"                           { return symbol(sym.Operator, yytext()); }
+"!"                            { return symbol(sym.Operator, yytext()); }
 
-  /* operators */
-  "="                            { return symbol(sym.EQ); }
-  "=="                           { return symbol(sym.EQEQ); }
-  "+"                            { return symbol(sym.PLUS); }
-  "-"                            { return symbol(sym.MINUS); }
+/* delimiters */
+";"                            { return symbol(sym.Delimiter, yytext()); }
+"."                            { return symbol(sym.Delimiter, yytext()); }
+","                            { return symbol(sym.Delimiter, yytext()); }
+"="                            { return symbol(sym.Delimiter, yytext()); }
+"("                            { return symbol(sym.Delimiter, yytext()); }
+")"                            { return symbol(sym.Delimiter, yytext()); }
+"{"                            { return symbol(sym.Delimiter, yytext()); }
+"}"                            { return symbol(sym.Delimiter, yytext()); }
+"["                            { return symbol(sym.Delimiter, yytext()); }
+"]"                            { return symbol(sym.Delimiter, yytext()); }
 
-  /* comments */
-  {Comment}                      { /* ignore */ }
- 
-  /* whitespace */
-  {WhiteSpace}                   { /* ignore */ }
-}
+/* literals */
+{DecIntegerLiteral}            { return symbol(sym.Integer, new Integer(yytext())); }
 
-<STRING> {
-  \"                             { yybegin(YYINITIAL); 
-                                   return symbol(sym.STRING_LITERAL, 
-                                   string.toString()); }
-  [^\n\r\"\\]+                   { string.append( yytext() ); }
-  \\t                            { string.append('\t'); }
-  \\n                            { string.append('\n'); }
+/* identifiers */
+{Identifier}                   { return symbol(sym.ID, yytext()); }
 
-  \\r                            { string.append('\r'); }
-  \\\"                           { string.append('\"'); }
-  \\                             { string.append('\\'); }
-}
+/* whitespace */
+{WhiteSpace}                   { /* ignore */ }
+
+/* comments */
+{Comment}                      { /* ignore */ }
 
 /* error fallback */
 [^]                              { throw new Error("Illegal character <"+
