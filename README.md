@@ -1,5 +1,7 @@
 # Minijavac
 
+[![Build Status](https://travis-ci.org/aj-michael/minijavac.svg?branch=master)](https://travis-ci.org/aj-michael/minijavac)
+
 A Java compiler for a worse version of Java.
 
 ## Build instructions
