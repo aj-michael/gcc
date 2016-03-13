@@ -1,6 +1,7 @@
 package edu.rosehulman.minijavac;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -91,8 +91,13 @@ public class LexerTest {
 
     @Test
     public void test() throws IOException {
-        String lexerOutput = new Lexer(new FileReader(testFile)).getTokens().stream()
-                .map(Object::toString).collect(Collectors.joining("\n"));
+        ImmutableList<Token> tokens = new Lexer(new FileReader(testFile)).getTokens();
+        String lexerOutput = "";
+        String delimiter = "";
+        for(Token token: tokens) {
+            lexerOutput += delimiter + token;
+            delimiter = "\n";
+        }
         String expectedOutput = Files.toString(this.outputFile, Charsets.UTF_8).trim();
         assertEquals(expectedOutput, lexerOutput);
     }
