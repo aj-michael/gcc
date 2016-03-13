@@ -1,6 +1,7 @@
 # Minijavac
 
-[![Build Status](https://travis-ci.org/aj-michael/minijavac.svg?branch=master)](https://travis-ci.org/aj-michael/minijavac)
+[![Build Status](https://img.shields.io/travis/aj-michael/minijavac.svg)](https://travis-ci.org/aj-michael/minijavac)
+[![Code Coverage](https://img.shields.io/codecov/c/github/aj-michael/minijavac.svg)](https://codecov.io/github/aj-michael/minijavac)
 
 A Java compiler for a worse version of Java.
 

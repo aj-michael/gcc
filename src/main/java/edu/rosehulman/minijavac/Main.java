@@ -17,6 +17,7 @@ public class Main {
             Symbol token = lexer.next_token();
             while (token.sym != sym.EOF) {
                 System.out.println(token.toString());
+                token = lexer.next_token();
             }
         }
     }

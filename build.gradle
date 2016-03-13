@@ -3,6 +3,7 @@ version '0.0.0'
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'jacoco'
 
 buildscript {
     repositories {
@@ -61,6 +62,14 @@ dependencies {
     compile 'com.github.vbmacher:java-cup-runtime:11b'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+check.dependsOn jacocoTestReport
 
 jar {
     manifest {
