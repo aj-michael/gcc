@@ -92,14 +92,11 @@ public class LexerTest {
     @Test
     public void test() throws IOException {
         ImmutableList<Token> tokens = new Lexer(new FileReader(testFile)).getTokens();
-        String lexerOutput = "";
-        String delimiter = "";
-        for(Token token: tokens) {
-            lexerOutput += delimiter + token;
-            delimiter = "\n";
+        List<String> expectedLines = Files.readLines(outputFile, Charsets.UTF_8);
+        assertEquals(expectedLines.size(), tokens.size());
+        for (int i = 0; i < expectedLines.size(); i++) {
+            assertEquals(expectedLines.get(i), tokens.get(i).toString());
         }
-        String expectedOutput = Files.toString(this.outputFile, Charsets.UTF_8).trim();
-        assertEquals(expectedOutput, lexerOutput);
     }
 
 }
