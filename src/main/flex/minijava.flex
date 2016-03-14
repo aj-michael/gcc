@@ -31,7 +31,7 @@ EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
 DocumentationComment = "/**" {CommentContent}? "*"+ "/"
 CommentContent       = [^/] ( [^*] | \*+ [^/*] )*
 
-BadSystemOutPrintln = "System.out.println" [:jletter:]+
+BadSystemOutPrintln = "System.out.println" [:jletterdigit:]+
 
 Identifier = [:jletter:] [:jletterdigit:]*
 
