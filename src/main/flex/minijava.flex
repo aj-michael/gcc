@@ -17,6 +17,16 @@ import java_cup.runtime.*;
   private Symbol symbol(int type) {
     return new Symbol(type, yyline, yycolumn);
   }
+
+  public static class NameAndValue {
+    public String name;
+    public Object value;
+    NameAndValue(String name, Object value) {
+      this.name = name;
+      this.value = value;
+    }
+  }
+
   private Symbol symbol(int type, Object value) {
     return new Symbol(type, yyline, yycolumn, value);
   }
@@ -42,9 +52,9 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 %%
 
 /* keywords */
-"class"                        { return symbol(sym.ReservedWord, yytext()); }
-"public"                       { return symbol(sym.ReservedWord, yytext()); }
-"static"                       { return symbol(sym.ReservedWord, yytext()); }
+"class"                        { return symbol(sym.Class, new NameAndValue("ReservedWord", yytext())); }
+"public"                       { return symbol(sym.Public, yytext()); }
+"static"                       { return symbol(sym.Static, yytext()); }
 "extends"                      { return symbol(sym.ReservedWord, yytext()); }
 "void"                         { return symbol(sym.ReservedWord, yytext()); }
 "int"                          { return symbol(sym.ReservedWord, yytext()); }

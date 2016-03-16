@@ -2,17 +2,20 @@ package edu.rosehulman.minijavac;
 
 import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generated.sym;
+import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
 
 import java.io.IOException;
 import java.io.Reader;
 
-public class Lexer {
+public class Lexer implements Scanner {
 
     private ImmutableList<Token> tokens;
+    private int index;
 
     public Lexer(Reader reader) throws IOException {
-         this.tokens = this.lex(reader);
+        this.tokens = this.lex(reader);
+        this.index = 0;
     }
 
     private ImmutableList<Token> lex(Reader reader) throws IOException {
@@ -29,5 +32,10 @@ public class Lexer {
 
     public ImmutableList<Token> getTokens() {
         return this.tokens;
+    }
+
+    @Override
+    public Symbol next_token() throws Exception {
+        return tokens.get(index).getSymbol();
     }
 }

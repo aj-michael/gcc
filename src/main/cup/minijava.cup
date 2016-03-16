@@ -15,11 +15,15 @@ scan with {:
   return lexer.next_token();
 :};
 
+terminal Class;
 terminal Integer Integer;
 terminal String ID, ReservedWord, Operator, Delimiter;
 
-/*non terminal Object Program, MainClassDecl, ClassDecl, ClassVarDecl, MethodDecl, Formal, Type, Stmt, Expr;*/
+non terminal ClassDecl;
+non terminal MainClassDecl;
+non terminal Program;
 non terminal Type;
 
-Type ::= Integer
-      | ID;
+Program ::= MainClassDecl { ClassDecl };
+//MainClassDecl ::= " { ReservedWord ReservedWord ReservedWord ReservedWord(
+Token   ::= ID | Integer | ReservedWord;
