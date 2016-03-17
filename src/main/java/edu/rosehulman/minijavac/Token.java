@@ -19,7 +19,6 @@ class Token {
     }
 
     @Override public String toString() {
-        //return sym.terminalNames[symbol.sym] + ", " + symbol.value;
         return nv.name + ", " + nv.value;
     }
 }
