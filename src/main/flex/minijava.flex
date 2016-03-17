@@ -14,10 +14,6 @@ import java_cup.runtime.*;
 %{
   StringBuffer string = new StringBuffer();
 
-  private Symbol symbol(int type) {
-    return new Symbol(type, yyline, yycolumn);
-  }
-
   public static class NameAndValue {
     public TokenDisplayName name;
     public Object value;
@@ -33,10 +29,6 @@ import java_cup.runtime.*;
     Integer,
     Operator,
     ReservedWord;
-  }
-
-  private Symbol symbol(int type, Object value) {
-    return new Symbol(type, yyline, yycolumn, value);
   }
 
   private Symbol symbol(int type, TokenDisplayName name, Object value) {
