@@ -5,7 +5,7 @@ import java_cup.runtime.*;
 parser code {:
   Lexer lexer;
 
-  public parser(Lexer lexer) {
+  public Parser(Lexer lexer) {
     this.lexer = lexer;
   }
 

@@ -11,6 +11,10 @@ import java_cup.runtime.*;
 %column
 %cup
 
+%eofval{
+  return new java_cup.runtime.Symbol(Symbols.EOF);
+%eofval}
+
 %{
   StringBuffer string = new StringBuffer();
 
@@ -56,58 +60,59 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 %%
 
 /* keywords */
-"class"                        { return symbol(sym.Class, TokenDisplayName.ReservedWord, yytext()); }
-"public"                       { return symbol(sym.Public, TokenDisplayName.ReservedWord, yytext()); }
-"static"                       { return symbol(sym.Static, TokenDisplayName.ReservedWord, yytext()); }
-"extends"                      { return symbol(sym.Extends, TokenDisplayName.ReservedWord, yytext()); }
-"void"                         { return symbol(sym.Void, TokenDisplayName.ReservedWord, yytext()); }
-"int"                          { return symbol(sym.Int, TokenDisplayName.ReservedWord, yytext()); }
-"boolean"                      { return symbol(sym.Boolean, TokenDisplayName.ReservedWord, yytext()); }
-"if"                           { return symbol(sym.If, TokenDisplayName.ReservedWord, yytext()); }
-"else"                         { return symbol(sym.Else, TokenDisplayName.ReservedWord, yytext()); }
-"while"                        { return symbol(sym.While, TokenDisplayName.ReservedWord, yytext()); }
-"return"                       { return symbol(sym.Return, TokenDisplayName.ReservedWord, yytext()); }
-"null"                         { return symbol(sym.Null, TokenDisplayName.ReservedWord, yytext()); }
-"true"                         { return symbol(sym.True, TokenDisplayName.ReservedWord, yytext()); }
-"false"                        { return symbol(sym.False, TokenDisplayName.ReservedWord, yytext()); }
-"this"                         { return symbol(sym.This, TokenDisplayName.ReservedWord, yytext()); }
-"new"                          { return symbol(sym.New, TokenDisplayName.ReservedWord, yytext()); }
-"String"                       { return symbol(sym.String, TokenDisplayName.ReservedWord, yytext()); }
-"main"                         { return symbol(sym.Main, TokenDisplayName.ReservedWord, yytext()); }
-"System.out.println"           { return symbol(sym.SystemOutPrintln, TokenDisplayName.ReservedWord, yytext()); }
+"class"                        { return symbol(Symbols.Class, TokenDisplayName.ReservedWord, yytext()); }
+"public"                       { return symbol(Symbols.Public, TokenDisplayName.ReservedWord, yytext()); }
+"static"                       { return symbol(Symbols.Static, TokenDisplayName.ReservedWord, yytext()); }
+"extends"                      { return symbol(Symbols.Extends, TokenDisplayName.ReservedWord, yytext()); }
+"void"                         { return symbol(Symbols.Void, TokenDisplayName.ReservedWord, yytext()); }
+"int"                          { return symbol(Symbols.Int, TokenDisplayName.ReservedWord, yytext()); }
+"boolean"                      { return symbol(Symbols.Boolean, TokenDisplayName.ReservedWord, yytext()); }
+"if"                           { return symbol(Symbols.If, TokenDisplayName.ReservedWord, yytext()); }
+"else"                         { return symbol(Symbols.Else, TokenDisplayName.ReservedWord, yytext()); }
+"while"                        { return symbol(Symbols.While, TokenDisplayName.ReservedWord, yytext()); }
+"return"                       { return symbol(Symbols.Return, TokenDisplayName.ReservedWord, yytext()); }
+"null"                         { return symbol(Symbols.Null, TokenDisplayName.ReservedWord, yytext()); }
+"true"                         { return symbol(Symbols.True, TokenDisplayName.ReservedWord, yytext()); }
+"false"                        { return symbol(Symbols.False, TokenDisplayName.ReservedWord, yytext()); }
+"this"                         { return symbol(Symbols.This, TokenDisplayName.ReservedWord, yytext()); }
+"new"                          { return symbol(Symbols.New, TokenDisplayName.ReservedWord, yytext()); }
+"String"                       { return symbol(Symbols.String, TokenDisplayName.ReservedWord, yytext()); }
+"main"                         { return symbol(Symbols.Main, TokenDisplayName.ReservedWord, yytext()); }
+"System.out.println"           { return symbol(Symbols.SystemOutPrintln, TokenDisplayName.ReservedWord, yytext()); }
 
 /* Operators */
-"+"                            { return symbol(sym.Plus, TokenDisplayName.Operator, yytext()); }
-"-"                            { return symbol(sym.Minus, TokenDisplayName.Operator, yytext()); }
-"*"                            { return symbol(sym.Multiply, TokenDisplayName.Operator, yytext()); }
-"/"                            { return symbol(sym.Divide, TokenDisplayName.Operator, yytext()); }
-"<"                            { return symbol(sym.LessThan, TokenDisplayName.Operator, yytext()); }
-"<="                           { return symbol(sym.LessThanOrEqual, TokenDisplayName.Operator, yytext()); }
-">="                           { return symbol(sym.GreaterThanOrEqual, TokenDisplayName.Operator, yytext()); }
-">"                            { return symbol(sym.GreaterThan, TokenDisplayName.Operator, yytext()); }
-"=="                           { return symbol(sym.Equals, TokenDisplayName.Operator, yytext()); }
-"!="                           { return symbol(sym.NotEquals, TokenDisplayName.Operator, yytext()); }
-"&&"                           { return symbol(sym.And, TokenDisplayName.Operator, yytext()); }
-"||"                           { return symbol(sym.Or, TokenDisplayName.Operator, yytext()); }
-"!"                            { return symbol(sym.Not, TokenDisplayName.Operator, yytext()); }
+"+"                            { return symbol(Symbols.Plus, TokenDisplayName.Operator, yytext()); }
+"-"                            { return symbol(Symbols.Minus, TokenDisplayName.Operator, yytext()); }
+"*"                            { return symbol(Symbols.Multiply, TokenDisplayName.Operator, yytext()); }
+"/"                            { return symbol(Symbols.Divide, TokenDisplayName.Operator, yytext()); }
+"<"                            { return symbol(Symbols.LessThan, TokenDisplayName.Operator, yytext()); }
+"<="                           { return symbol(Symbols.LessThanOrEqual, TokenDisplayName.Operator, yytext()); }
+">="                           { return symbol(Symbols.GreaterThanOrEqual, TokenDisplayName.Operator, yytext()); }
+">"                            { return symbol(Symbols.GreaterThan, TokenDisplayName.Operator, yytext()); }
+"=="                           { return symbol(Symbols.Equals, TokenDisplayName.Operator, yytext()); }
+"!="                           { return symbol(Symbols.NotEquals, TokenDisplayName.Operator, yytext()); }
+"&&"                           { return symbol(Symbols.And, TokenDisplayName.Operator, yytext()); }
+"||"                           { return symbol(Symbols.Or, TokenDisplayName.Operator, yytext()); }
+"!"                            { return symbol(Symbols.Not, TokenDisplayName.Operator, yytext()); }
 
 /* Delimiters */
-";"                            { return symbol(sym.Semicolon, TokenDisplayName.Delimiter, yytext()); }
-"."                            { return symbol(sym.Dot, TokenDisplayName.Delimiter, yytext()); }
-","                            { return symbol(sym.Comma, TokenDisplayName.Delimiter, yytext()); }
-"="                            { return symbol(sym.Assignment, TokenDisplayName.Delimiter, yytext()); }
-"("                            { return symbol(sym.LeftParenthesis, TokenDisplayName.Delimiter, yytext()); }
-")"                            { return symbol(sym.RightParenthesis, TokenDisplayName.Delimiter, yytext()); }
-"{"                            { return symbol(sym.LeftBrace, TokenDisplayName.Delimiter, yytext()); }
-"}"                            { return symbol(sym.RightBrace, TokenDisplayName.Delimiter, yytext()); }
-"["                            { return symbol(sym.LeftBracket, TokenDisplayName.Delimiter, yytext()); }
-"]"                            { return symbol(sym.RightBracket, TokenDisplayName.Delimiter, yytext()); }
+";"                            { return symbol(Symbols.Semicolon, TokenDisplayName.Delimiter, yytext()); }
+"."                            { return symbol(Symbols.Dot, TokenDisplayName.Delimiter, yytext()); }
+","                            { return symbol(Symbols.Comma, TokenDisplayName.Delimiter, yytext()); }
+"="                            { return symbol(Symbols.Assignment, TokenDisplayName.Delimiter, yytext()); }
+"("                            { return symbol(Symbols.LeftParenthesis, TokenDisplayName.Delimiter, yytext()); }
+")"                            { return symbol(Symbols.RightParenthesis, TokenDisplayName.Delimiter, yytext()); }
+"{"                            { return symbol(Symbols.LeftBrace, TokenDisplayName.Delimiter, yytext()); }
+"}"                            { return symbol(Symbols.RightBrace, TokenDisplayName.Delimiter, yytext()); }
+"["                            { return symbol(Symbols.LeftBracket, TokenDisplayName.Delimiter, yytext()); }
+"]"                            { return symbol(Symbols.RightBracket, TokenDisplayName.Delimiter, yytext()); }
 
-{DecIntegerLiteral}            { return symbol(sym.Integer, TokenDisplayName.Integer, new Integer(yytext())); }
-{Identifier}                   { return symbol(sym.ID, TokenDisplayName.ID, yytext()); }
+{DecIntegerLiteral}            { return symbol(Symbols.Integer, TokenDisplayName.Integer, new Integer(yytext())); }
+{Identifier}                   { return symbol(Symbols.ID, TokenDisplayName.ID, yytext()); }
 {BadSystemOutPrintln}          { yypushback(yylength() - "System".length());
-                                 return symbol(sym.ID, TokenDisplayName.ID, yytext());
+                                 return symbol(Symbols.ID, TokenDisplayName.ID, yytext());
                                }
+
 {WhiteSpace}                   { /* ignore */ }
 {Comment}                      { /* ignore */ }
 

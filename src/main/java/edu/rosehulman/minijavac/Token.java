@@ -1,7 +1,7 @@
 package edu.rosehulman.minijavac;
 
-import edu.rosehulman.minijavac.generated.*;
 import edu.rosehulman.minijavac.generated.Lexer;
+
 import java_cup.runtime.Symbol;
 
 class Token {

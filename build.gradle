@@ -20,7 +20,8 @@ task generateLexer << {
 }
 
 task generateParser << {
-    java_cup.Main.main(['src/main/cup/minijava.cup'] as String[])
+    System.setIn(new FileInputStream('src/main/cup/minijava.cup'))
+    java_cup.Main.main(['-symbols', 'Symbols', '-parser', 'Parser'] as String[])
 }
 
 task copyGenerated(type: Copy) {
