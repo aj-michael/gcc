@@ -1,8 +1,8 @@
 package edu.rosehulman.minijavac;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
+import java_cup.runtime.Symbol;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -12,9 +12,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(value = Parameterized.class)
 public class LexerTest {
@@ -45,13 +47,11 @@ public class LexerTest {
 
     @Test
     public void test() throws IOException {
-        ImmutableList<Token> tokens = new Lexer(new FileReader(testFile)).getTokens();
-        String expectedLines = Files.toString(outputFile, Charsets.UTF_8);
-        String actualLines = "";
-        for(Token token : tokens) {
-            actualLines += token + "\n";
+        Iterator<String> expectedTokenValues = Files.readLines(outputFile, Charsets.UTF_8).iterator();
+        Lexer lexer = new Lexer(new FileReader(testFile));
+        for (Symbol token : lexer.getTokens()) {
+            assertEquals(expectedTokenValues.next(), token.value.toString());
         }
-        assertEquals(expectedLines, actualLines);
+        assertFalse(expectedTokenValues.hasNext());
     }
-
 }

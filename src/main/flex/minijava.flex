@@ -18,12 +18,17 @@ import java_cup.runtime.*;
 %{
   StringBuffer string = new StringBuffer();
 
-  public static class NameAndValue {
+  public static class DisplayableValue {
     public TokenDisplayName name;
     public Object value;
-    NameAndValue(TokenDisplayName name, Object value) {
+
+    DisplayableValue(TokenDisplayName name, Object value) {
       this.name = name;
       this.value = value;
+    }
+
+    @Override public String toString() {
+      return String.format("%s, %s", name, value);
     }
   }
 
@@ -36,7 +41,7 @@ import java_cup.runtime.*;
   }
 
   private Symbol symbol(int type, TokenDisplayName name, Object value) {
-    return new Symbol(type, yyline, yycolumn, new NameAndValue(name, value));
+    return new Symbol(type, yyline, yycolumn, new DisplayableValue(name, value));
   }
 %}
 

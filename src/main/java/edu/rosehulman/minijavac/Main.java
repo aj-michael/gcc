@@ -1,6 +1,6 @@
 package edu.rosehulman.minijavac;
 
-import com.google.common.collect.ImmutableList;
+import java_cup.runtime.Symbol;
 
 import java.io.FileReader;
 import java.io.Reader;
@@ -10,9 +10,8 @@ public class Main {
         for (String arg : args) {
             Reader reader = new FileReader(arg);
             Lexer lexer = new Lexer(reader);
-            ImmutableList<Token> tokens = lexer.getTokens();
-            for(Token token: tokens) {
-                System.out.println(token);
+            for (Symbol token : lexer.getTokens()) {
+                System.out.println(token.value);
             }
         }
     }
