@@ -63,11 +63,11 @@ terminal True;
 terminal Void;
 terminal While;
 
-non terminal ClassDecl;
+non terminal ClassDeclList;
 non terminal MainClassDecl;
 non terminal Program;
 non terminal Type;
 
-Program ::= MainClassDecl { ClassDecl };
-//MainClassDecl ::= " { ReservedWord ReservedWord ReservedWord ReservedWord(
+Program ::= MainClassDecl ClassDeclList;
+MainClassDecl ::= Class ID LeftBrace Public Static Void Main LeftParenthesis String LeftBracket RightBracket ID RightParenthesis LeftBrace RightBrace RightBrace;
 Token   ::= ID | Integer | ReservedWord;

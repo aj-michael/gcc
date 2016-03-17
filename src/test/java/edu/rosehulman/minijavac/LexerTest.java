@@ -2,6 +2,7 @@ package edu.rosehulman.minijavac;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import edu.rosehulman.minijavac.generated.Lexer;
 import java_cup.runtime.Symbol;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +50,7 @@ public class LexerTest {
     public void test() throws IOException {
         Iterator<String> expectedTokenValues = Files.readLines(outputFile, Charsets.UTF_8).iterator();
         Lexer lexer = new Lexer(new FileReader(testFile));
-        for (Symbol token : lexer.getTokens()) {
+        for (Symbol token : lexer) {
             assertEquals(expectedTokenValues.next(), token.value.toString());
         }
         assertFalse(expectedTokenValues.hasNext());

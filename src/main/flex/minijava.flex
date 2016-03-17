@@ -1,11 +1,15 @@
 package edu.rosehulman.minijavac.generated;
 
+import edu.rosehulman.minijavac.ScannerIterator;
 import java_cup.runtime.*;
+
+import java.util.Iterator;
 
 %%
 
 %public
 %class Lexer
+%implements Iterable<Symbol>
 %unicode
 %line
 %column
@@ -17,6 +21,14 @@ import java_cup.runtime.*;
 
 %{
   StringBuffer string = new StringBuffer();
+
+  private Symbol symbol(int type, TokenDisplayName name, Object value) {
+    return new Symbol(type, yyline, yycolumn, new DisplayableValue(name, value));
+  }
+
+  @Override public Iterator<Symbol> iterator() {
+    return new ScannerIterator(this);
+  }
 
   public static class DisplayableValue {
     public TokenDisplayName name;
@@ -40,9 +52,6 @@ import java_cup.runtime.*;
     ReservedWord;
   }
 
-  private Symbol symbol(int type, TokenDisplayName name, Object value) {
-    return new Symbol(type, yyline, yycolumn, new DisplayableValue(name, value));
-  }
 %}
 
 LineTerminator = \r|\n|\r\n
