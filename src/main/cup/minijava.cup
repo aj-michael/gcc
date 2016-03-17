@@ -15,11 +15,59 @@ scan with {:
   return lexer.next_token();
 :};
 
+terminal And;
+terminal Assignment;
+terminal Boolean;
+terminal Class;
+terminal Comma;
+terminal Delimiter;
+terminal Divide;
+terminal Dot;
+terminal Else;
+terminal Equals;
+terminal Extends;
+terminal False;
+terminal GreaterThan;
+terminal GreaterThanOrEqual;
+terminal If;
+terminal Int;
 terminal Integer Integer;
-terminal String ID, ReservedWord, Operator, Delimiter;
+terminal LeftBrace;
+terminal LeftBracket;
+terminal LeftParenthesis;
+terminal LessThan;
+terminal LessThanOrEqual;
+terminal Main;
+terminal Minus;
+terminal Multiply;
+terminal New;
+terminal Not;
+terminal NotEquals;
+terminal Null;
+terminal Operator;
+terminal Or;
+terminal Plus;
+terminal Public;
+terminal ReservedWord;
+terminal Return;
+terminal RightBrace;
+terminal RightBracket;
+terminal RightParenthesis;
+terminal Semicolon;
+terminal Static;
+terminal String ID;
+terminal String;
+terminal SystemOutPrintln;
+terminal This;
+terminal True;
+terminal Void;
+terminal While;
 
-/*non terminal Object Program, MainClassDecl, ClassDecl, ClassVarDecl, MethodDecl, Formal, Type, Stmt, Expr;*/
+non terminal ClassDecl;
+non terminal MainClassDecl;
+non terminal Program;
 non terminal Type;
 
-Type ::= Integer
-      | ID;
+Program ::= MainClassDecl { ClassDecl };
+//MainClassDecl ::= " { ReservedWord ReservedWord ReservedWord ReservedWord(
+Token   ::= ID | Integer | ReservedWord;
