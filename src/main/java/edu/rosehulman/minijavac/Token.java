@@ -1,6 +1,6 @@
 package edu.rosehulman.minijavac;
 
-import edu.rosehulman.minijavac.generated.sym;
+import edu.rosehulman.minijavac.generated.Symbols;
 import java_cup.runtime.Symbol;
 
 class Token {
@@ -12,6 +12,6 @@ class Token {
     }
 
     @Override public String toString() {
-        return sym.terminalNames[symbol.sym] + ", " + symbol.value;
+        return Symbols.terminalNames[symbol.sym] + ", " + symbol.value;
     }
 }

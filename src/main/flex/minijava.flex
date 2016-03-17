@@ -11,6 +11,10 @@ import java_cup.runtime.*;
 %column
 %cup
 
+%eofval{
+  return new java_cup.runtime.Symbol(Symbols.EOF);
+%eofval}
+
 %{
   StringBuffer string = new StringBuffer();
 
@@ -42,57 +46,57 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 %%
 
 /* keywords */
-"class"                        { return symbol(sym.ReservedWord, yytext()); }
-"public"                       { return symbol(sym.ReservedWord, yytext()); }
-"static"                       { return symbol(sym.ReservedWord, yytext()); }
-"extends"                      { return symbol(sym.ReservedWord, yytext()); }
-"void"                         { return symbol(sym.ReservedWord, yytext()); }
-"int"                          { return symbol(sym.ReservedWord, yytext()); }
-"boolean"                      { return symbol(sym.ReservedWord, yytext()); }
-"if"                           { return symbol(sym.ReservedWord, yytext()); }
-"else"                         { return symbol(sym.ReservedWord, yytext()); }
-"while"                        { return symbol(sym.ReservedWord, yytext()); }
-"return"                       { return symbol(sym.ReservedWord, yytext()); }
-"null"                         { return symbol(sym.ReservedWord, yytext()); }
-"true"                         { return symbol(sym.ReservedWord, yytext()); }
-"false"                        { return symbol(sym.ReservedWord, yytext()); }
-"this"                         { return symbol(sym.ReservedWord, yytext()); }
-"new"                          { return symbol(sym.ReservedWord, yytext()); }
-"String"                       { return symbol(sym.ReservedWord, yytext()); }
-"main"                         { return symbol(sym.ReservedWord, yytext()); }
-"System.out.println"           { return symbol(sym.ReservedWord, yytext()); }
+"class"                        { return symbol(Symbols.ReservedWord, yytext()); }
+"public"                       { return symbol(Symbols.ReservedWord, yytext()); }
+"static"                       { return symbol(Symbols.ReservedWord, yytext()); }
+"extends"                      { return symbol(Symbols.ReservedWord, yytext()); }
+"void"                         { return symbol(Symbols.ReservedWord, yytext()); }
+"int"                          { return symbol(Symbols.ReservedWord, yytext()); }
+"boolean"                      { return symbol(Symbols.ReservedWord, yytext()); }
+"if"                           { return symbol(Symbols.ReservedWord, yytext()); }
+"else"                         { return symbol(Symbols.ReservedWord, yytext()); }
+"while"                        { return symbol(Symbols.ReservedWord, yytext()); }
+"return"                       { return symbol(Symbols.ReservedWord, yytext()); }
+"null"                         { return symbol(Symbols.ReservedWord, yytext()); }
+"true"                         { return symbol(Symbols.ReservedWord, yytext()); }
+"false"                        { return symbol(Symbols.ReservedWord, yytext()); }
+"this"                         { return symbol(Symbols.ReservedWord, yytext()); }
+"new"                          { return symbol(Symbols.ReservedWord, yytext()); }
+"String"                       { return symbol(Symbols.ReservedWord, yytext()); }
+"main"                         { return symbol(Symbols.ReservedWord, yytext()); }
+"System.out.println"           { return symbol(Symbols.ReservedWord, yytext()); }
 
 /* operators */
-"+"                            { return symbol(sym.Operator, yytext()); }
-"-"                            { return symbol(sym.Operator, yytext()); }
-"*"                            { return symbol(sym.Operator, yytext()); }
-"/"                            { return symbol(sym.Operator, yytext()); }
-"<"                            { return symbol(sym.Operator, yytext()); }
-"<="                           { return symbol(sym.Operator, yytext()); }
-">="                           { return symbol(sym.Operator, yytext()); }
-">"                            { return symbol(sym.Operator, yytext()); }
-"=="                           { return symbol(sym.Operator, yytext()); }
-"!="                           { return symbol(sym.Operator, yytext()); }
-"&&"                           { return symbol(sym.Operator, yytext()); }
-"||"                           { return symbol(sym.Operator, yytext()); }
-"!"                            { return symbol(sym.Operator, yytext()); }
+"+"                            { return symbol(Symbols.Operator, yytext()); }
+"-"                            { return symbol(Symbols.Operator, yytext()); }
+"*"                            { return symbol(Symbols.Operator, yytext()); }
+"/"                            { return symbol(Symbols.Operator, yytext()); }
+"<"                            { return symbol(Symbols.Operator, yytext()); }
+"<="                           { return symbol(Symbols.Operator, yytext()); }
+">="                           { return symbol(Symbols.Operator, yytext()); }
+">"                            { return symbol(Symbols.Operator, yytext()); }
+"=="                           { return symbol(Symbols.Operator, yytext()); }
+"!="                           { return symbol(Symbols.Operator, yytext()); }
+"&&"                           { return symbol(Symbols.Operator, yytext()); }
+"||"                           { return symbol(Symbols.Operator, yytext()); }
+"!"                            { return symbol(Symbols.Operator, yytext()); }
 
 /* delimiters */
-";"                            { return symbol(sym.Delimiter, yytext()); }
-"."                            { return symbol(sym.Delimiter, yytext()); }
-","                            { return symbol(sym.Delimiter, yytext()); }
-"="                            { return symbol(sym.Delimiter, yytext()); }
-"("                            { return symbol(sym.Delimiter, yytext()); }
-")"                            { return symbol(sym.Delimiter, yytext()); }
-"{"                            { return symbol(sym.Delimiter, yytext()); }
-"}"                            { return symbol(sym.Delimiter, yytext()); }
-"["                            { return symbol(sym.Delimiter, yytext()); }
-"]"                            { return symbol(sym.Delimiter, yytext()); }
+";"                            { return symbol(Symbols.Delimiter, yytext()); }
+"."                            { return symbol(Symbols.Delimiter, yytext()); }
+","                            { return symbol(Symbols.Delimiter, yytext()); }
+"="                            { return symbol(Symbols.Delimiter, yytext()); }
+"("                            { return symbol(Symbols.Delimiter, yytext()); }
+")"                            { return symbol(Symbols.Delimiter, yytext()); }
+"{"                            { return symbol(Symbols.Delimiter, yytext()); }
+"}"                            { return symbol(Symbols.Delimiter, yytext()); }
+"["                            { return symbol(Symbols.Delimiter, yytext()); }
+"]"                            { return symbol(Symbols.Delimiter, yytext()); }
 
-{DecIntegerLiteral}            { return symbol(sym.Integer, new Integer(yytext())); }
-{Identifier}                   { return symbol(sym.ID, yytext()); }
+{DecIntegerLiteral}            { return symbol(Symbols.Integer, new Integer(yytext())); }
+{Identifier}                   { return symbol(Symbols.ID, yytext()); }
 {BadSystemOutPrintln}          { yypushback(yylength() - "System".length());
-                                 return symbol(sym.ID, yytext());
+                                 return symbol(Symbols.ID, yytext());
                                }
 {WhiteSpace}                   { /* ignore */ }
 {Comment}                      { /* ignore */ }

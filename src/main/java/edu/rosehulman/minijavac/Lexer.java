@@ -1,7 +1,7 @@
 package edu.rosehulman.minijavac;
 
 import com.google.common.collect.ImmutableList;
-import edu.rosehulman.minijavac.generated.sym;
+import edu.rosehulman.minijavac.generated.Symbols;
 import java_cup.runtime.Symbol;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class Lexer {
                 new edu.rosehulman.minijavac.generated.Lexer(reader);
         Symbol symbol = lexer.next_token();
         ImmutableList.Builder<Token> tokens = new ImmutableList.Builder<>();
-        while (symbol.sym != sym.EOF) {
+        while (symbol.sym != Symbols.EOF) {
             tokens.add(new Token(symbol));
             symbol = lexer.next_token();
         }
