@@ -20,7 +20,6 @@ terminal Assignment;
 terminal Boolean;
 terminal Class;
 terminal Comma;
-terminal Delimiter;
 terminal Divide;
 terminal Dot;
 terminal Else;
@@ -44,11 +43,9 @@ terminal New;
 terminal Not;
 terminal NotEquals;
 terminal Null;
-terminal Operator;
 terminal Or;
 terminal Plus;
 terminal Public;
-terminal ReservedWord;
 terminal Return;
 terminal RightBrace;
 terminal RightBracket;
@@ -63,11 +60,77 @@ terminal True;
 terminal Void;
 terminal While;
 
+non terminal ClassDecl;
 non terminal ClassDeclList;
+non terminal ClassVarDecl;
+non terminal ClassVarDeclList;
+non terminal CommaFormalList;
+non terminal Expr;
+non terminal ExprList;
+non terminal Formal;
 non terminal MainClassDecl;
+non terminal MethodDecl;
+non terminal MethodDeclList;
+non terminal OptArgList;
+non terminal OptExprList;
+non terminal OptExtendsID;
 non terminal Program;
+non terminal Stmt;
+non terminal StmtList;
 non terminal Type;
 
-Program ::= MainClassDecl ClassDeclList;
-MainClassDecl ::= Class ID LeftBrace Public Static Void Main LeftParenthesis String LeftBracket RightBracket ID RightParenthesis LeftBrace RightBrace RightBrace;
-Token   ::= ID | Integer | ReservedWord;
+precedence left Or;
+precedence left And;
+precedence left Equals, NotEquals;
+precedence left GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual;
+precedence left Plus, Minus;
+precedence left Multiply, Divide;
+precedence left Not;
+
+start with Program;
+
+Program ::= MainClassDecl ClassDeclList ;
+ClassDeclList ::= ClassDecl ClassDeclList | ;
+MainClassDecl ::= Class ID LeftBrace Public Static Void Main LeftParenthesis String LeftBracket RightBracket ID RightParenthesis LeftBrace StmtList RightBrace RightBrace ;
+StmtList ::= Stmt StmtList | ;
+ClassDecl ::= Class ID OptExtendsID LeftBrace ClassVarDeclList MethodDeclList RightBrace ;
+OptExtendsID ::= Extends ID | ;
+ClassVarDeclList ::= ClassVarDecl ClassVarDeclList | ;
+ClassVarDecl ::= Type ID Semicolon ;
+MethodDeclList ::= MethodDecl MethodDeclList | ;
+MethodDecl ::= Public Type ID LeftParenthesis OptArgList RightParenthesis LeftBrace StmtList Return Expr Semicolon RightBrace ;
+OptArgList ::= Formal CommaFormalList | ;
+CommaFormalList ::= Comma Formal CommaFormalList | ;
+Formal ::= Type ID ;
+Type ::= Int | Boolean | ID;
+Stmt ::= Type ID Assignment Expr Semicolon
+    | LeftBrace StmtList RightBrace
+    | If LeftParenthesis Expr RightParenthesis Stmt Else Stmt
+    | While LeftParenthesis Expr RightParenthesis Stmt
+    | SystemOutPrintln LeftParenthesis Expr RightParenthesis Semicolon
+    | ID Assignment Expr Semicolon ;
+Expr ::= Expr Plus Expr
+    | Expr Minus Expr
+    | Expr Multiply Expr
+    | Expr Divide Expr
+    | Expr LessThan Expr
+    | Expr LessThanOrEqual Expr
+    | Expr GreaterThanOrEqual Expr
+    | Expr GreaterThan Expr
+    | Expr Equals Expr
+    | Expr NotEquals Expr
+    | Expr And Expr
+    | Expr Or Expr
+    | Minus Expr
+    | Not Expr
+    | Expr Dot ID LeftParenthesis OptExprList RightParenthesis
+    | New ID LeftParenthesis RightParenthesis
+    | ID
+    | This
+    | Integer
+    | Null
+    | True
+    | False
+    | LeftParenthesis Expr RightParenthesis ;
+OptExprList ::= Expr ExprList | ;
+ExprList ::= Comma Expr ExprList | ;
