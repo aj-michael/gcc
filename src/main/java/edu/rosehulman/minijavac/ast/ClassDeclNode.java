@@ -4,8 +4,8 @@ import java.util.List;
 
 public class ClassDeclNode extends NonterminalNode {
     public ClassDeclNode(List<ClassVarDeclNode> cvdl, List<MethodDeclNode> mdl) {
-        children.addAll(cvdl);
-        children.addAll(mdl);
+        if (cvdl != null) children.addAll(cvdl);
+        if (mdl != null) children.addAll(mdl);
     }
 
     @Override

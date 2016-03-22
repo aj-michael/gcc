@@ -1,5 +1,7 @@
 package edu.rosehulman.minijavac.generated;
 
+import com.google.common.base.Joiner;
+
 import edu.rosehulman.minijavac.ast.*;
 
 import java_cup.runtime.*;
@@ -9,11 +11,14 @@ import java.util.List;
 
 parser code {:
   Lexer lexer;
+  List<String> output = new ArrayList<>();
 
-  //public Parser(Lexer lexer, ComplexSymbolFactory symbolFactory) {
   public Parser(Lexer lexer) {
-    //super(lexer, symbolFactory);
     this.lexer = lexer;
+  }
+
+  public String getParseLog() {
+    return Joiner.on("\n").join(output) + "\n";
   }
 
 :};
@@ -67,24 +72,28 @@ terminal True;
 terminal Void;
 terminal While;
 
+non terminal CallExpr;
 non terminal ClassDeclNode ClassDecl;
 non terminal List<ClassDeclNode> ClassDeclList;
 non terminal ClassVarDeclNode ClassVarDecl;
 non terminal List<ClassVarDeclNode> ClassVarDeclList;
-non terminal List<FormalNode> CommaFormalList;
+non terminal List<FormalNode> FormalList;
 non terminal ExprNode Expr;
 non terminal List<ExprNode> ExprList;
 non terminal FormalNode Formal;
+non terminal LiteralExpr;
 non terminal MainClassDeclNode MainClassDecl;
 non terminal MethodDeclNode MethodDecl;
 non terminal List<MethodDeclNode> MethodDeclList;
-non terminal OptArgListNode OptArgList;
 non terminal OptExprListNode OptExprList;
-non terminal OptExtendsIDNode OptExtendsID;
+non terminal OptExtendsNode OptExtends;
+non terminal OptFormalListNode OptFormalList;
+non terminal ParenExpr;
 non terminal ProgramNode Program;
 non terminal StmtNode Stmt;
 non terminal List<StmtNode> StmtList;
 non terminal TypeNode Type;
+non terminal UnaryExpr;
 
 precedence left Or;
 precedence left And;
@@ -97,92 +106,289 @@ precedence left Not;
 start with Program;
 
 Program ::= MainClassDecl:mcl ClassDeclList:cdl
-    {: RESULT = new ProgramNode(mcl, cdl); :}
+    {:
+        output.add("Program ::= MainClassDecl ClassDeclList");
+        RESULT = new ProgramNode(mcl, cdl);
+    :}
     ;
-ClassDeclList ::= ClassDecl:cd ClassDeclList:cdl
-    {: cdl.add(cd); RESULT = cdl; :}
+ClassDeclList ::= ClassDeclList:cdl ClassDecl:cd
+    {:
+        output.add("ClassDeclList ::= ClassDeclList ClassDecl");
+        cdl.add(cd); RESULT = cdl;
+    :}
     |
-    {: RESULT = new ArrayList<>(); :}
+    {:
+        output.add("ClassDeclList ::= ");
+        RESULT = new ArrayList<>();
+    :}
     ;
 MainClassDecl ::= Class ID LeftBrace Public Static Void Main LeftParenthesis String LeftBracket RightBracket ID RightParenthesis LeftBrace StmtList:sl RightBrace RightBrace
-    {: RESULT = new MainClassDeclNode(sl); :}
+    {:
+        output.add("MainClassDecl ::= ...");
+        RESULT = new MainClassDeclNode(sl);
+    :}
     ;
-StmtList ::= Stmt:s StmtList:sl
-    {: sl.add(s); RESULT = sl; :}
+StmtList ::= StmtList:sl Stmt:s
+    {:
+        output.add("StmtList ::= StmtList Stmt");
+        sl.add(s); RESULT = sl;
+    :}
     |
-    {: RESULT = new ArrayList<>(); :}
+    {:
+        output.add("StmtList ::= ");
+        RESULT = new ArrayList<>();
+    :}
     ;
-ClassDecl ::= Class ID OptExtendsID LeftBrace ClassVarDeclList:cvdl MethodDeclList:mdl RightBrace
-    {: RESULT = new ClassDeclNode(cvdl, mdl); :}
+ClassDecl ::= Class ID OptExtends LeftBrace ClassVarDeclList:cvdl MethodDeclList:mdl RightBrace
+    {:
+        output.add("ClassDecl ::= ...");
+        RESULT = new ClassDeclNode(cvdl, mdl);
+    :}
     ;
-OptExtendsID ::= Extends ID | ;
-ClassVarDeclList ::= ClassVarDecl ClassVarDeclList | ;
-ClassVarDecl ::= Type ID Semicolon ;
-MethodDeclList ::= MethodDecl MethodDeclList | ;
-MethodDecl ::= Public Type ID LeftParenthesis OptArgList RightParenthesis LeftBrace StmtList Return Expr Semicolon RightBrace ;
-OptArgList ::= Formal CommaFormalList | ;
-CommaFormalList ::= Comma Formal CommaFormalList | ;
-Formal ::= Type ID ;
-Type ::= Int | Boolean | ID;
+OptExtends ::= Extends ID
+    {:
+        output.add("OptExtends ::= EXTENDS ID");
+    :}
+    |
+    {:
+        output.add("OptExtends ::= ");
+    :}
+    ;
+ClassVarDeclList ::= ClassVarDeclList ClassVarDecl
+    {:
+        output.add("ClassVarDeclList ::= ClassVarDeclList ClassVarDecl");
+    :}
+    |
+    {:
+        output.add("ClassVarDeclList ::= ");
+    :}
+    ;
+ClassVarDecl ::= Type ID Semicolon
+    {:
+        output.add("ClassVarDecl ::= Type ID SEMI");
+    :}
+    ;
+MethodDeclList ::= MethodDeclList MethodDecl
+    {:
+        output.add("MethodDeclList ::= MethodDeclList MethodDecl");
+    :}
+    |
+    {:
+        output.add("MethodDeclList ::= ");
+    :}
+    ;
+MethodDecl ::= Public Type ID LeftParenthesis OptFormalList RightParenthesis LeftBrace StmtList Return Expr Semicolon RightBrace
+    {:
+        output.add("MethodDecl ::= ... ");
+    :}
+    ;
+OptFormalList ::= FormalList
+    {:
+        output.add("OptFormalList ::= FormalList");
+    :}
+    |
+    {:
+        output.add("OptFormalList ::= ");
+    :}
+    ;
+FormalList ::= FormalList Comma Formal
+    {:
+        output.add("FormalList ::= FormalList COMMA Formal");
+    :}
+    | Formal
+    {:
+        output.add("FormalList ::= Formal");
+    :}
+    ;
+Formal ::= Type ID
+    {:
+        output.add("Formal ::= Type ID");
+    :}
+    ;
+Type ::= Int
+    {:
+        output.add("Type ::= INT");
+    :}
+    | Boolean
+    {:
+        output.add("Type ::= BOOLEAN");
+    :}
+    | ID
+    {:
+        output.add("Type ::= ID");
+    :}
+    ;
 Stmt ::= Type ID Assignment Expr Semicolon
-    {: RESULT = new StmtNode(); :}
+    {:
+        output.add("Stmt ::= Type ID GETS Expr SEMI");
+        RESULT = new StmtNode();
+    :}
     | LeftBrace StmtList RightBrace
-    {: RESULT = new StmtNode(); :}
+    {:
+        output.add("Stmt ::= LBRACE StmtList RBRACE");
+        RESULT = new StmtNode();
+    :}
     | If LeftParenthesis Expr RightParenthesis Stmt Else Stmt
-    {: RESULT = new StmtNode(); :}
+    {:
+        output.add("Stmt ::= IF LPAREN Expr RPAREN Stmt ELSE Stmt");
+        RESULT = new StmtNode();
+    :}
     | While LeftParenthesis Expr RightParenthesis Stmt
-    {: RESULT = new StmtNode(); :}
+    {:
+        output.add("Stmt ::= WHILE LPAREN Expr RPAREN Stmt");
+        RESULT = new StmtNode();
+    :}
     | SystemOutPrintln LeftParenthesis Expr RightParenthesis Semicolon
-    {: RESULT = new StmtNode(); :}
+    {:
+        output.add("Stmt ::= SYSTEMOUTPRINTLN LPAREN Expr RPAREN SEMI");
+        RESULT = new StmtNode();
+    :}
     | ID Assignment Expr Semicolon
-    {: RESULT = new StmtNode(); :}
+    {:
+        output.add("Stmt ::= ID GETS Expr SEMI");
+        RESULT = new StmtNode();
+    :}
     ;
 Expr ::= Expr Plus Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr PLUS Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr Minus Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr MINUS Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr Multiply Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr TIMES Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr Divide Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr DIVIDE Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr LessThan Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr LT Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr LessThanOrEqual Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr LTE Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr GreaterThanOrEqual Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr GTE Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr GreaterThan Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr GT Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr Equals Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr EQ Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr NotEquals Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr NE Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr And Expr
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr AND Expr");
+        RESULT = new ExprNode();
+    :}
     | Expr Or Expr
-    {: RESULT = new ExprNode(); :}
-    | Minus Expr
-    {: RESULT = new ExprNode(); :}
-    | Not Expr
-    {: RESULT = new ExprNode(); :}
-    | Expr Dot ID LeftParenthesis OptExprList RightParenthesis
-    {: RESULT = new ExprNode(); :}
-    | New ID LeftParenthesis RightParenthesis
-    {: RESULT = new ExprNode(); :}
-    | ID
-    {: RESULT = new ExprNode(); :}
-    | This
-    {: RESULT = new ExprNode(); :}
-    | Integer
-    {: RESULT = new ExprNode(); :}
-    | Null
-    {: RESULT = new ExprNode(); :}
-    | True
-    {: RESULT = new ExprNode(); :}
-    | False
-    {: RESULT = new ExprNode(); :}
-    | LeftParenthesis Expr RightParenthesis
-    {: RESULT = new ExprNode(); :}
+    {:
+        output.add("Expr ::= Expr OR Expr");
+        RESULT = new ExprNode();
+    :}
+    | UnaryExpr
+    {:
+        output.add("Expr ::= UnaryExpr");
+    :}
     ;
-OptExprList ::= Expr ExprList | ;
-ExprList ::= Comma Expr ExprList | ;
+OptExprList ::= ExprList
+    {:
+        output.add("OptExprList ::= ExprList");
+    :}
+    |
+    {:
+        output.add("OptExprList ::=");
+    :}
+    ;
+ExprList ::= ExprList Comma Expr
+    {:
+        output.add("ExprList ::= ExprList COMMA Expr");
+    :}
+    | Expr
+    {:
+        output.add("ExprList ::= Expr");
+    :}
+    ;
+LiteralExpr ::= ID
+    {:
+        output.add("LiteralExpr ::= ID");
+    :}
+    | Integer
+    {:
+        output.add("LiteralExpr ::= INTEGER");
+    :}
+    | True
+    {:
+        output.add("LiteralExpr ::= TRUE");
+    :}
+    | ParenExpr
+    {:
+        output.add("LiteralExpr ::= ParenExpr");
+    :}
+    | False
+    {:
+        output.add("LiteralExpr ::= FALSE");
+    :}
+    | This
+    {:
+        output.add("LiteralExpr ::= THIS");
+    :}
+    | Null
+    {:
+        output.add("LiteralExpr ::= NULL");
+    :}
+    ;
+ParenExpr ::= LeftParenthesis Expr RightParenthesis
+    {:
+        output.add("ParenExpr ::= LPAREN Expr RPAREN");
+    :}
+    ;
+UnaryExpr ::= CallExpr
+    {:
+        output.add("UnaryExpr ::= CallExpr");
+    :}
+    | Minus UnaryExpr
+    {:
+        output.add("UnaryExpr ::= MINUS UnaryExpr");
+    :}
+    | Not UnaryExpr
+    {:
+        output.add("UnaryExpr ::= NOT UnaryExpr");
+    :}
+    ;
+CallExpr ::= LiteralExpr
+    {:
+        output.add("CallExpr ::= LiteralExpr");
+    :}
+    | New ID LeftParenthesis RightParenthesis
+    {:
+        output.add("CallExpr ::= NEW ID LPAREN RPAREN");
+    :}
+    | CallExpr Dot ID LeftParenthesis OptExprList RightParenthesis
+    {:
+        output.add("CallExpr ::= CallExpr DOT ID LPAREN OptExprList RPAREN");
+    :}
+    ;
