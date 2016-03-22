@@ -1,0 +1,90 @@
+Minijava Syntax
+
+Program ::= MainClassDecl {ClassDecl}
+MainClassDecl::= class ID { public static void main (String[ ] ID) { {Stmt} } }
+ClassDecl ::= class ID [extends ID] { {ClassVarDecl} {MethodDecl} }
+ClassVarDecl ::= Type ID;
+MethodDecl ::= public Type ID ( [Formal {, Formal}] ) { {Stmt} return Expr; }
+Formal ::= Type ID
+Type ::= int
+| boolean
+| ID
+Stmt ::= Type ID = Expr;
+| { {Stmt} } 
+| if (Expr) Stmt else Stmt 
+| while (Expr) Stmt 
+| System.out.println(Expr); 
+| ID = Expr;
+Expr ::= Expr (+ | - | * | / | < | <= | >= | >| == | != | && | || ) Expr
+| ( - | ! ) Expr
+| Expr . ID ( [Expr {, Expr}] )
+| new ID ( )
+| ID
+| this
+| Integer
+| null
+
+
+
+Minijava BNF
+
+
+Program ::= MainClassDecl ClassDeclList
+MainClassDecl::= class ID { public static void main ( String [ ] ID ) { StmtList } }
+ClassDeclList ::= ClassDecl ClassDeclList
+        |
+ClassDecl ::= class ID OptExtends { ClassVarDeclList MethodDeclList }
+OptExtends ::= extends ID
+        |
+ClassVarDeclList ::= ClassVarDec ClassVarDecList
+        | 
+MethodDecList ::= MethodDecl MethodDecList
+        |
+ClassVarDecl ::= Type ID ;
+MethodDecl ::= public Type ID ( OptFormal ) { StmtList return Expr ; }
+OptFormal: := Formal FormalList
+        |
+FormalList ::= , FormalList
+        | 
+Formal ::= Type ID
+Type ::= int
+        | boolean
+        | ID
+StmtList ::= Stmt StmtList
+Stmt ::= Type ID = Expr ;
+        | { StmtList }
+        | if ( Expr ) Stmt else Stmt 
+        | while ( Expr ) Stmt 
+        | System.out.println ( Expr ) ; 
+        | ID = Expr;
+Expr ::= Expr + Expr
+        | Expr - Expr
+        | Expr * Expr
+        | Expr / Expr
+        | Expr < Expr
+        | Expr <= Expr
+        | Expr >= Expr
+        | Expr > Expr
+        | Expr == Expr
+        | Expr != Expr
+        | Expr && Expr
+        | Expr || Expr
+        | UnaryExpr
+CallExpr ::= Literal Expr
+        | new ID ( )
+        | CallExpr . ID ( OptExprList )
+UnaryExpr ::= CallExpr
+        | - UnaryExpr
+        | ! UnaryExpr
+ParenExpr ::= ( Expr )
+LiteralExpr ::= ID
+        | Integer
+        | true
+        | false
+        | ParenExpr
+        | this
+        | null
+        
+
+
+
