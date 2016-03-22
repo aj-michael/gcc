@@ -1,7 +1,7 @@
 package edu.rosehulman.minijavac.generated;
 
 import edu.rosehulman.minijavac.ScannerIterator;
-import java_cup.runtime.*;
+import java_cup.runtime.Symbol;
 
 import java.util.Iterator;
 
@@ -16,7 +16,7 @@ import java.util.Iterator;
 %cup
 
 %eofval{
-  return new java_cup.runtime.Symbol(Symbols.EOF);
+  return new Symbol(Symbols.EOF);
 %eofval}
 
 %{
@@ -26,7 +26,8 @@ import java.util.Iterator;
     return new Symbol(type, yyline, yycolumn, new DisplayableValue(name, value));
   }
 
-  @Override public Iterator<Symbol> iterator() {
+  @Override
+  public Iterator<Symbol> iterator() {
     return new ScannerIterator(this);
   }
 

@@ -1,6 +1,8 @@
 package edu.rosehulman.minijavac;
 
+import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import edu.rosehulman.minijavac.ast.ProgramNode;
 import edu.rosehulman.minijavac.generated.Lexer;
 import edu.rosehulman.minijavac.generated.Parser;
 import org.junit.Test;
@@ -12,6 +14,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(value = Parameterized.class)
 public class ParserTest {
@@ -26,8 +30,10 @@ public class ParserTest {
         for (File testFile : Files.fileTreeTraverser().children(new File(INPUT_FOLDER))) {
             File outputFile = new File(OUTPUT_FOLDER,
                     Files.getNameWithoutExtension(testFile.getName()) + OUTPUT_EXTENSION);
-            File[] filePair = {testFile, outputFile};
-            fileCollection.add(filePair);
+            if (outputFile.exists()) {
+                File[] filePair = {testFile, outputFile};
+                fileCollection.add(filePair);
+            }
         }
         return fileCollection;
     }
@@ -44,6 +50,8 @@ public class ParserTest {
     public void test() throws Exception {
         Lexer lexer = new Lexer(new FileReader(testFile));
         Parser parser = new Parser(lexer);
-        parser.parse();
+        String expectedOutput = Files.toString(outputFile, Charsets.UTF_8);
+        String actualOutput = ((ProgramNode) parser.parse().value).postorderTraversal();
+        assertEquals(expectedOutput, actualOutput);
     }
 }
