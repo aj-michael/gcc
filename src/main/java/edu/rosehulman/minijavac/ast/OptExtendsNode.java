@@ -1,4 +1,5 @@
 package edu.rosehulman.minijavac.ast;
 
-public class OptArgListNode {
+public class OptExtendsNode {
+
 }
