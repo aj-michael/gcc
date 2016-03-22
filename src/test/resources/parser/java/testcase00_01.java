@@ -14,3 +14,7 @@ class mainclass
    }
 }
 
+class what
+{
+
+}
