@@ -2,8 +2,6 @@ package edu.rosehulman.minijavac.generated;
 
 import com.google.common.base.Joiner;
 
-import edu.rosehulman.minijavac.ast.*;
-
 import java_cup.runtime.*;
 
 import java.util.ArrayList;
@@ -73,26 +71,26 @@ terminal Void;
 terminal While;
 
 non terminal CallExpr;
-non terminal ClassDeclNode ClassDecl;
-non terminal List<ClassDeclNode> ClassDeclList;
-non terminal ClassVarDeclNode ClassVarDecl;
-non terminal List<ClassVarDeclNode> ClassVarDeclList;
-non terminal List<FormalNode> FormalList;
-non terminal ExprNode Expr;
-non terminal List<ExprNode> ExprList;
-non terminal FormalNode Formal;
+non terminal ClassDecl;
+non terminal ClassDeclList;
+non terminal ClassVarDecl;
+non terminal ClassVarDeclList;
+non terminal FormalList;
+non terminal Expr;
+non terminal ExprList;
+non terminal Formal;
 non terminal LiteralExpr;
-non terminal MainClassDeclNode MainClassDecl;
-non terminal MethodDeclNode MethodDecl;
-non terminal List<MethodDeclNode> MethodDeclList;
-non terminal OptExprListNode OptExprList;
-non terminal OptExtendsNode OptExtends;
-non terminal OptFormalListNode OptFormalList;
+non terminal MainClassDecl;
+non terminal MethodDecl;
+non terminal MethodDeclList;
+non terminal OptExprList;
+non terminal OptExtends;
+non terminal OptFormalList;
 non terminal ParenExpr;
-non terminal ProgramNode Program;
-non terminal StmtNode Stmt;
-non terminal List<StmtNode> StmtList;
-non terminal TypeNode Type;
+non terminal Program;
+non terminal Stmt;
+non terminal StmtList;
+non terminal Type;
 non terminal UnaryExpr;
 
 precedence left Or;
@@ -108,41 +106,34 @@ start with Program;
 Program ::= MainClassDecl:mcl ClassDeclList:cdl
     {:
         output.add("Program ::= MainClassDecl ClassDeclList");
-        RESULT = new ProgramNode(mcl, cdl);
     :}
     ;
 ClassDeclList ::= ClassDeclList:cdl ClassDecl:cd
     {:
         output.add("ClassDeclList ::= ClassDeclList ClassDecl");
-        cdl.add(cd); RESULT = cdl;
     :}
     |
     {:
         output.add("ClassDeclList ::= ");
-        RESULT = new ArrayList<>();
     :}
     ;
 MainClassDecl ::= Class ID LeftBrace Public Static Void Main LeftParenthesis String LeftBracket RightBracket ID RightParenthesis LeftBrace StmtList:sl RightBrace RightBrace
     {:
         output.add("MainClassDecl ::= ...");
-        RESULT = new MainClassDeclNode(sl);
     :}
     ;
 StmtList ::= StmtList:sl Stmt:s
     {:
         output.add("StmtList ::= StmtList Stmt");
-        sl.add(s); RESULT = sl;
     :}
     |
     {:
         output.add("StmtList ::= ");
-        RESULT = new ArrayList<>();
     :}
     ;
 ClassDecl ::= Class ID OptExtends LeftBrace ClassVarDeclList:cvdl MethodDeclList:mdl RightBrace
     {:
         output.add("ClassDecl ::= ...");
-        RESULT = new ClassDeclNode(cvdl, mdl);
     :}
     ;
 OptExtends ::= Extends ID
@@ -221,93 +212,75 @@ Type ::= Int
 Stmt ::= Type ID Assignment Expr Semicolon
     {:
         output.add("Stmt ::= Type ID GETS Expr SEMI");
-        RESULT = new StmtNode();
     :}
     | LeftBrace StmtList RightBrace
     {:
         output.add("Stmt ::= LBRACE StmtList RBRACE");
-        RESULT = new StmtNode();
     :}
     | If LeftParenthesis Expr RightParenthesis Stmt Else Stmt
     {:
         output.add("Stmt ::= IF LPAREN Expr RPAREN Stmt ELSE Stmt");
-        RESULT = new StmtNode();
     :}
     | While LeftParenthesis Expr RightParenthesis Stmt
     {:
         output.add("Stmt ::= WHILE LPAREN Expr RPAREN Stmt");
-        RESULT = new StmtNode();
     :}
     | SystemOutPrintln LeftParenthesis Expr RightParenthesis Semicolon
     {:
         output.add("Stmt ::= SYSTEMOUTPRINTLN LPAREN Expr RPAREN SEMI");
-        RESULT = new StmtNode();
     :}
     | ID Assignment Expr Semicolon
     {:
         output.add("Stmt ::= ID GETS Expr SEMI");
-        RESULT = new StmtNode();
     :}
     ;
 Expr ::= Expr Plus Expr
     {:
         output.add("Expr ::= Expr PLUS Expr");
-        RESULT = new ExprNode();
     :}
     | Expr Minus Expr
     {:
         output.add("Expr ::= Expr MINUS Expr");
-        RESULT = new ExprNode();
     :}
     | Expr Multiply Expr
     {:
         output.add("Expr ::= Expr TIMES Expr");
-        RESULT = new ExprNode();
     :}
     | Expr Divide Expr
     {:
         output.add("Expr ::= Expr DIVIDE Expr");
-        RESULT = new ExprNode();
     :}
     | Expr LessThan Expr
     {:
         output.add("Expr ::= Expr LT Expr");
-        RESULT = new ExprNode();
     :}
     | Expr LessThanOrEqual Expr
     {:
         output.add("Expr ::= Expr LTE Expr");
-        RESULT = new ExprNode();
     :}
     | Expr GreaterThanOrEqual Expr
     {:
         output.add("Expr ::= Expr GTE Expr");
-        RESULT = new ExprNode();
     :}
     | Expr GreaterThan Expr
     {:
         output.add("Expr ::= Expr GT Expr");
-        RESULT = new ExprNode();
     :}
     | Expr Equals Expr
     {:
         output.add("Expr ::= Expr EQ Expr");
-        RESULT = new ExprNode();
     :}
     | Expr NotEquals Expr
     {:
         output.add("Expr ::= Expr NE Expr");
-        RESULT = new ExprNode();
     :}
     | Expr And Expr
     {:
         output.add("Expr ::= Expr AND Expr");
-        RESULT = new ExprNode();
     :}
     | Expr Or Expr
     {:
         output.add("Expr ::= Expr OR Expr");
-        RESULT = new ExprNode();
     :}
     | UnaryExpr
     {:

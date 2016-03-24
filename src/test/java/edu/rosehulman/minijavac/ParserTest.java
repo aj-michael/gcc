@@ -2,7 +2,6 @@ package edu.rosehulman.minijavac;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import edu.rosehulman.minijavac.ast.ProgramNode;
 import edu.rosehulman.minijavac.generated.Lexer;
 import edu.rosehulman.minijavac.generated.Parser;
 import org.junit.Test;

@@ -1,6 +1,5 @@
 package edu.rosehulman.minijavac;
 
-import edu.rosehulman.minijavac.ast.Node;
 import edu.rosehulman.minijavac.generated.Lexer;
 import edu.rosehulman.minijavac.generated.Parser;
 import java_cup.runtime.ComplexSymbolFactory;
