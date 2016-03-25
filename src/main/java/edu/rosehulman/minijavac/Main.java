@@ -10,8 +10,8 @@ import java.io.FileReader;
 public class Main {
     public static void main(String args[]) throws Exception {
         ComplexSymbolFactory csf = new ComplexSymbolFactory();
-        Parser parser = new Parser(new Lexer(new FileReader("src/test/resources/parser/java/testcase00_04.java")));
-        Symbol symbol = parser.debug_parse();
+        Parser parser = new Parser(new Lexer(new FileReader("src/test/resources/parser/java/testcase00_03.java")));
+        Symbol symbol = parser.parse();
         System.out.println(parser.getParseLog());
     }
 }

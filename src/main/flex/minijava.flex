@@ -23,7 +23,7 @@ import java.util.Iterator;
   StringBuffer string = new StringBuffer();
 
   private Symbol symbol(int type, TokenDisplayName name, Object value) {
-    return new Symbol(type, yyline, yycolumn, new DisplayableValue(name, value));
+    return new Symbol(type, yyline + 1, yycolumn + 1, new DisplayableValue(name, value));
   }
 
   @Override

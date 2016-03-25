@@ -19,6 +19,14 @@ parser code {:
     return Joiner.on("\n").join(output) + "\n";
   }
 
+  public void syntax_error(Symbol current) {
+    output.add("\n\nERROR in line " + current.left + " and column " + current.right + ": Syntax error\n\nError recovery to next semicolon.");
+  }
+
+  @Override
+  public void unrecovered_syntax_error(Symbol current) {
+    output.add("\n\nERROR in line " + current.left + " and column " + current.right + ": Couldn't repair and continue parse\n\nException processing file: Can't recover from previous error(s)");
+  }
 :};
 
 scan with {:
@@ -135,6 +143,7 @@ ClassDecl ::= Class ID OptExtends LeftBrace ClassVarDeclList:cvdl MethodDeclList
     {:
         output.add("ClassDecl ::= ...");
     :}
+    | error
     ;
 OptExtends ::= Extends ID
     {:
@@ -233,6 +242,7 @@ Stmt ::= Type ID Assignment Expr Semicolon
     {:
         output.add("Stmt ::= ID GETS Expr SEMI");
     :}
+    | error
     ;
 Expr ::= Expr Plus Expr
     {:
@@ -286,6 +296,7 @@ Expr ::= Expr Plus Expr
     {:
         output.add("Expr ::= UnaryExpr");
     :}
+    | error
     ;
 OptExprList ::= ExprList
     {:
