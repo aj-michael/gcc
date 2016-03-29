@@ -16,7 +16,7 @@ import java.util.Iterator;
 %cup
 
 %eofval{
-  return new Symbol(Symbols.EOF);
+  return new Symbol(Symbols.EOF, yyline + 1, yycolumn + 1);
 %eofval}
 
 %{
@@ -131,6 +131,4 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 {WhiteSpace}                   { /* ignore */ }
 {Comment}                      { /* ignore */ }
 
-/* Error fallback */
-[^]                              { throw new Error("Illegal character <"+
-                                                    yytext()+">"); }
+[^]                            { return new Symbol(Symbols.UnmatchedCharacter, yyline + 1, yycolumn + 1, yytext()); }

@@ -21,7 +21,6 @@ parser code {:
   }
 
   public void syntax_error(Symbol current) {
-    System.out.println(Symbols.terminalNames[current.sym]);
     output.add("\n\nERROR in line " + current.left + " and column " + current.right + ": Syntax error\n");
     output.add(RECOVERY);
   }
@@ -36,7 +35,13 @@ parser code {:
 :};
 
 scan with {:
-  return lexer.next_token();
+    Symbol symbol = lexer.next_token();
+    if (symbol.sym == Symbols.UnmatchedCharacter) {
+        output.add(String.format("Unmatched character '%s' at line %d and column %d", symbol.value, symbol.left, symbol.right));
+        return scan();
+    } else {
+        return symbol;
+    }
 :};
 
 terminal And;
@@ -83,6 +88,8 @@ terminal This;
 terminal True;
 terminal Void;
 terminal While;
+
+terminal String UnmatchedCharacter;
 
 non terminal CallExpr;
 non terminal ClassDecl;
@@ -149,7 +156,6 @@ ClassDecl ::= Class ID OptExtends LeftBrace ClassVarDeclList:cvdl MethodDeclList
     {:
         output.add("ClassDecl ::= ...");
     :}
-    | error
     ;
 OptExtends ::= Extends ID
     {:
@@ -227,7 +233,6 @@ Type ::= Int
 Stmt ::= Type ID Assignment Expr Semicolon
     {:
         output.add("Stmt ::= Type ID GETS Expr SEMI");
-        System.out.println(cur_token);
     :}
     | LeftBrace StmtList RightBrace
     {:
@@ -250,13 +255,6 @@ Stmt ::= Type ID Assignment Expr Semicolon
         output.add("Stmt ::= ID GETS Expr SEMI");
     :}
     | error Semicolon
-    {:
-        System.out.println("errored on stmt semicolon");
-    :}
-    | error RightBrace
-    {:
-        System.out.println("errored on stmt rightbrace");
-    :}
     ;
 Expr ::= Expr Plus Expr
     {:
