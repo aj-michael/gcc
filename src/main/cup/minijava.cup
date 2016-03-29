@@ -4,12 +4,13 @@ import com.google.common.base.Joiner;
 
 import java_cup.runtime.*;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 parser code {:
   Lexer lexer;
-  List<String> output = new ArrayList<>();
+  LinkedList<String> output = new LinkedList<>();
+  static final String RECOVERY = "Error recovery to next semicolon.";
 
   public Parser(Lexer lexer) {
     this.lexer = lexer;
@@ -20,11 +21,16 @@ parser code {:
   }
 
   public void syntax_error(Symbol current) {
-    output.add("\n\nERROR in line " + current.left + " and column " + current.right + ": Syntax error\n\nError recovery to next semicolon.");
+    System.out.println(Symbols.terminalNames[current.sym]);
+    output.add("\n\nERROR in line " + current.left + " and column " + current.right + ": Syntax error\n");
+    output.add(RECOVERY);
   }
 
   @Override
   public void unrecovered_syntax_error(Symbol current) {
+    if (output.peekLast().equals(RECOVERY)) {
+        output.pollLast();
+    }
     output.add("\n\nERROR in line " + current.left + " and column " + current.right + ": Couldn't repair and continue parse\n\nException processing file: Can't recover from previous error(s)");
   }
 :};
@@ -221,6 +227,7 @@ Type ::= Int
 Stmt ::= Type ID Assignment Expr Semicolon
     {:
         output.add("Stmt ::= Type ID GETS Expr SEMI");
+        System.out.println(cur_token);
     :}
     | LeftBrace StmtList RightBrace
     {:
@@ -242,7 +249,14 @@ Stmt ::= Type ID Assignment Expr Semicolon
     {:
         output.add("Stmt ::= ID GETS Expr SEMI");
     :}
-    | error
+    | error Semicolon
+    {:
+        System.out.println("errored on stmt semicolon");
+    :}
+    | error RightBrace
+    {:
+        System.out.println("errored on stmt rightbrace");
+    :}
     ;
 Expr ::= Expr Plus Expr
     {:
