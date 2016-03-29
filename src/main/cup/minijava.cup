@@ -310,7 +310,6 @@ Expr ::= Expr Plus Expr
     {:
         output.add("Expr ::= UnaryExpr");
     :}
-    | error
     ;
 OptExprList ::= ExprList
     {:
