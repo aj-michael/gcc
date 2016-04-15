@@ -56,7 +56,7 @@ public class ParserTest {
     public void test() throws Exception {
         Lexer lexer = new Lexer(new FileReader(testFile));
         Parser parser = new Parser(lexer);
-        parser.parse();
+        parser.parseProgram();
         String expectedOutput = Files.toString(outputFile, Charsets.UTF_8);
         String actualOutput = parser.getParseLog();
         assertEquals(expectedOutput, actualOutput);

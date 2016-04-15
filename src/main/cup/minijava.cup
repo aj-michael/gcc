@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 import edu.rosehulman.minijavac.ast.*;
+import edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator;
 
 import java_cup.runtime.*;
 
@@ -40,6 +41,11 @@ parser code {:
         output.pollLast();
     }
     output.add("\n\nERROR in line " + current.left + " and column " + current.right + ": Couldn't repair and continue parse\n\nException processing file: Can't recover from previous error(s)");
+  }
+
+  public Program parseProgram() throws Exception {
+    Symbol symbol = super.parse();
+    return symbol != null && symbol.value instanceof Program ? (Program) symbol.value : null;
   }
 :};
 
@@ -106,22 +112,22 @@ non terminal List<ClassDeclaration> ClassDeclList;
 non terminal Map.Entry<String, String> ClassVarDecl;
 non terminal Map<String, String> ClassVarDeclList;
 non terminal LinkedHashMap<String, String> FormalList;
-non terminal Expr;
-non terminal ExprList;
+non terminal Expression Expr;
+non terminal List<Expression> ExprList;
 non terminal Map.Entry<String, String> Formal;
 non terminal LiteralExpr;
 non terminal ClassDeclaration MainClassDecl;
 non terminal MethodDeclaration MethodDecl;
 non terminal List<MethodDeclaration> MethodDeclList;
-non terminal OptExprList;
+non terminal List<Expression> OptExprList;
 non terminal Optional<String> OptExtends;
 non terminal LinkedHashMap<String, String> OptFormalList;
 non terminal ParenExpr;
 non terminal Program Program;
-non terminal Stmt;
-non terminal StmtList;
+non terminal Statement Stmt;
+non terminal List<Statement> StmtList;
 non terminal String Type;
-non terminal UnaryExpr;
+non terminal Expression UnaryExpr;
 
 precedence left Or;
 precedence left And;
@@ -154,16 +160,20 @@ ClassDeclList ::= ClassDeclList:cdl ClassDecl:cd
 MainClassDecl ::= Class ID:name LeftBrace Public Static Void Main LeftParenthesis String LeftBracket RightBracket ID RightParenthesis LeftBrace StmtList:sl RightBrace RightBrace
     {:
         output.add("MainClassDecl ::= ...");
-        RESULT = new ClassDeclaration(name.value, Optional.empty(), ImmutableMap.of(), ImmutableList.of());
+        MethodDeclaration main = new MainMethodDeclaration(sl);
+        RESULT = new ClassDeclaration(name.value, Optional.empty(), ImmutableMap.of(), ImmutableList.of(main));
     :}
     ;
 StmtList ::= StmtList:sl Stmt:s
     {:
         output.add("StmtList ::= StmtList Stmt");
+        sl.add(s);
+        RESULT = sl;
     :}
     |
     {:
         output.add("StmtList ::= ");
+        RESULT = new LinkedList<>();
     :}
     ;
 ClassDecl ::= Class ID:name OptExtends:parent LeftBrace ClassVarDeclList:cvdl MethodDeclList:mdl RightBrace
@@ -213,10 +223,10 @@ MethodDeclList ::= MethodDeclList:mdl MethodDecl:md
         RESULT = new LinkedList<>();
     :}
     ;
-MethodDecl ::= Public Type:returnType ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList Return Expr Semicolon RightBrace
+MethodDecl ::= Public Type:returnType ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl Return Expr:e Semicolon RightBrace
     {:
         output.add("MethodDecl ::= ... ");
-        RESULT = new MethodDeclaration(name.value, returnType, ofl);
+        RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e);
     :}
     ;
 OptFormalList ::= FormalList:fl
@@ -266,101 +276,126 @@ Type ::= Int
         RESULT = name.value;
     :}
     ;
-Stmt ::= Type ID Assignment Expr Semicolon
+Stmt ::= Type:type ID:id Assignment Expr:expression Semicolon
     {:
         output.add("Stmt ::= Type ID GETS Expr SEMI");
+        RESULT = new AssignmentStatement(type, id.value, expression);
     :}
-    | LeftBrace StmtList RightBrace
+    | LeftBrace StmtList:sl RightBrace
     {:
         output.add("Stmt ::= LBRACE StmtList RBRACE");
+        RESULT = new BlockStatement(sl);
     :}
-    | If LeftParenthesis Expr RightParenthesis Stmt Else Stmt
+    | If LeftParenthesis Expr:condition RightParenthesis Stmt:trueStatement Else Stmt:falseStatement
     {:
         output.add("Stmt ::= IF LPAREN Expr RPAREN Stmt ELSE Stmt");
+        RESULT = new IfStatement(condition, trueStatement, falseStatement);
     :}
-    | While LeftParenthesis Expr RightParenthesis Stmt
+    | While LeftParenthesis Expr:condition RightParenthesis Stmt:statement
     {:
         output.add("Stmt ::= WHILE LPAREN Expr RPAREN Stmt");
+        RESULT = new WhileStatement(condition, statement);
     :}
-    | SystemOutPrintln LeftParenthesis Expr RightParenthesis Semicolon
+    | SystemOutPrintln LeftParenthesis Expr:expression RightParenthesis Semicolon
     {:
         output.add("Stmt ::= SYSTEMOUTPRINTLN LPAREN Expr RPAREN SEMI");
+        RESULT = new PrintlnStatement(expression);
     :}
-    | ID Assignment Expr Semicolon
+    | ID:id Assignment Expr:expression Semicolon
     {:
         output.add("Stmt ::= ID GETS Expr SEMI");
+        RESULT = new AssignmentStatement(id.value, expression);
     :}
     | error Semicolon
     ;
-Expr ::= Expr Plus Expr
+Expr ::= Expr:e1 Plus Expr:e2
     {:
         output.add("Expr ::= Expr PLUS Expr");
+        RESULT = new BinaryOperation(BinaryOperator.PLUS, e1, e2);
     :}
-    | Expr Minus Expr
+    | Expr:e1 Minus Expr:e2
     {:
         output.add("Expr ::= Expr MINUS Expr");
+        RESULT = new BinaryOperation(BinaryOperator.MINUS, e1, e2);
     :}
-    | Expr Multiply Expr
+    | Expr:e1 Multiply Expr:e2
     {:
         output.add("Expr ::= Expr TIMES Expr");
+        RESULT = new BinaryOperation(BinaryOperator.MULTIPLY, e1, e2);
     :}
-    | Expr Divide Expr
+    | Expr:e1 Divide Expr:e2
     {:
         output.add("Expr ::= Expr DIVIDE Expr");
+        RESULT = new BinaryOperation(BinaryOperator.DIVIDE, e1, e2);
     :}
-    | Expr LessThan Expr
+    | Expr:e1 LessThan Expr:e2
     {:
         output.add("Expr ::= Expr LT Expr");
+        RESULT = new BinaryOperation(BinaryOperator.LT, e1, e2);
     :}
-    | Expr LessThanOrEqual Expr
+    | Expr:e1 LessThanOrEqual Expr:e2
     {:
         output.add("Expr ::= Expr LTE Expr");
+        RESULT = new BinaryOperation(BinaryOperator.LTE, e1, e2);
     :}
-    | Expr GreaterThanOrEqual Expr
+    | Expr:e1 GreaterThanOrEqual Expr:e2
     {:
         output.add("Expr ::= Expr GTE Expr");
+        RESULT = new BinaryOperation(BinaryOperator.GTE, e1, e2);
     :}
-    | Expr GreaterThan Expr
+    | Expr:e1 GreaterThan Expr:e2
     {:
         output.add("Expr ::= Expr GT Expr");
+        RESULT = new BinaryOperation(BinaryOperator.GT, e1, e2);
     :}
-    | Expr Equals Expr
+    | Expr:e1 Equals Expr:e2
     {:
         output.add("Expr ::= Expr EQ Expr");
+        RESULT = new BinaryOperation(BinaryOperator.EQ, e1, e2);
     :}
-    | Expr NotEquals Expr
+    | Expr:e1 NotEquals Expr:e2
     {:
         output.add("Expr ::= Expr NE Expr");
+        RESULT = new BinaryOperation(BinaryOperator.NEQ, e1, e2);
     :}
-    | Expr And Expr
+    | Expr:e1 And Expr:e2
     {:
         output.add("Expr ::= Expr AND Expr");
+        RESULT = new BinaryOperation(BinaryOperator.AND, e1, e2);
     :}
-    | Expr Or Expr
+    | Expr:e1 Or Expr:e2
     {:
         output.add("Expr ::= Expr OR Expr");
+        RESULT = new BinaryOperation(BinaryOperator.OR, e1, e2);
     :}
     | UnaryExpr
     {:
         output.add("Expr ::= UnaryExpr");
     :}
     ;
-OptExprList ::= ExprList
+OptExprList ::= ExprList:el
     {:
         output.add("OptExprList ::= ExprList");
+        RESULT = el;
     :}
     |
     {:
         output.add("OptExprList ::=");
+        RESULT = new LinkedList<>();
     :}
     ;
-ExprList ::= ExprList Comma Expr
+ExprList ::= ExprList:el Comma Expr:e
     {:
         output.add("ExprList ::= ExprList COMMA Expr");
+        el.add(e);
+        RESULT = el;
     :}
-    | Expr
+    | Expr:e
     {:
         output.add("ExprList ::= Expr");
+        List<Expression> el = new LinkedList<>();
+        el.add(e);
+        RESULT = el;
     :}
     ;
 LiteralExpr ::= ID
