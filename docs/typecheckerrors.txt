@@ -1,0 +1,24 @@
+Actual return type Baz of method self does not match declared type Bar
+Argument type boolean is incompatible with formal parameter type int
+Cannot assign type AClass to variable b of type AnotherClass
+Cannot assign type null to variable z of type int
+Cannot find class named Baz
+Cannot instantiate undeclared class named C
+Cannot overload methods.  Method bad has different type signature than inherited method of the same name.
+Cannot redeclare method equal
+Class named A already exists.
+Condition for if statement is of type int instead of boolean
+Formal parameter named Foo duplicates the name of another formal parameter.
+In MiniJava, System.out.println only takes an int.  The expression has type Class2
+Left argument of type boolean does not match expected type int for operator GT
+No method named a5 found for class A6
+No variable named a exists in the current scope.
+Operand type boolean is not compatible with expected type int of operator MINUS
+Right argument of type LightBulb does not match expected type int for operator PLUS
+Success!
+Superclass name Bar not in scope.
+The class variable a is already declared.  Redeclaration and shadowing are not allowed.
+The operand types, null and int, are not compatible for equality comparison
+The variable a is already declared in the current scope.
+Variable a is not declared.
+While loop condition must be a boolean.  The expressions has type int
