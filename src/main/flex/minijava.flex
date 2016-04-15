@@ -22,8 +22,8 @@ import java.util.Iterator;
 %{
   StringBuffer string = new StringBuffer();
 
-  private Symbol symbol(int type, TokenDisplayName name, Object value) {
-    return new Symbol(type, yyline + 1, yycolumn + 1, new DisplayableValue(name, value));
+  private <T> Symbol symbol(int type, TokenDisplayName name, T value) {
+    return new Symbol(type, yyline + 1, yycolumn + 1, new DisplayableValue<T>(name, value));
   }
 
   @Override
@@ -31,11 +31,11 @@ import java.util.Iterator;
     return new ScannerIterator(this);
   }
 
-  public static class DisplayableValue {
+  public static class DisplayableValue<T> {
     public TokenDisplayName name;
-    public Object value;
+    public T value;
 
-    DisplayableValue(TokenDisplayName name, Object value) {
+    DisplayableValue(TokenDisplayName name, T value) {
       this.name = name;
       this.value = value;
     }

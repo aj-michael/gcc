@@ -81,7 +81,7 @@ terminal RightBracket;
 terminal RightParenthesis;
 terminal Semicolon;
 terminal Static;
-terminal String ID;
+terminal Lexer.DisplayableValue<String> ID;
 terminal String;
 terminal SystemOutPrintln;
 terminal This;
