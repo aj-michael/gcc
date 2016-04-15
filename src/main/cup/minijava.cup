@@ -1,11 +1,20 @@
 package edu.rosehulman.minijavac.generated;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+
+import edu.rosehulman.minijavac.ast.*;
 
 import java_cup.runtime.*;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 parser code {:
   Lexer lexer;
@@ -92,26 +101,26 @@ terminal While;
 terminal String UnmatchedCharacter;
 
 non terminal CallExpr;
-non terminal ClassDecl;
-non terminal ClassDeclList;
-non terminal ClassVarDecl;
-non terminal ClassVarDeclList;
-non terminal FormalList;
+non terminal ClassDeclaration ClassDecl;
+non terminal List<ClassDeclaration> ClassDeclList;
+non terminal Map.Entry<String, String> ClassVarDecl;
+non terminal Map<String, String> ClassVarDeclList;
+non terminal LinkedHashMap<String, String> FormalList;
 non terminal Expr;
 non terminal ExprList;
-non terminal Formal;
+non terminal Map.Entry<String, String> Formal;
 non terminal LiteralExpr;
-non terminal MainClassDecl;
-non terminal MethodDecl;
-non terminal MethodDeclList;
+non terminal ClassDeclaration MainClassDecl;
+non terminal MethodDeclaration MethodDecl;
+non terminal List<MethodDeclaration> MethodDeclList;
 non terminal OptExprList;
-non terminal OptExtends;
-non terminal OptFormalList;
+non terminal Optional<String> OptExtends;
+non terminal LinkedHashMap<String, String> OptFormalList;
 non terminal ParenExpr;
-non terminal Program;
+non terminal Program Program;
 non terminal Stmt;
 non terminal StmtList;
-non terminal Type;
+non terminal String Type;
 non terminal UnaryExpr;
 
 precedence left Or;
@@ -127,20 +136,25 @@ start with Program;
 Program ::= MainClassDecl:mcl ClassDeclList:cdl
     {:
         output.add("Program ::= MainClassDecl ClassDeclList");
+        RESULT = new Program(mcl, cdl);
     :}
     ;
 ClassDeclList ::= ClassDeclList:cdl ClassDecl:cd
     {:
         output.add("ClassDeclList ::= ClassDeclList ClassDecl");
+        cdl.add(cd);
+        RESULT = cdl;
     :}
     |
     {:
         output.add("ClassDeclList ::= ");
+        RESULT = new LinkedList<>();
     :}
     ;
-MainClassDecl ::= Class ID LeftBrace Public Static Void Main LeftParenthesis String LeftBracket RightBracket ID RightParenthesis LeftBrace StmtList:sl RightBrace RightBrace
+MainClassDecl ::= Class ID:name LeftBrace Public Static Void Main LeftParenthesis String LeftBracket RightBracket ID RightParenthesis LeftBrace StmtList:sl RightBrace RightBrace
     {:
         output.add("MainClassDecl ::= ...");
+        RESULT = new ClassDeclaration(name.value, Optional.empty(), ImmutableMap.of(), ImmutableList.of());
     :}
     ;
 StmtList ::= StmtList:sl Stmt:s
@@ -152,82 +166,104 @@ StmtList ::= StmtList:sl Stmt:s
         output.add("StmtList ::= ");
     :}
     ;
-ClassDecl ::= Class ID OptExtends LeftBrace ClassVarDeclList:cvdl MethodDeclList:mdl RightBrace
+ClassDecl ::= Class ID:name OptExtends:parent LeftBrace ClassVarDeclList:cvdl MethodDeclList:mdl RightBrace
     {:
         output.add("ClassDecl ::= ...");
+        RESULT = new ClassDeclaration(name.value, parent, cvdl, mdl);
     :}
     ;
-OptExtends ::= Extends ID
+OptExtends ::= Extends ID:name
     {:
         output.add("OptExtends ::= EXTENDS ID");
+        RESULT = Optional.of(name.value);
     :}
     |
     {:
         output.add("OptExtends ::= ");
+        RESULT = Optional.empty();
     :}
     ;
-ClassVarDeclList ::= ClassVarDeclList ClassVarDecl
+ClassVarDeclList ::= ClassVarDeclList:cvdl ClassVarDecl:cvd
     {:
         output.add("ClassVarDeclList ::= ClassVarDeclList ClassVarDecl");
+        cvdl.put(cvd.getKey(), cvd.getValue());
+        RESULT = cvdl;
     :}
     |
     {:
         output.add("ClassVarDeclList ::= ");
+        RESULT = new HashMap<>();
     :}
     ;
-ClassVarDecl ::= Type ID Semicolon
+ClassVarDecl ::= Type:type ID:name Semicolon
     {:
         output.add("ClassVarDecl ::= Type ID SEMI");
+        RESULT = Maps.immutableEntry(name.value, type);
     :}
     ;
-MethodDeclList ::= MethodDeclList MethodDecl
+MethodDeclList ::= MethodDeclList:mdl MethodDecl:md
     {:
         output.add("MethodDeclList ::= MethodDeclList MethodDecl");
+        mdl.add(md);
+        RESULT = mdl;
     :}
     |
     {:
         output.add("MethodDeclList ::= ");
+        RESULT = new LinkedList<>();
     :}
     ;
-MethodDecl ::= Public Type ID LeftParenthesis OptFormalList RightParenthesis LeftBrace StmtList Return Expr Semicolon RightBrace
+MethodDecl ::= Public Type:returnType ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList Return Expr Semicolon RightBrace
     {:
         output.add("MethodDecl ::= ... ");
+        RESULT = new MethodDeclaration(name.value, returnType, ofl);
     :}
     ;
-OptFormalList ::= FormalList
+OptFormalList ::= FormalList:fl
     {:
         output.add("OptFormalList ::= FormalList");
+        RESULT = fl;
     :}
     |
     {:
         output.add("OptFormalList ::= ");
+        RESULT = new LinkedHashMap<>();
     :}
     ;
-FormalList ::= FormalList Comma Formal
+FormalList ::= FormalList:fl Comma Formal:f
     {:
         output.add("FormalList ::= FormalList COMMA Formal");
+        fl.put(f.getKey(), f.getValue());
+        RESULT = fl;
     :}
-    | Formal
+    | Formal:f
     {:
         output.add("FormalList ::= Formal");
+        LinkedHashMap<String, String> fl = new LinkedHashMap<>();
+        fl.put(f.getKey(), f.getValue());
+        RESULT = fl;
     :}
     ;
-Formal ::= Type ID
+Formal ::= Type:type ID:name
     {:
         output.add("Formal ::= Type ID");
+        RESULT = Maps.immutableEntry(name.value, type);
     :}
     ;
 Type ::= Int
     {:
         output.add("Type ::= INT");
+        RESULT = "int";
     :}
     | Boolean
     {:
         output.add("Type ::= BOOLEAN");
+        RESULT = "boolean";
     :}
-    | ID
+    | ID:name
     {:
         output.add("Type ::= ID");
+        RESULT = name.value;
     :}
     ;
 Stmt ::= Type ID Assignment Expr Semicolon
