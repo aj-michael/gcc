@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 
 import edu.rosehulman.minijavac.ast.*;
 import edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator;
+import edu.rosehulman.minijavac.ast.UnaryOperation.UnaryOperator;
 
 import java_cup.runtime.*;
 
@@ -74,7 +75,7 @@ terminal GreaterThan;
 terminal GreaterThanOrEqual;
 terminal If;
 terminal Int;
-terminal Integer Integer;
+terminal Lexer.DisplayableValue<Integer> Integer;
 terminal LeftBrace;
 terminal LeftBracket;
 terminal LeftParenthesis;
@@ -106,7 +107,7 @@ terminal While;
 
 terminal String UnmatchedCharacter;
 
-non terminal CallExpr;
+non terminal CallExpression CallExpr;
 non terminal ClassDeclaration ClassDecl;
 non terminal List<ClassDeclaration> ClassDeclList;
 non terminal Map.Entry<String, String> ClassVarDecl;
@@ -115,19 +116,19 @@ non terminal LinkedHashMap<String, String> FormalList;
 non terminal Expression Expr;
 non terminal List<Expression> ExprList;
 non terminal Map.Entry<String, String> Formal;
-non terminal LiteralExpr;
+non terminal LiteralExpression LiteralExpr;
 non terminal ClassDeclaration MainClassDecl;
 non terminal MethodDeclaration MethodDecl;
 non terminal List<MethodDeclaration> MethodDeclList;
 non terminal List<Expression> OptExprList;
 non terminal Optional<String> OptExtends;
 non terminal LinkedHashMap<String, String> OptFormalList;
-non terminal ParenExpr;
+non terminal ParenthesisExpression ParenExpr;
 non terminal Program Program;
 non terminal Statement Stmt;
 non terminal List<Statement> StmtList;
 non terminal String Type;
-non terminal Expression UnaryExpr;
+non terminal UnaryOperation UnaryExpr;
 
 precedence left Or;
 precedence left And;
@@ -398,63 +399,79 @@ ExprList ::= ExprList:el Comma Expr:e
         RESULT = el;
     :}
     ;
-LiteralExpr ::= ID
+LiteralExpr ::= ID:variableName
     {:
         output.add("LiteralExpr ::= ID");
+        RESULT = new VariableInvocation(variableName.value);
     :}
-    | Integer
+    | Integer:i
     {:
         output.add("LiteralExpr ::= INTEGER");
+        RESULT = new LiteralValue("int", i.value);
     :}
     | True
     {:
         output.add("LiteralExpr ::= TRUE");
+        RESULT = new LiteralValue("boolean", true);
     :}
-    | ParenExpr
+    | ParenExpr:pe
     {:
         output.add("LiteralExpr ::= ParenExpr");
+        RESULT = pe;
     :}
     | False
     {:
         output.add("LiteralExpr ::= FALSE");
+        RESULT = new LiteralValue("boolean", false);
     :}
     | This
     {:
         output.add("LiteralExpr ::= THIS");
+        RESULT = LiteralKeyword.THIS;
     :}
     | Null
     {:
         output.add("LiteralExpr ::= NULL");
+        RESULT = LiteralKeyword.NULL;
     :}
     ;
-ParenExpr ::= LeftParenthesis Expr RightParenthesis
+ParenExpr ::= LeftParenthesis Expr:expression RightParenthesis
     {:
         output.add("ParenExpr ::= LPAREN Expr RPAREN");
+        RESULT = new ParenthesisExpression(expression);
     :}
     ;
-UnaryExpr ::= CallExpr
+UnaryExpr ::= CallExpr:ce
     {:
         output.add("UnaryExpr ::= CallExpr");
+        RESULT = new UnaryOperation(new LinkedList<>(), ce);
     :}
-    | Minus UnaryExpr
+    | Minus UnaryExpr:ue
     {:
         output.add("UnaryExpr ::= MINUS UnaryExpr");
+        ue.operators.add(UnaryOperator.MINUS);
+        RESULT = ue;
     :}
-    | Not UnaryExpr
+    | Not UnaryExpr:ue
     {:
         output.add("UnaryExpr ::= NOT UnaryExpr");
+        ue.operators.add(UnaryOperator.NOT);
+        RESULT = ue;
     :}
     ;
-CallExpr ::= LiteralExpr
+CallExpr ::= LiteralExpr:le
     {:
         output.add("CallExpr ::= LiteralExpr");
+        RESULT = le;
     :}
-    | New ID LeftParenthesis RightParenthesis
+    | New ID:className LeftParenthesis RightParenthesis
     {:
         output.add("CallExpr ::= NEW ID LPAREN RPAREN");
+        RESULT = new ConstructorInvocation(className.value);
     :}
-    | CallExpr Dot ID LeftParenthesis OptExprList RightParenthesis
+    | CallExpr:ce Dot ID:methodName LeftParenthesis OptExprList:el RightParenthesis
     {:
         output.add("CallExpr ::= CallExpr DOT ID LPAREN OptExprList RPAREN");
+        RESULT = new MethodInvocation(ce, methodName.value, el);
     :}
     ;
