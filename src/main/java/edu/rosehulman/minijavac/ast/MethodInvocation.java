@@ -1,5 +1,8 @@
 package edu.rosehulman.minijavac.ast;
 
+import edu.rosehulman.minijavac.typechecker.Scope;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MethodInvocation implements CallExpression {
@@ -11,5 +14,17 @@ public class MethodInvocation implements CallExpression {
         this.subject = subject;
         this.methodName = methodName;
         this.arguments = arguments;
+    }
+
+    @Override
+    public List<String> typecheck(Scope scope) {
+        List<String> errors = new ArrayList<>();
+        return errors;
+    }
+
+    @Override
+    public String getType(Scope scope) {
+        MethodDeclaration md = scope.getMethod(methodName);
+        return md == null ? "null" : md.returnType;
     }
 }

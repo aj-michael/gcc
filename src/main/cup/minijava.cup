@@ -2,8 +2,6 @@ package edu.rosehulman.minijavac.generated;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 import edu.rosehulman.minijavac.ast.*;
 import edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator;
@@ -12,7 +10,6 @@ import edu.rosehulman.minijavac.ast.UnaryOperation.UnaryOperator;
 import java_cup.runtime.*;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +43,11 @@ parser code {:
 
   public Program parseProgram() throws Exception {
     Symbol symbol = super.parse();
-    return symbol != null && symbol.value instanceof Program ? (Program) symbol.value : null;
+    if (symbol == null || !(symbol.value instanceof Program)) {
+        return null;
+    } else {
+        return (Program) symbol.value;
+    }
   }
 :};
 
@@ -110,19 +111,19 @@ terminal String UnmatchedCharacter;
 non terminal CallExpression CallExpr;
 non terminal ClassDeclaration ClassDecl;
 non terminal List<ClassDeclaration> ClassDeclList;
-non terminal Map.Entry<String, String> ClassVarDecl;
-non terminal Map<String, String> ClassVarDeclList;
-non terminal LinkedHashMap<String, String> FormalList;
+non terminal VariableDeclaration ClassVarDecl;
+non terminal List<VariableDeclaration> ClassVarDeclList;
+non terminal List<VariableDeclaration> FormalList;
 non terminal Expression Expr;
 non terminal List<Expression> ExprList;
-non terminal Map.Entry<String, String> Formal;
+non terminal VariableDeclaration Formal;
 non terminal LiteralExpression LiteralExpr;
 non terminal ClassDeclaration MainClassDecl;
 non terminal MethodDeclaration MethodDecl;
 non terminal List<MethodDeclaration> MethodDeclList;
 non terminal List<Expression> OptExprList;
 non terminal Optional<String> OptExtends;
-non terminal LinkedHashMap<String, String> OptFormalList;
+non terminal List<VariableDeclaration> OptFormalList;
 non terminal ParenthesisExpression ParenExpr;
 non terminal Program Program;
 non terminal Statement Stmt;
@@ -162,7 +163,7 @@ MainClassDecl ::= Class ID:name LeftBrace Public Static Void Main LeftParenthesi
     {:
         output.add("MainClassDecl ::= ...");
         MethodDeclaration main = new MainMethodDeclaration(sl);
-        RESULT = new ClassDeclaration(name.value, Optional.empty(), ImmutableMap.of(), ImmutableList.of(main));
+        RESULT = new ClassDeclaration(name.value, Optional.empty(), ImmutableList.of(), ImmutableList.of(main));
     :}
     ;
 StmtList ::= StmtList:sl Stmt:s
@@ -197,19 +198,19 @@ OptExtends ::= Extends ID:name
 ClassVarDeclList ::= ClassVarDeclList:cvdl ClassVarDecl:cvd
     {:
         output.add("ClassVarDeclList ::= ClassVarDeclList ClassVarDecl");
-        cvdl.put(cvd.getKey(), cvd.getValue());
+        cvdl.add(cvd);
         RESULT = cvdl;
     :}
     |
     {:
         output.add("ClassVarDeclList ::= ");
-        RESULT = new HashMap<>();
+        RESULT = new LinkedList<>();
     :}
     ;
 ClassVarDecl ::= Type:type ID:name Semicolon
     {:
         output.add("ClassVarDecl ::= Type ID SEMI");
-        RESULT = Maps.immutableEntry(name.value, type);
+        RESULT = new VariableDeclaration(name.value, type);
     :}
     ;
 MethodDeclList ::= MethodDeclList:mdl MethodDecl:md
@@ -238,27 +239,27 @@ OptFormalList ::= FormalList:fl
     |
     {:
         output.add("OptFormalList ::= ");
-        RESULT = new LinkedHashMap<>();
+        RESULT = new LinkedList<>();
     :}
     ;
 FormalList ::= FormalList:fl Comma Formal:f
     {:
         output.add("FormalList ::= FormalList COMMA Formal");
-        fl.put(f.getKey(), f.getValue());
+        fl.add(f);
         RESULT = fl;
     :}
     | Formal:f
     {:
         output.add("FormalList ::= Formal");
-        LinkedHashMap<String, String> fl = new LinkedHashMap<>();
-        fl.put(f.getKey(), f.getValue());
+        List<VariableDeclaration> fl = new LinkedList<>();
+        fl.add(f);
         RESULT = fl;
     :}
     ;
 Formal ::= Type:type ID:name
     {:
         output.add("Formal ::= Type ID");
-        RESULT = Maps.immutableEntry(name.value, type);
+        RESULT = new VariableDeclaration(name.value, type);
     :}
     ;
 Type ::= Int
@@ -369,9 +370,10 @@ Expr ::= Expr:e1 Plus Expr:e2
         output.add("Expr ::= Expr OR Expr");
         RESULT = new BinaryOperation(BinaryOperator.OR, e1, e2);
     :}
-    | UnaryExpr
+    | UnaryExpr:ue
     {:
         output.add("Expr ::= UnaryExpr");
+        RESULT = ue;
     :}
     ;
 OptExprList ::= ExprList:el

@@ -6,11 +6,13 @@ import edu.rosehulman.minijavac.typechecker.Scope;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrintlnStatement implements Statement {
-    public final Expression expression;
+public class VariableDeclaration implements Statement {
+    public final String name;
+    public final String type;
 
-    public PrintlnStatement(Expression expression) {
-        this.expression = expression;
+    public VariableDeclaration(String name, String type) {
+        this.name = name;
+        this.type = type;
     }
 
     @Override

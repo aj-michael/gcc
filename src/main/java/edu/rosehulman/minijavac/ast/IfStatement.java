@@ -1,5 +1,12 @@
 package edu.rosehulman.minijavac.ast;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import edu.rosehulman.minijavac.typechecker.Scope;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class IfStatement implements Statement {
     public final Expression condition;
     public final Statement trueStatement;
@@ -9,5 +16,20 @@ public class IfStatement implements Statement {
         this.condition = condition;
         this.trueStatement = trueStatement;
         this.falseStatement = falseStatement;
+    }
+
+    @Override
+    public List<Statement> getSubstatements() {
+        return ImmutableList.of(trueStatement, falseStatement);
+    }
+
+    @Override
+    public List<String> typecheck(Scope scope) {
+        List<String> errors = new ArrayList<>();
+
+        errors.addAll(condition.typecheck(scope));
+        errors.addAll(trueStatement.typecheck(scope));
+        errors.addAll(falseStatement.typecheck(scope));
+        return errors;
     }
 }
