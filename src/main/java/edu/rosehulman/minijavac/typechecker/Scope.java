@@ -1,6 +1,5 @@
 package edu.rosehulman.minijavac.typechecker;
 
-import edu.rosehulman.minijavac.ast.ClassDeclaration;
 import edu.rosehulman.minijavac.ast.MethodDeclaration;
 
 import java.util.HashMap;
@@ -82,17 +81,4 @@ public class Scope {
             return null;
         }
     }
-
-    //public Map<String, ClassDeclaration> getDeclaredClasses() {
-    //    return parent.isPresent() ? parent.get().getDeclaredClasses() : classes;
-    //}
-
-    /*public boolean addVariable(String name, String type) {
-        if (containsVariable(name)) {
-            return false;
-        } else {
-            declaredVariables.put(name, type);
-            return true;
-        }
-    }*/
 }

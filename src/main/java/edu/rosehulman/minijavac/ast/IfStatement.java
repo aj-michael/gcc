@@ -1,6 +1,5 @@
 package edu.rosehulman.minijavac.ast;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.typechecker.Scope;
 

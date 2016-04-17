@@ -20,20 +20,6 @@ public class ClassDeclaration {
         this.methodDeclarations = methodDeclarations;
     }
 
-    /*public void setParent(ClassDeclaration parent) {
-        this.parent = parent;
-    }
-
-    public List<VariableDeclaration> getClassVariables() {
-        if (parent == null) {
-            return new ArrayList<>(classVariableDeclarations);
-        } else {
-            List<VariableDeclaration> parentVariables = parent.getClassVariables();
-            parentVariables.addAll(classVariableDeclarations);
-            return parentVariables;
-        }
-    }*/
-
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
         for (MethodDeclaration md : methodDeclarations) {
