@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -35,12 +34,7 @@ public class ParserTest {
                 fileCollection.add(filePair);
             }
         }
-        fileCollection.sort(new Comparator<File[]>() {
-            @Override
-            public int compare(File[] o1, File[] o2) {
-                return o1[0].getName().compareTo(o2[0].getName());
-            }
-        });
+        fileCollection.sort((o1, o2) -> o1[0].getName().compareTo(o2[0].getName()));
         return fileCollection;
     }
 
