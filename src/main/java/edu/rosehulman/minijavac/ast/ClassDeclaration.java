@@ -11,7 +11,6 @@ public class ClassDeclaration {
     public final Optional<String> parentClassName;
     public final List<VariableDeclaration> classVariableDeclarations;
     public final List<MethodDeclaration> methodDeclarations;
-    public ClassDeclaration parent;
 
     public ClassDeclaration(String name, Optional<String> parentClassName, List<VariableDeclaration> classVariableDeclarations,
             List<MethodDeclaration> methodDeclarations) {
@@ -21,7 +20,7 @@ public class ClassDeclaration {
         this.methodDeclarations = methodDeclarations;
     }
 
-    public void setParent(ClassDeclaration parent) {
+    /*public void setParent(ClassDeclaration parent) {
         this.parent = parent;
     }
 
@@ -33,19 +32,10 @@ public class ClassDeclaration {
             parentVariables.addAll(classVariableDeclarations);
             return parentVariables;
         }
-    }
+    }*/
 
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
-        for (VariableDeclaration cvd : classVariableDeclarations) {
-            if (scope.containsVariable(cvd.name)) {
-                errors.add("The class variable " + cvd.name + " is already declared.  Redeclaration and shadowing are not allowed.");
-            } else if (!scope.containsClass(cvd.type)) {
-                errors.add("Cannot find class named " + cvd.type);
-            } else {
-                scope.declaredVariables.put(cvd.name, cvd.type);
-            }
-        }
         for (MethodDeclaration md : methodDeclarations) {
             if (scope.methods.containsKey(md.name)) {
                 errors.add("Cannot redeclare method " + md.name);
@@ -60,8 +50,15 @@ public class ClassDeclaration {
 
     public List<String> typecheckAgain(Scope scope) {
         List<String> errors = new ArrayList<>();
-        System.out.println(scope.methods == null);
-        System.out.println(scope.methods.values());
+        for (VariableDeclaration cvd : classVariableDeclarations) {
+            if (scope.containsVariable(cvd.name)) {
+                errors.add("The class variable " + cvd.name + " is already declared.  Redeclaration and shadowing are not allowed.");
+            } else if (!scope.containsClass(cvd.type)) {
+                errors.add("Cannot find class named " + cvd.type);
+            } else {
+                scope.declaredVariables.put(cvd.name, cvd.type);
+            }
+        }
         for (MethodDeclaration md : scope.methods.values()) {
             errors.addAll(md.typecheck(new Scope(scope)));
         }

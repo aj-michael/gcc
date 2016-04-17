@@ -41,17 +41,21 @@ public class AssignmentStatement implements Statement {
                 errors.add("The variable " + id + " is already declared in the current scope.");
             } else if (!scope.containsClass(type.get())) {
                 errors.add("Cannot find class named " + type.get());
-            } else {
+            } else if (type.get().equals(expression.getType(scope)) || expression.getType(scope).equals("null")) {
                 scope.declaredVariables.put(id, type.get());
+            } else {
+                errors.add("Cannot assign type " + expression.getType(scope) + " to variable " + id +
+                    " of type " + type.get());
             }
         } else {
             if (!scope.containsVariable(id)) {
                 errors.add("Variable " + id + " is not declared.");
-            } else if (!scope.getVariableType(id).equals(expression.getType(scope))) {
+            } else if (!scope.getVariableType(id).equals(expression.getType(scope)) && !expression.getType(scope).equals("null")) {
                 errors.add("Cannot assign type " + expression.getType(scope) + " to variable " + id +
                     " of type " + scope.getVariableType(id));
             }
         }
+        errors.addAll(expression.typecheck(scope));
         return errors;
     }
 }

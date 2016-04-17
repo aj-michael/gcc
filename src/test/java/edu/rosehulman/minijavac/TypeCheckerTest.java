@@ -59,7 +59,7 @@ public class TypeCheckerTest {
         Lexer lexer = new Lexer(new FileReader(testFile));
         Parser parser = new Parser(lexer);
         Program program = parser.parseProgram();
-        TypeChecker typeChecker = TypeChecker.createDefault();
+        TypeChecker typeChecker = new TypeChecker();
         typeChecker.isValid(program);
         String expectedOutput = Files.toString(outputFile, Charsets.UTF_8);
         String actualOutput = typeChecker.getTypeCheckerLog();

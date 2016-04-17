@@ -15,7 +15,7 @@ public class VariableInvocation implements LiteralExpression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
-        if(scope.containsVariable(name)) {
+        if (scope.containsVariable(name)) {
             errors.add("No variable named " + name + " exists in the current scope.");
         }
         return errors;
@@ -23,6 +23,10 @@ public class VariableInvocation implements LiteralExpression {
 
     @Override
     public String getType(Scope scope) {
-        return scope.getVariableType(name);
+        if (scope.getVariableType(name) != null) {
+            return scope.getVariableType(name);
+        } else {
+            return "unknown";
+        }
     }
 }

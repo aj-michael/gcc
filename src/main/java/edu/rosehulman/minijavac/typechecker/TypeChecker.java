@@ -13,10 +13,10 @@ import static java.util.stream.Collectors.toList;
 
 public class TypeChecker {
 
-    private final List<TypeCheckerRule> typeCheckerRules;
+    //private final List<TypeCheckerRule> typeCheckerRules;
     private List<String> errors;
 
-    private static final List<TypeCheckerRule> defaultRules = ImmutableList.of(
+    /*private static final List<TypeCheckerRule> defaultRules = ImmutableList.of(
         new NonexistantSuperclass(),
         new ClassRedeclaration(),
         new FieldRedeclaration(),
@@ -31,9 +31,9 @@ public class TypeChecker {
     public TypeChecker(List<TypeCheckerRule> rules) {
         typeCheckerRules = rules;
     }
-
+*/
     public boolean isValid(Program program) {
-        setParentClasses(program);
+        //setParentClasses(program);
         /*errors = typeCheckerRules.stream()
             .map(r -> r.apply(program))
             .flatMap(List::stream)
@@ -50,7 +50,7 @@ public class TypeChecker {
         }
     }
 
-    private static void setParentClasses(Program program) {
+    /*private static void setParentClasses(Program program) {
         Map<String, ClassDeclaration> classes = new HashMap<>();
         classes.put(program.mainClassDeclaration.name, program.mainClassDeclaration);
         for (ClassDeclaration cd : program.classDeclarations) {
@@ -59,5 +59,5 @@ public class TypeChecker {
                 cd.setParent(classes.get(cd.parentClassName.get()));
             }
         }
-    }
+    }*/
 }

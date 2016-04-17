@@ -21,6 +21,11 @@ public class PrintlnStatement implements Statement {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
+        errors.addAll(expression.typecheck(scope));
+        String expressionType = expression.getType(scope);
+        if (!expressionType.equals("int")) {
+            errors.add("In MiniJava, System.out.println only takes an int.  The expression has type " + expressionType);
+        }
         return errors;
     }
 }

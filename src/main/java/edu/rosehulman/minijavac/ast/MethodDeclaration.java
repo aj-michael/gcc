@@ -1,13 +1,11 @@
 package edu.rosehulman.minijavac.ast;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
-import edu.rosehulman.minijavac.typechecker.VariableRedeclaration;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class MethodDeclaration {
     public final String name;
@@ -48,7 +46,6 @@ public class MethodDeclaration {
         if (!(this instanceof MainMethodDeclaration) && !scope.containsClass(returnType)) {
             errors.add("Cannot find class named " + returnType);
         }
-
         for (VariableDeclaration argument : arguments) {
             if (scope.containsVariable(argument.name)) {
                 errors.add("Formal parameter named " + argument.name + " duplicates the name of another formal parameter.");
@@ -58,16 +55,13 @@ public class MethodDeclaration {
                 scope.declaredVariables.put(argument.name, argument.type);
             }
         }
-
         for (Statement statement : statements) {
             errors.addAll(statement.typecheck(scope));
         }
-
-        if (returnExpression != null && !returnExpression.getType(scope).equals(returnType)) {
+        if ((returnExpression != null) && !returnExpression.getType(scope).equals(returnType)) {
             errors.add("Actual return type " + returnExpression.getType(scope) + " of method " + name +
                 " does not match declared type " + returnType);
         }
-
         return errors;
     }
 }

@@ -15,7 +15,7 @@ public class ConstructorInvocation implements CallExpression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
-        if(!scope.containsClass(className)) {
+        if (!scope.containsClass(className)) {
             errors.add("Cannot instantiate undeclared class named " + className);
         }
         return errors;

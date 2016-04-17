@@ -10,7 +10,7 @@ import java.util.Optional;
 public class Scope {
     public final Optional<Scope> parent;
     public final Map<String, String>declaredVariables = new HashMap<>();
-    public final Map<String, ClassDeclaration> classes = new HashMap<>();
+    public final Map<String, Scope> classes = new HashMap<>();
     public final Map<String, MethodDeclaration> methods = new HashMap<>();
 
     public Scope() {
@@ -21,8 +21,6 @@ public class Scope {
 
     public Scope(Scope parent) {
         this.parent = Optional.of(parent);
-        classes.put("int", null);
-        classes.put("boolean", null);
     }
 
     public boolean containsVariable(String name) {
@@ -70,6 +68,16 @@ public class Scope {
             return methods.get(name);
         } else if (parent.isPresent()) {
             return parent.get().getMethod(name);
+        } else {
+            return null;
+        }
+    }
+
+    public Scope getClassScope(String type) {
+        if (classes.containsKey(type)) {
+            return classes.get(type);
+        } else if (parent.isPresent()) {
+            return parent.get().getClassScope(type);
         } else {
             return null;
         }

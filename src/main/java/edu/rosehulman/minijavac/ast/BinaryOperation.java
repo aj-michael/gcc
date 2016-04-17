@@ -13,12 +13,12 @@ public class BinaryOperation implements Expression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
-        if(!left.getType(scope).equals(operator.operandType)) {
+        if (!left.getType(scope).equals(operator.operandType)) {
             errors.add("Left argument of type " + left.getType(scope) + " does not match expected type " +
                     operator.operandType + " for operator " + operator.name());
         }
         errors.addAll(left.typecheck(scope));
-        if(!right.getType(scope).equals(operator.operandType)) {
+        if (!right.getType(scope).equals(operator.operandType)) {
             errors.add("Right argument of type " + right.getType(scope) + " does not match expected type " +
                     operator.operandType + " for operator " + operator.name());
         }

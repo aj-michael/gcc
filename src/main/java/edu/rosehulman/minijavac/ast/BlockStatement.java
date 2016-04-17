@@ -22,7 +22,7 @@ public class BlockStatement implements Statement {
         List<String> errors = new ArrayList<>();
         Scope blockScope = new Scope(scope);
 
-        for(Statement statement : statements) {
+        for (Statement statement : statements) {
             errors.addAll(statement.typecheck(blockScope));
         }
 

@@ -24,7 +24,10 @@ public class MethodInvocation implements CallExpression {
 
     @Override
     public String getType(Scope scope) {
-        MethodDeclaration md = scope.getMethod(methodName);
-        return md == null ? "null" : md.returnType;
+        try {
+            return scope.getClassScope(subject.getType(scope)).getMethod(methodName).returnType;
+        } catch (NullPointerException e) {
+            return "no such method";
+        }
     }
 }

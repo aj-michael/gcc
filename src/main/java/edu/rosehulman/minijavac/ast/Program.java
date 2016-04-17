@@ -38,24 +38,29 @@ public class Program {
     public List<String> typecheck() {
         List<String> errors = new ArrayList<>();
         Scope programScope = new Scope();
-        Map<String, Scope> classScopes = new HashMap<>();
+        List<ClassDeclaration> validClasses = new ArrayList<>();
         for (ClassDeclaration cd : getClassDeclarations()) {
             if (programScope.classes.containsKey(cd.name)) {
                 errors.add("Class named " + cd.name + " already exists.");
+                errors.addAll(cd.typecheck(programScope.getClassScope(cd.name)));
             } else {
-                programScope.classes.put(cd.name, cd);
-                if (cd.parentClassName.isPresent() && !programScope.containsClass(cd.parentClassName.get())) {
+                Scope parentScope;
+                if (!cd.parentClassName.isPresent()) {
+                    parentScope = programScope;
+                } else if (programScope.containsClass(cd.parentClassName.get())) {
+                    parentScope = programScope.classes.get(cd.parentClassName.get());
+                } else {
                     errors.add("Superclass name " + cd.parentClassName.get() + " not in scope.");
+                    parentScope = programScope;
                 }
-                Scope parentScope = cd.parentClassName.isPresent() ? classScopes.get(cd.parentClassName.get()) : programScope;
                 Scope classScope = new Scope(parentScope);
-                classScopes.put(cd.name, classScope);
+                programScope.classes.put(cd.name, classScope);
+                validClasses.add(cd);
+                programScope.classes.put(cd.name, classScope);
                 errors.addAll(cd.typecheck(classScope));
             }
         }
-        programScope.classes.values().stream()
-            .filter(cd -> cd != null)
-            .forEach(cd -> errors.addAll(cd.typecheckAgain(classScopes.get(cd.name))));
+        getClassDeclarations().forEach(cd -> errors.addAll(cd.typecheckAgain(programScope.classes.get(cd.name))));
         return errors;
     }
 }

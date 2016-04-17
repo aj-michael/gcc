@@ -23,6 +23,10 @@ public class WhileStatement implements Statement {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
+        String conditionType = condition.getType(scope);
+        if (!conditionType.equals("boolean")) {
+           errors.add("While loop condition must be a boolean.  The expressions has type " + conditionType);
+        }
         return errors;
     }
 }
