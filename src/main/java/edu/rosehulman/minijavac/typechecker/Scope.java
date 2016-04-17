@@ -1,25 +1,37 @@
 package edu.rosehulman.minijavac.typechecker;
 
 import edu.rosehulman.minijavac.ast.MethodDeclaration;
+import edu.rosehulman.minijavac.ast.Program;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class Scope {
     public final Optional<Scope> parent;
-    public final Map<String, String>declaredVariables = new HashMap<>();
+    public final Map<String, String> declaredVariables = new HashMap<>();
     public final Map<String, Scope> classes = new HashMap<>();
-    public final Map<String, MethodDeclaration> methods = new HashMap<>();
+    public final Map<String, MethodDeclaration> methods = new LinkedHashMap<>();
+    public final Program program;
+    public final String className;
 
-    public Scope() {
+    public Scope(Program program) {
+        this.program = program;
         this.parent = Optional.empty();
         classes.put("int", null);
         classes.put("boolean", null);
+        className = null;
     }
 
     public Scope(Scope parent) {
+        this(parent, parent.className);
+    }
+
+    public Scope(Scope parent, String className) {
+        this.program = parent.program;
         this.parent = Optional.of(parent);
+        this.className = className;
     }
 
     public boolean containsVariable(String name) {

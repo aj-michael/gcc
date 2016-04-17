@@ -1,20 +1,15 @@
 package edu.rosehulman.minijavac.ast;
 
-import edu.rosehulman.minijavac.typechecker.Scope;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class BlockStatement implements Statement {
     public final List<Statement> statements;
 
     public BlockStatement(List<Statement> statements) {
         this.statements = statements;
-    }
-
-    @Override
-    public List<Statement> getSubstatements() {
-        return statements;
     }
 
     @Override

@@ -1,9 +1,9 @@
 package edu.rosehulman.minijavac.ast;
 
-import edu.rosehulman.minijavac.typechecker.Scope;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class VariableInvocation implements LiteralExpression {
     public final String name;
@@ -15,7 +15,7 @@ public class VariableInvocation implements LiteralExpression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
-        if (scope.containsVariable(name)) {
+        if (!scope.containsVariable(name)) {
             errors.add("No variable named " + name + " exists in the current scope.");
         }
         return errors;

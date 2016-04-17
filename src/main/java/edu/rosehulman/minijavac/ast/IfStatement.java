@@ -1,10 +1,9 @@
 package edu.rosehulman.minijavac.ast;
 
-import com.google.common.collect.ImmutableList;
-import edu.rosehulman.minijavac.typechecker.Scope;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class IfStatement implements Statement {
     public final Expression condition;
@@ -15,11 +14,6 @@ public class IfStatement implements Statement {
         this.condition = condition;
         this.trueStatement = trueStatement;
         this.falseStatement = falseStatement;
-    }
-
-    @Override
-    public List<Statement> getSubstatements() {
-        return ImmutableList.of(trueStatement, falseStatement);
     }
 
     @Override

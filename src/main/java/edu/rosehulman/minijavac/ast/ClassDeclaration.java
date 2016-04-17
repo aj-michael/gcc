@@ -1,10 +1,10 @@
 package edu.rosehulman.minijavac.ast;
 
-import edu.rosehulman.minijavac.typechecker.Scope;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class ClassDeclaration {
     public final String name;

@@ -1,9 +1,9 @@
 package edu.rosehulman.minijavac.ast;
 
-import edu.rosehulman.minijavac.typechecker.Scope;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class MethodInvocation implements CallExpression {
     public final CallExpression subject;
@@ -19,6 +19,24 @@ public class MethodInvocation implements CallExpression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
+        if (subject.getType(scope) == null) {
+            errors.add("Variable this is not declared.");
+        }
+        for (Expression argument : arguments) {
+            if (argument.getType(scope) == null) {
+                errors.add("Variable this is not declared.");
+            }
+            errors.addAll(argument.typecheck(scope));
+        }
+        MethodDeclaration md = scope.getClassScope(subject.getType(scope)).getMethod(methodName);
+        for (int argIndex = 0; argIndex < arguments.size(); argIndex++) {
+            String realType = arguments.get(argIndex).getType(scope);
+            String requiredType = md.arguments.get(argIndex).type;
+            if (!realType.equals(requiredType)) {
+                errors.add("Argument type " + realType +
+                    " is incompatible with formal parameter type " + requiredType);
+            }
+        }
         return errors;
     }
 

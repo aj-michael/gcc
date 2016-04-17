@@ -1,9 +1,9 @@
 package edu.rosehulman.minijavac.ast;
 
-import edu.rosehulman.minijavac.typechecker.Scope;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.rosehulman.minijavac.typechecker.Scope;
 
 public enum LiteralKeyword implements LiteralExpression {
     THIS {
@@ -15,7 +15,12 @@ public enum LiteralKeyword implements LiteralExpression {
 
         @Override
         public String getType(Scope scope) {
-            return "this";
+            if (scope.className.equals(scope.program.mainClassDeclaration.name)) {
+                // Cannot use `this` in main.
+                return null;
+            } else {
+                return scope.className;
+            }
         }
     }, NULL {
         @Override

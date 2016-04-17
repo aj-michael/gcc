@@ -1,11 +1,9 @@
 package edu.rosehulman.minijavac.ast;
 
-import edu.rosehulman.minijavac.typechecker.Scope;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class Program {
     public final ClassDeclaration mainClassDeclaration;
@@ -23,19 +21,9 @@ public class Program {
         return classDeclarations;
     }
 
-    public Set<String> getClassNames() {
-        HashSet<String> classNames = new HashSet<>();
-        for (ClassDeclaration classDeclaration : classDeclarations) {
-            classNames.add(classDeclaration.name);
-        }
-        classNames.add("int");
-        classNames.add("boolean");
-        return classNames;
-    }
-
     public List<String> typecheck() {
         List<String> errors = new ArrayList<>();
-        Scope programScope = new Scope();
+        Scope programScope = new Scope(this);
         List<ClassDeclaration> validClasses = new ArrayList<>();
         for (ClassDeclaration cd : getClassDeclarations()) {
             if (programScope.classes.containsKey(cd.name)) {
@@ -51,7 +39,7 @@ public class Program {
                     errors.add("Superclass name " + cd.parentClassName.get() + " not in scope.");
                     parentScope = programScope;
                 }
-                Scope classScope = new Scope(parentScope);
+                Scope classScope = new Scope(parentScope, cd.name);
                 programScope.classes.put(cd.name, classScope);
                 validClasses.add(cd);
                 programScope.classes.put(cd.name, classScope);

@@ -1,10 +1,9 @@
 package edu.rosehulman.minijavac.ast;
 
-import com.google.common.collect.ImmutableList;
-import edu.rosehulman.minijavac.typechecker.Scope;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class WhileStatement implements Statement {
     public final Expression condition;
@@ -16,17 +15,14 @@ public class WhileStatement implements Statement {
     }
 
     @Override
-    public List<Statement> getSubstatements() {
-        return ImmutableList.of(statement);
-    }
-
-    @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
         String conditionType = condition.getType(scope);
         if (!conditionType.equals("boolean")) {
            errors.add("While loop condition must be a boolean.  The expressions has type " + conditionType);
         }
+        errors.addAll(condition.typecheck(scope));
+        errors.addAll(statement.typecheck(scope));
         return errors;
     }
 }

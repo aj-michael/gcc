@@ -12,6 +12,7 @@ public class UnaryOperation implements Expression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
+        errors.addAll(expression.typecheck(scope));
         return errors;
     }
 
