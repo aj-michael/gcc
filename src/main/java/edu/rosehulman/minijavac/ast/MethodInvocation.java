@@ -32,7 +32,9 @@ public class MethodInvocation implements CallExpression {
         for (int argIndex = 0; argIndex < arguments.size(); argIndex++) {
             String realType = arguments.get(argIndex).getType(scope);
             String requiredType = md.arguments.get(argIndex).type;
-            if (!realType.equals(requiredType)) {
+            if (arguments.get(argIndex).getType(scope) == null) {
+                // Already added `this not declared` error.
+            } else if (!realType.equals(requiredType)) {
                 errors.add("Argument type " + realType +
                     " is incompatible with formal parameter type " + requiredType);
             }

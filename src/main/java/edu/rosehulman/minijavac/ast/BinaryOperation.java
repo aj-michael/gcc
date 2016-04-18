@@ -13,16 +13,26 @@ public class BinaryOperation implements Expression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
-        if (!left.getType(scope).equals(operator.operandType)) {
-            errors.add("Left argument of type " + left.getType(scope) + " does not match expected type " +
-                    operator.operandType + " for operator " + operator.name());
+        if (operator == BinaryOperator.EQ || operator == BinaryOperator.NEQ) {
+            errors.addAll(left.typecheck(scope));
+            errors.addAll(right.typecheck(scope));
+            String leftType = left.getType(scope);
+            String rightType = right.getType(scope);
+            if (!left.equals(right)) {
+                errors.add("The operand types, " + leftType + " and " + rightType + ", are not compatible for equality comparison");
+            }
+        } else {
+            if (!left.getType(scope).equals(operator.operandType)) {
+                errors.add("Left argument of type " + left.getType(scope) + " does not match expected type " +
+                        operator.operandType + " for operator " + operator.name());
+            }
+            errors.addAll(left.typecheck(scope));
+            if (!right.getType(scope).equals(operator.operandType)) {
+                errors.add("Right argument of type " + right.getType(scope) + " does not match expected type " +
+                        operator.operandType + " for operator " + operator.name());
+            }
+            errors.addAll(right.typecheck(scope));
         }
-        errors.addAll(left.typecheck(scope));
-        if (!right.getType(scope).equals(operator.operandType)) {
-            errors.add("Right argument of type " + right.getType(scope) + " does not match expected type " +
-                    operator.operandType + " for operator " + operator.name());
-        }
-        errors.addAll(right.typecheck(scope));
         return errors;
     }
 
@@ -40,10 +50,10 @@ public class BinaryOperation implements Expression {
         LTE("int", "boolean"),
         GT("int", "boolean"),
         GTE("int", "boolean"),
-        EQ("int", "boolean"),
-        NEQ("int", "boolean"),
         AND("boolean", "boolean"),
-        OR("boolean", "boolean");
+        OR("boolean", "boolean"),
+        EQ("", "boolean"),
+        NEQ("", "boolean");
 
         String operandType;
         String returnType;
