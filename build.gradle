@@ -52,7 +52,7 @@ task generate {
 }
 compileJava.dependsOn generate
 
-mainClassName = 'edu.rosehulman.minijavac.Main'
+mainClassName = 'edu.rosehulman.minijavac.cli.Minijavac'
 
 repositories {
     mavenCentral()
