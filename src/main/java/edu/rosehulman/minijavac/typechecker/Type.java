@@ -13,24 +13,24 @@ public class Type {
     }
 
     public boolean isA(Type otherType, Scope scope) {
-        if(isPrimitiveType() || otherType.isPrimitiveType()) {
+        if (isPrimitiveType() || otherType.isPrimitiveType()) {
            return type.equals(otherType.type);
         }
 
-        if(type.equals("null")) {
+        if (type.equals("null")) {
             return true;
         }
 
-        if(type.equals(otherType.type)) {
+        if (type.equals(otherType.type)) {
             return true;
         } else {
             Scope classScope = scope.getClassScope(type);
-            if(classScope == null) {
+            if (classScope == null) {
                return false;
             }
 
             Scope parentScope = classScope.parent.get();
-            if(parentScope.parent.isPresent()) {
+            if (parentScope.parent.isPresent()) {
                 return new Type(parentScope.className).isA(otherType, scope);
             } else {
                 return false;

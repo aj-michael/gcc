@@ -13,6 +13,6 @@ public class Main {
         Program program = parser.parseProgram();
         TypeChecker typechecker = new TypeChecker();
         typechecker.isValid(program);
-        System.out.println(typechecker.getTypeCheckerLog());
+        typechecker.getTypeCheckerLog().forEach(System.out::println);
     }
 }

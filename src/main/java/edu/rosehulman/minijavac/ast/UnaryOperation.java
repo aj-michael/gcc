@@ -13,7 +13,7 @@ public class UnaryOperation implements Expression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
-        if(!operators.isEmpty() && !operators.get(0).type.isA(expression.getType(scope), scope)) {
+        if (!operators.isEmpty() && !operators.get(0).type.isA(expression.getType(scope), scope)) {
             errors.add("Operand type " + expression.getType(scope) + " is not compatible with expected type " + operators.get(0).type + " of operator " + operators.get(0));
         }
         errors.addAll(expression.typecheck(scope));
@@ -22,7 +22,11 @@ public class UnaryOperation implements Expression {
 
     @Override
     public Type getType(Scope scope) {
-        return expression.getType(scope);
+        if (operators.isEmpty()) {
+            return expression.getType(scope);
+        } else {
+            return operators.get(0).type;
+        }
     }
 
     public enum UnaryOperator {

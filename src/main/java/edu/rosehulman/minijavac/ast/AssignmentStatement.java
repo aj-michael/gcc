@@ -33,18 +33,16 @@ public class AssignmentStatement implements Statement {
         List<String> errors = new ArrayList<>();
         errors.addAll(expression.typecheck(scope));
         if (isDeclaration()) {
+            if (scope.containsLocalVariable(id)) {
+                errors.add("The variable " + id + " is already declared in the current scope.");
+            }
             if (expression.getType(scope) == null) {
                 errors.add("Variable this is not declared.");
             } else if (!expression.getType(scope).isA(type.get(), scope)) {
-                scope.declaredVariables.put(id, type.get());
                 errors.add("Cannot assign type " + expression.getType(scope) + " to variable " + id +
-                        " of type " + type.get());
-            } else if (scope.containsVariable(id)) {
-                errors.add("The variable " + id + " is already declared in the current scope.");
-                scope.declaredVariables.put(id, type.get());
-            } else {
-                scope.declaredVariables.put(id, type.get());
+                    " of type " + type.get());
             }
+            scope.declaredVariables.put(id, type.get());
         } else {
             if (!scope.containsVariable(id)) {
                 errors.add("No variable named " + id + " exists in the current scope.");

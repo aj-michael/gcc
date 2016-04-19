@@ -9,10 +9,8 @@ import edu.rosehulman.minijavac.ast.UnaryOperation.UnaryOperator;
 
 import java_cup.runtime.*;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 parser code {:

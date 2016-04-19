@@ -33,7 +33,7 @@ public class MethodInvocation implements CallExpression {
         errors.addAll(subject.typecheck(scope));
 
         Scope classScope = scope.getClassScope(subject.getType(scope).type);
-        if(classScope == null || !classScope.containsMethod(methodName)) {
+        if (classScope == null || !classScope.containsMethod(methodName)) {
             errors.add("No method named " + methodName + " found for class " + subject.getType(scope));
         } else {
             MethodDeclaration md = classScope.getMethod(methodName);

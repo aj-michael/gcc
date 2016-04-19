@@ -46,7 +46,7 @@ public class Program {
                 errors.addAll(cd.typecheck(classScope));
             }
         }
-        getClassDeclarations().forEach(cd -> errors.addAll(cd.typecheck15(programScope.classes.get(cd.name))));
+        getClassDeclarations().forEach(cd -> errors.addAll(cd.typecheckMore(programScope.classes.get(cd.name))));
         getClassDeclarations().forEach(cd -> errors.addAll(cd.typecheckAgain(programScope.classes.get(cd.name))));
         return errors;
     }

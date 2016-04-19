@@ -1,11 +1,13 @@
 package edu.rosehulman.minijavac.ast;
 
+import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import edu.rosehulman.minijavac.typechecker.Scope;
-import edu.rosehulman.minijavac.typechecker.Type;
+import static java.util.stream.Collectors.toList;
 
 public class ClassDeclaration {
     public final String name;
@@ -26,27 +28,21 @@ public class ClassDeclaration {
         for (MethodDeclaration md : methodDeclarations) {
             if (scope.methods.containsKey(md.name)) {
                 errors.add("Cannot redeclare method " + md.name);
-                if (!md.canOverride(scope.getMethod(md.name))) {
-                    errors.add("Cannot overload methods.  Method " + md.name + " has different type signature than inherited method of the same name.");
-                }
-            } else if (scope.containsMethod(md.name) && !md.canOverride(scope.getMethod(md.name))) {
-                errors.add("Cannot overload methods.  Method " + md.name + " has different type signature than inherited method of the same name.");
-            } else {
-                scope.methods.put(md.name, md);
             }
+            if (scope.containsMethod(md.name) && !md.canOverride(scope.getMethod(md.name))) {
+                errors.add("Cannot overload methods.  Method " + md.name + " has different type signature than inherited method of the same name.");
+            }
+            scope.methods.put(md.name, md);
         }
 
         return errors;
     }
 
-    public List<String> typecheck15(Scope scope) {
-        List<String> errors = new ArrayList<>();
-        for(MethodDeclaration md : methodDeclarations) {
-            if (!(md instanceof MainMethodDeclaration) && !scope.containsClass(md.returnType)) {
-                System.out.println("$$$");
-                errors.add("Cannot find class named " + md.returnType);
-            }
-        }
+    public List<String> typecheckMore(Scope scope) {
+        List<String> errors = methodDeclarations.stream()
+                .filter(md -> !(md instanceof MainMethodDeclaration) && !scope.containsClass(md.returnType))
+                .map(md -> "Cannot find class named " + md.returnType)
+                .collect(toList());
         return errors;
     }
 
@@ -61,7 +57,7 @@ public class ClassDeclaration {
                 scope.declaredVariables.put(cvd.name, new Type(cvd.type));
             }
         }
-        for (MethodDeclaration md : scope.methods.values()) {
+        for (MethodDeclaration md : methodDeclarations) {
             errors.addAll(md.typecheck(new Scope(scope)));
         }
         return errors;

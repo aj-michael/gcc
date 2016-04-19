@@ -23,7 +23,6 @@ public class BinaryOperation implements Expression {
                 errors.add("The operand types, " + leftType + " and " + rightType + ", are not compatible for equality comparison");
             }
         } else {
-            System.out.println(scope.declaredVariables + " " + operator);
             if (!left.getType(scope).isA(operator.operandType, scope)) {
                 errors.add("Left argument of type " + left.getType(scope) + " does not match expected type " +
                         operator.operandType + " for operator " + operator.name());
