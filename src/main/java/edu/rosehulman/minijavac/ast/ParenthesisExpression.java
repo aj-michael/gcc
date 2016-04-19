@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class ParenthesisExpression implements LiteralExpression {
     public final Expression expression;
@@ -15,11 +16,12 @@ public class ParenthesisExpression implements LiteralExpression {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
+        errors.addAll(expression.typecheck(scope));
         return errors;
     }
 
     @Override
-    public String getType(Scope scope) {
+    public Type getType(Scope scope) {
         return expression.getType(scope);
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class IfStatement implements Statement {
     public final Expression condition;
@@ -20,8 +21,8 @@ public class IfStatement implements Statement {
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
 
-        String conditionType = condition.getType(scope);
-        if (!conditionType.equals("boolean")) {
+        Type conditionType = condition.getType(scope);
+        if (!conditionType.isA(Type.BOOLEAN, scope)) {
             errors.add("Condition for if statement is of type " + conditionType + " instead of boolean");
         }
 

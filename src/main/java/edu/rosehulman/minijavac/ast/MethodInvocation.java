@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class MethodInvocation implements CallExpression {
     public final CallExpression subject;
@@ -28,26 +29,34 @@ public class MethodInvocation implements CallExpression {
             }
             errors.addAll(argument.typecheck(scope));
         }
-        MethodDeclaration md = scope.getClassScope(subject.getType(scope)).getMethod(methodName);
-        for (int argIndex = 0; argIndex < arguments.size(); argIndex++) {
-            String realType = arguments.get(argIndex).getType(scope);
-            String requiredType = md.arguments.get(argIndex).type;
-            if (arguments.get(argIndex).getType(scope) == null) {
-                // Already added `this not declared` error.
-            } else if (!realType.equals(requiredType)) {
-                errors.add("Argument type " + realType +
-                    " is incompatible with formal parameter type " + requiredType);
+
+        errors.addAll(subject.typecheck(scope));
+
+        Scope classScope = scope.getClassScope(subject.getType(scope).type);
+        if(classScope == null || !classScope.containsMethod(methodName)) {
+            errors.add("No method named " + methodName + " found for class " + subject.getType(scope));
+        } else {
+            MethodDeclaration md = classScope.getMethod(methodName);
+            for (int argIndex = 0; argIndex < arguments.size() && argIndex < md.arguments.size(); argIndex++) {
+                Type realType = arguments.get(argIndex).getType(scope);
+                Type requiredType = new Type(md.arguments.get(argIndex).type);
+                if (arguments.get(argIndex).getType(scope) == null) {
+                    // Already added `this not declared` error.
+                } else if (!realType.isA(requiredType, scope)) {
+                    errors.add("Argument type " + realType +
+                        " is incompatible with formal parameter type " + requiredType);
+                }
             }
         }
         return errors;
     }
 
     @Override
-    public String getType(Scope scope) {
+    public Type getType(Scope scope) {
         try {
-            return scope.getClassScope(subject.getType(scope)).getMethod(methodName).returnType;
+            return new Type(scope.getClassScope(subject.getType(scope).type).getMethod(methodName).returnType);
         } catch (NullPointerException e) {
-            return "no such method";
+            return Type.NULL;
         }
     }
 }

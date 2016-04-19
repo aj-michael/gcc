@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class Scope {
     public final Optional<Scope> parent;
-    public final Map<String, String> declaredVariables = new HashMap<>();
+    public final Map<String, Type> declaredVariables = new HashMap<>();
     public final Map<String, Scope> classes = new HashMap<>();
     public final Map<String, MethodDeclaration> methods = new LinkedHashMap<>();
     public final Program program;
@@ -44,7 +44,7 @@ public class Scope {
         }
     }
 
-    public String getVariableType(String name) {
+    public Type getVariableType(String name) {
         if (declaredVariables.containsKey(name)) {
             return declaredVariables.get(name);
         } else if (parent.isPresent()) {

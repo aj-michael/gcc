@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public enum LiteralKeyword implements LiteralExpression {
     THIS {
@@ -14,12 +15,12 @@ public enum LiteralKeyword implements LiteralExpression {
         }
 
         @Override
-        public String getType(Scope scope) {
+        public Type getType(Scope scope) {
             if (scope.className.equals(scope.program.mainClassDeclaration.name)) {
                 // Cannot use `this` in main.
                 return null;
             } else {
-                return scope.className;
+                return new Type(scope.className);
             }
         }
     }, NULL {
@@ -30,8 +31,8 @@ public enum LiteralKeyword implements LiteralExpression {
         }
 
         @Override
-        public String getType(Scope scope) {
-            return "null";
+        public Type getType(Scope scope) {
+            return Type.NULL;
         }
     }
 }

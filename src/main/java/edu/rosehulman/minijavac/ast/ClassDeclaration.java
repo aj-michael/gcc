@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class ClassDeclaration {
     public final String name;
@@ -25,10 +26,25 @@ public class ClassDeclaration {
         for (MethodDeclaration md : methodDeclarations) {
             if (scope.methods.containsKey(md.name)) {
                 errors.add("Cannot redeclare method " + md.name);
+                if (!md.canOverride(scope.getMethod(md.name))) {
+                    errors.add("Cannot overload methods.  Method " + md.name + " has different type signature than inherited method of the same name.");
+                }
             } else if (scope.containsMethod(md.name) && !md.canOverride(scope.getMethod(md.name))) {
                 errors.add("Cannot overload methods.  Method " + md.name + " has different type signature than inherited method of the same name.");
             } else {
                 scope.methods.put(md.name, md);
+            }
+        }
+
+        return errors;
+    }
+
+    public List<String> typecheck15(Scope scope) {
+        List<String> errors = new ArrayList<>();
+        for(MethodDeclaration md : methodDeclarations) {
+            if (!(md instanceof MainMethodDeclaration) && !scope.containsClass(md.returnType)) {
+                System.out.println("$$$");
+                errors.add("Cannot find class named " + md.returnType);
             }
         }
         return errors;
@@ -42,7 +58,7 @@ public class ClassDeclaration {
             } else if (!scope.containsClass(cvd.type)) {
                 errors.add("Cannot find class named " + cvd.type);
             } else {
-                scope.declaredVariables.put(cvd.name, cvd.type);
+                scope.declaredVariables.put(cvd.name, new Type(cvd.type));
             }
         }
         for (MethodDeclaration md : scope.methods.values()) {

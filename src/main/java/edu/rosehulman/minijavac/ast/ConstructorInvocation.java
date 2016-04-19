@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class ConstructorInvocation implements CallExpression {
     public final String className;
@@ -22,7 +23,7 @@ public class ConstructorInvocation implements CallExpression {
     }
 
     @Override
-    public String getType(Scope scope) {
-        return className;
+    public Type getType(Scope scope) {
+        return new Type(className);
     }
 }

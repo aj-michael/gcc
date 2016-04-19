@@ -1,6 +1,7 @@
 package edu.rosehulman.minijavac;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
 import com.google.common.io.Files;
 import edu.rosehulman.minijavac.ast.Program;
 import edu.rosehulman.minijavac.generated.Lexer;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -55,8 +57,12 @@ public class TypeCheckerTest {
         Program program = parser.parseProgram();
         TypeChecker typeChecker = new TypeChecker();
         typeChecker.isValid(program);
-        String expectedOutput = Files.toString(outputFile, Charsets.UTF_8);
-        String actualOutput = typeChecker.getTypeCheckerLog();
-        assertEquals(expectedOutput, actualOutput);
+        List<String> expectedOutput = Files.readLines(outputFile, Charsets.UTF_8);
+        List<String> actualOutput = typeChecker.getTypeCheckerLog();
+        Collections.sort(expectedOutput);
+        Collections.sort(actualOutput);
+        String expectedSortedOutput = Joiner.on("\n").join(expectedOutput);
+        String actualSortedOutput = Joiner.on("\n").join(actualOutput);
+        assertEquals(expectedSortedOutput, actualSortedOutput);
     }
 }

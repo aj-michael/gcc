@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class BinaryOperation implements Expression {
     public final BinaryOperator operator;
@@ -16,18 +17,19 @@ public class BinaryOperation implements Expression {
         if (operator == BinaryOperator.EQ || operator == BinaryOperator.NEQ) {
             errors.addAll(left.typecheck(scope));
             errors.addAll(right.typecheck(scope));
-            String leftType = left.getType(scope);
-            String rightType = right.getType(scope);
-            if (!left.equals(right)) {
+            Type leftType = left.getType(scope);
+            Type rightType = right.getType(scope);
+            if (leftType.isPrimitiveType() ^ rightType.isPrimitiveType()) {
                 errors.add("The operand types, " + leftType + " and " + rightType + ", are not compatible for equality comparison");
             }
         } else {
-            if (!left.getType(scope).equals(operator.operandType)) {
+            System.out.println(scope.declaredVariables + " " + operator);
+            if (!left.getType(scope).isA(operator.operandType, scope)) {
                 errors.add("Left argument of type " + left.getType(scope) + " does not match expected type " +
                         operator.operandType + " for operator " + operator.name());
             }
             errors.addAll(left.typecheck(scope));
-            if (!right.getType(scope).equals(operator.operandType)) {
+            if (!right.getType(scope).isA(operator.operandType, scope)) {
                 errors.add("Right argument of type " + right.getType(scope) + " does not match expected type " +
                         operator.operandType + " for operator " + operator.name());
             }
@@ -37,28 +39,28 @@ public class BinaryOperation implements Expression {
     }
 
     @Override
-    public String getType(Scope scope) {
+    public Type getType(Scope scope) {
         return operator.returnType;
     }
 
     public enum BinaryOperator {
-        PLUS("int", "int"),
-        MINUS("int", "int"),
-        MULTIPLY("int", "int"),
-        DIVIDE("int", "int"),
-        LT("int", "boolean"),
-        LTE("int", "boolean"),
-        GT("int", "boolean"),
-        GTE("int", "boolean"),
-        AND("boolean", "boolean"),
-        OR("boolean", "boolean"),
-        EQ("", "boolean"),
-        NEQ("", "boolean");
+        PLUS(Type.INT, Type.INT),
+        MINUS(Type.INT, Type.INT),
+        MULTIPLY(Type.INT, Type.INT),
+        DIVIDE(Type.INT, Type.INT),
+        LT(Type.INT, Type.BOOLEAN),
+        LTE(Type.INT, Type.BOOLEAN),
+        GT(Type.INT, Type.BOOLEAN),
+        GTE(Type.INT, Type.BOOLEAN),
+        AND(Type.BOOLEAN, Type.BOOLEAN),
+        OR(Type.BOOLEAN, Type.BOOLEAN),
+        EQ(null, Type.BOOLEAN),
+        NEQ(null, Type.BOOLEAN);
 
-        String operandType;
-        String returnType;
+        Type operandType;
+        Type returnType;
 
-        BinaryOperator(String operandType, String returnType) {
+        BinaryOperator(Type operandType, Type returnType) {
             this.operandType = operandType;
             this.returnType = returnType;
         }

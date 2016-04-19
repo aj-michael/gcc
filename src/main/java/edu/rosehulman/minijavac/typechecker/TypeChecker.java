@@ -1,8 +1,8 @@
 package edu.rosehulman.minijavac.typechecker;
 
-import com.google.common.base.Joiner;
 import edu.rosehulman.minijavac.ast.Program;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TypeChecker {
@@ -14,11 +14,11 @@ public class TypeChecker {
         return errors.isEmpty();
     }
 
-    public String getTypeCheckerLog() {
+    public List<String> getTypeCheckerLog() {
         if (errors == null || errors.isEmpty()) {
-            return "Success!\n";
+            return Arrays.asList("Success!");
         } else {
-            return Joiner.on("\n").join(errors) + "\n";
+            return errors;
         }
     }
 }

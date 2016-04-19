@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class VariableInvocation implements LiteralExpression {
     public final String name;
@@ -16,17 +17,17 @@ public class VariableInvocation implements LiteralExpression {
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
         if (!scope.containsVariable(name)) {
-            errors.add("No variable named " + name + " exists in the current scope.");
+            errors.add("Variable " + name + " is not declared.");
         }
         return errors;
     }
 
     @Override
-    public String getType(Scope scope) {
+    public Type getType(Scope scope) {
         if (scope.getVariableType(name) != null) {
             return scope.getVariableType(name);
         } else {
-            return "unknown";
+            return Type.NULL;
         }
     }
 }

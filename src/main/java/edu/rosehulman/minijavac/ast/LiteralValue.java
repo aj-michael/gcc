@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class LiteralValue implements LiteralExpression {
-    public final String type;
+    public final Type type;
     public final Object value;
 
     public LiteralValue(String type, Object value) {
-        this.type = type;
+        this.type = new Type(type);
         this.value = value;
     }
 
@@ -21,7 +22,7 @@ public class LiteralValue implements LiteralExpression {
     }
 
     @Override
-    public String getType(Scope scope) {
+    public Type getType(Scope scope) {
         return type;
     }
 }

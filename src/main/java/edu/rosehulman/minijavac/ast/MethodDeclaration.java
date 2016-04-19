@@ -1,6 +1,7 @@
 package edu.rosehulman.minijavac.ast;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,9 +46,6 @@ public class MethodDeclaration {
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
 
-        if (!(this instanceof MainMethodDeclaration) && !scope.containsClass(returnType)) {
-            errors.add("Cannot find class named " + returnType);
-        }
         Set<String> argumentNames = new HashSet<String>();
         for (VariableDeclaration argument : arguments) {
             if (argumentNames.contains(argument.name)) {
@@ -55,7 +53,7 @@ public class MethodDeclaration {
             } else if (!scope.containsClass(argument.type)) {
                 errors.add("Cannot find class named " + argument.type);
             } else {
-                scope.declaredVariables.put(argument.name, argument.type);
+                scope.declaredVariables.put(argument.name, new Type(argument.type));
             }
             argumentNames.add(argument.name);
         }
@@ -65,12 +63,10 @@ public class MethodDeclaration {
         if (returnExpression != null) {
             errors.addAll(returnExpression.typecheck(scope));
         }
-        if ((returnExpression != null) && !returnExpression.getType(scope).equals(returnType)) {
-            if (!returnExpression.getType(scope).equals("null")) {
-                errors.add(
-                    "Actual return type " + returnExpression.getType(scope) + " of method " + name +
-                        " does not match declared type " + returnType);
-            }
+        if ((returnExpression != null) && !returnExpression.getType(scope).isA(new Type(returnType), scope)) {
+            errors.add(
+                "Actual return type " + returnExpression.getType(scope) + " of method " + name +
+                    " does not match declared type " + returnType);
         }
         return errors;
     }

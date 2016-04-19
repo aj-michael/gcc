@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class WhileStatement implements Statement {
     public final Expression condition;
@@ -17,8 +18,8 @@ public class WhileStatement implements Statement {
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
-        String conditionType = condition.getType(scope);
-        if (!conditionType.equals("boolean")) {
+        Type conditionType = condition.getType(scope);
+        if (!conditionType.isA(Type.BOOLEAN, scope)) {
            errors.add("While loop condition must be a boolean.  The expressions has type " + conditionType);
         }
         errors.addAll(condition.typecheck(scope));
