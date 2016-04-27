@@ -2,7 +2,6 @@ package edu.rosehulman.minijavac.ast;
 
 import edu.rosehulman.minijavac.generator.ClassEntry;
 import edu.rosehulman.minijavac.generator.ConstantPool;
-import edu.rosehulman.minijavac.generator.ConstantPoolEntry;
 import edu.rosehulman.minijavac.generator.Utf8Entry;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
@@ -69,6 +68,10 @@ public class ClassDeclaration {
 
     public ConstantPool getConstantPool() {
         ConstantPool cp = new ConstantPool();
-        Utf8Entry nameEntry = cp.newUtf8Entry(name);
+        ClassEntry classEntry = cp.classEntry(name);
+        for (MethodDeclaration md : methodDeclarations) {
+            cp.methodRefEntry(classEntry, md);
+        }
+        return cp;
     }
 }

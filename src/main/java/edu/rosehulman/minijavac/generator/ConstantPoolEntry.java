@@ -1,7 +1,13 @@
 package edu.rosehulman.minijavac.generator;
 
-public interface ConstantPoolEntry {
-    byte getTag();
-    byte[] getBytes();
-    short getIndex();
+abstract class ConstantPoolEntry {
+    final short index;
+    final byte tag;
+
+    ConstantPoolEntry(short index, byte tag) {
+        this.index = index;
+        this.tag = tag;
+    }
+
+    abstract byte[] getBytes();
 }

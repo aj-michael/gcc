@@ -1,8 +1,22 @@
 package edu.rosehulman.minijavac.generator;
 
-public class ClassEntry implements ConstantPoolEntry {
+import java.nio.ByteBuffer;
 
-    public ClassEntry(short nameIndex) {
+public class ClassEntry extends ConstantPoolEntry {
+    static final byte TAG = 7;
 
+    final Utf8Entry nameEntry;
+
+    public ClassEntry(short index, Utf8Entry nameEntry) {
+        super(index, TAG);
+        this.nameEntry = nameEntry;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return ByteBuffer.allocate(3)
+                .put(TAG)
+                .putShort(nameEntry.index)
+                .array();
     }
 }

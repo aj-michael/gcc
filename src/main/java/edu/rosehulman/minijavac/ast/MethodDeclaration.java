@@ -1,14 +1,10 @@
 package edu.rosehulman.minijavac.ast;
 
+import com.google.common.collect.ImmutableMap;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MethodDeclaration {
     public final String name;
@@ -69,5 +65,33 @@ public class MethodDeclaration {
                     " does not match declared type " + returnType);
         }
         return errors;
+    }
+
+    private static Map<String, String> primitiveTypes = ImmutableMap.of(
+            "int", "I",
+            "null", "V",
+            "boolean", "Z"
+    );
+
+    private static String formatType(String type) {
+        if (type == null) {
+            return "V";
+        } else if (primitiveTypes.containsKey(type)) {
+            return primitiveTypes.get(type);
+        } else {
+            return "L" + type;
+        }
+    }
+
+    public String getDescriptor() {
+        StringBuilder builder = new StringBuilder()
+            .append("(");
+        for (VariableDeclaration argument : arguments) {
+            builder.append(formatType(argument.type))
+                .append(";");
+        }
+        builder.append(")")
+            .append(formatType(returnType));
+        return builder.toString();
     }
 }
