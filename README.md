@@ -11,8 +11,16 @@ A Java compiler for a worse version of Java.
 
 To install, download and unzip the most recent [release](https://github.com/aj-michael/minijavac/releases). Add `export PATH="$PATH:/path/to/minijavac-x.y.z/bin"` to your bashrc or set the equivalent Windows environment variable.
 
-To cut a new release, use `gradle distZip` or `gradle distTar`.
+## Running instructions
 
-## Development build instructions
+Minijavac has three commands: `lex`, `parse` and `typecheck`. Each takes exactly one file and writes to standard out.
 
-Build with `gradle build`. Generate the lexer and parser with `gradle generate`. Run tests with `gradle test`. Build an executable jar with `gradle build`. Run the jar with `java -jar build/libs/minijavac-x.y.z.jar sample_inputs/testfile1.java`.
+    $ minijavac
+    usage: minijavac <command> [<args>]
+
+    The most commonly used minijavac commands are:
+        lex         Lexical analysis of Minijava program
+        parse       Parse Minijava program
+        typecheck   Typecheck Minijava program
+
+    See 'minijavac help <command>' for more information on a specific command.
