@@ -30,20 +30,23 @@ public class CodeGenerator {
     byte[] compile(ClassDeclaration cd) throws IOException {
         ConstantPool cp = cd.getConstantPool();
         byte[] header = ByteBuffer.allocate(8)
-                .putInt(0xCAFEBABE)
-                .putInt(0x00000034)
+                .putInt(0xCAFEBABE)     // Magic number
+                .putInt(0x00000034)     // java version 8
                 .array();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         out.write(header);
-        out.write(ByteBuffer.allocate(2).putShort((short) cp.entries.size()).array());
+
+        out.write(ByteBuffer.allocate(2).putShort((short) (cp.entries.size()+1)).array());
         for (ConstantPoolEntry entry : cp.entries) {
             out.write(entry.getBytes());
         }
-        out.write(ByteBuffer.allocate(10).putShort((short) 1)
+
+        out.write(ByteBuffer.allocate(10)
+            .putShort((short) 0x0020)
             .putShort(cp.classEntryMap.get(cd.name).index)
             .putShort(cp.classEntryMap.get(cd.getParentClass()).index)
             .putShort((short) 0)
-            .putShort((short) cp.fieldRefEntryMap.size())
+            .putShort((short) cd.classVariableDeclarations.size())
             .array());
 
         for (VariableDeclaration vd : cd.classVariableDeclarations) {
@@ -55,19 +58,68 @@ public class CodeGenerator {
                 .array());
         }
 
-        out.write(ByteBuffer.allocate(2).putShort((short) cd.methodDeclarations.size()).array());
-        for(MethodDeclaration md : cd .methodDeclarations) {
+        out.write(ByteBuffer.allocate(2).putShort((short) (1  + cd.methodDeclarations.size())).array());
+
+        // Constructor
+        {
+            ByteBuffer bb = ByteBuffer.allocate(31);
+            bb.putShort((short) 0); // access_flags
+            bb.putShort(cp.constructorNameEntry.index); // name index
+            bb.putShort(cp.constructorDescriptorEntry.index);   // descriptor index
+            bb.putShort((short) 1); // attributes count
+            // Code attribute
+            bb.putShort(cp.codeEntry.index);
+            bb.putInt(2+2+4+2+2+1+2+2);
+            bb.putShort((short) 1);
+            bb.putShort((short) 1);
+            bb.putInt(5);   //code_length
+            // Start instructions
+            bb.putShort((short) 0x2AB7);
+            bb.putShort(cp.objectConstructorEntry.index);
+            bb.put((byte) 0xB1);
+            // End instructions
+            // Exception table length
+            bb.putShort((short) 0);
+            // attributes_count
+            bb.putShort((short) 0);
+            out.write(bb.array());
+        }
+
+
+        // Class methods
+        for (MethodDeclaration md : cd.methodDeclarations) {
             ByteBuffer bb = ByteBuffer.allocate(8);
             if(md instanceof MainMethodDeclaration) {
                 bb.putShort((short) 9);
             } else {
                 bb.putShort((short) 1);
             }
+            bb.putShort(cp.utf8EntryMap.get(md.name).index); // name_index
+            bb.putShort(cp.utf8EntryMap.get(md.getDescriptor()).index); // descriptor_index
 
-            bb.putShort(cp.utf8EntryMap.get(md.name).index);
-            bb.putShort(cp.utf8EntryMap.get(md.getDescriptor()).index);
-            bb.putShort((short) 1);
+            bb.putShort((short) 1);     // attributes_count
+            out.write(bb.array());
+
+            // Code attribute
+            bb = ByteBuffer.allocate(6 + 2 + 2 + 4 + 8 + 2 + 2);
+            bb.putShort(cp.codeEntry.index);
+            int attributeLength = 2 + 2 + 4 + 8 + 2 + 2;
+            bb.putInt(attributeLength);
+            bb.putShort((short) (1 + md.numArguments()));     // max_stack
+            bb.putShort((short) 1);       // max_locals
+            bb.putInt(8);
+            bb.put((byte) 0xB2);
+            bb.putShort(cp.systemOutEntry.index);
+            bb.putShort((short)0x07B6);
+            bb.putShort(cp.printlnEntry.index);
+            bb.put((byte)0xB1);;
+            bb.putShort((short) 0);
+            bb.putShort((short) 0);
+            out.write(bb.array());
         }
+
+        // attributes_count
+        out.write(ByteBuffer.allocate(2).putShort((short) 0).array());
 
         return out.toByteArray();
     }

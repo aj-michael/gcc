@@ -3,8 +3,6 @@ package edu.rosehulman.minijavac.generator;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import edu.rosehulman.minijavac.ast.ClassDeclaration;
-import edu.rosehulman.minijavac.ast.MethodDeclaration;
-import edu.rosehulman.minijavac.ast.VariableDeclaration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +17,22 @@ public class ConstantPool {
     Table<String, String, NameAndTypeEntry> nameAndTypeEntryTable = HashBasedTable.create();
     Map<NameAndTypeEntry, MethodRefEntry> methodRefEntryMap = new HashMap<>();
     Map<NameAndTypeEntry, FieldRefEntry> fieldRefEntryMap = new HashMap<>();
+
+    final Utf8Entry codeEntry;
+    final Utf8Entry constructorNameEntry;
+    final Utf8Entry constructorDescriptorEntry;
+    final FieldRefEntry systemOutEntry;
+    final MethodRefEntry printlnEntry;
+    final MethodRefEntry objectConstructorEntry;
+
+    public ConstantPool() {
+        codeEntry = utf8Entry("Code");
+        systemOutEntry = fieldRefEntry("java/lang/System", "out", "Ljava/io/PrintStream;");
+        constructorNameEntry = utf8Entry("<init>");
+        constructorDescriptorEntry = utf8Entry("()V");
+        printlnEntry = methodRefEntry("java/io/PrintStream", "println", "(I)V");
+        objectConstructorEntry = methodRefEntry("java/lang/Object", "<init>", "()V");
+    }
 
     public Utf8Entry utf8Entry(String string) {
         if (utf8EntryMap.containsKey(string)) {
@@ -69,20 +83,22 @@ public class ConstantPool {
         }
     }
 
-    public FieldRefEntry fieldRefEntry(ClassEntry classEntry, VariableDeclaration vd) {
-        NameAndTypeEntry nameAndTypeEntry = nameAndTypeEntry(vd.name, vd.getDescriptor());
+    public FieldRefEntry fieldRefEntry(String className, String fieldName, String fieldDescriptor) {
+        NameAndTypeEntry nameAndTypeEntry = nameAndTypeEntry(fieldName, fieldDescriptor);
+        ClassEntry classEntry = classEntry(className);
         if (fieldRefEntryMap.containsKey(nameAndTypeEntry)) {
             return fieldRefEntryMap.get(nameAndTypeEntry);
         } else {
-            FieldRefEntry entry = new FieldRefEntry(index++, classEntry, nameAndTypeEntry);
+            FieldRefEntry entry = new FieldRefEntry(index++, classEntry.index, nameAndTypeEntry);
             entries.add(entry);
             fieldRefEntryMap.put(nameAndTypeEntry, entry);
             return entry;
         }
     }
 
-    public MethodRefEntry methodRefEntry(ClassEntry classEntry, MethodDeclaration md) {
-        NameAndTypeEntry nameAndTypeEntry = nameAndTypeEntry(md.name, md.getDescriptor());
+    public MethodRefEntry methodRefEntry(String className, String methodName, String methodDescriptor) {
+        ClassEntry classEntry = classEntry(className);
+        NameAndTypeEntry nameAndTypeEntry = nameAndTypeEntry(methodName, methodDescriptor);
         if (methodRefEntryMap.containsKey(nameAndTypeEntry)) {
             return methodRefEntryMap.get(nameAndTypeEntry);
         } else {

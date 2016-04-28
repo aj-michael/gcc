@@ -89,8 +89,15 @@ public class MethodDeclaration {
         for (VariableDeclaration argument : arguments) {
             builder.append(formatType(argument.type));
         }
+        if (this instanceof MainMethodDeclaration) {
+            builder.append("[Ljava/lang/String;");
+        }
         builder.append(")")
             .append(formatType(returnType));
         return builder.toString();
+    }
+
+    public int numArguments() {
+        return (this instanceof MainMethodDeclaration) ? 1 + arguments.size() : arguments.size();
     }
 }

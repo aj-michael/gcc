@@ -78,11 +78,11 @@ public class ClassDeclaration {
         ConstantPool cp = new ConstantPool();
         ClassEntry classEntry = cp.classEntry(this);
         for (MethodDeclaration md : methodDeclarations) {
-            cp.methodRefEntry(classEntry, md);
+            cp.methodRefEntry(name, md.name, md.getDescriptor());
         }
 
         for(VariableDeclaration vd : classVariableDeclarations) {
-            cp.fieldRefEntry(classEntry, vd);
+            cp.fieldRefEntry(name, vd.name, vd.getDescriptor());
         }
         return cp;
     }

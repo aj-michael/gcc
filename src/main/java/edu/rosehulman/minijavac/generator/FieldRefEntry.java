@@ -1,16 +1,15 @@
 package edu.rosehulman.minijavac.generator;
 
-import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
 public class FieldRefEntry extends ConstantPoolEntry {
     static final byte TAG = 9;
-    final ClassEntry classEntry;
+    final short classEntryIndex;
     final NameAndTypeEntry nameAndTypeEntry;
 
-    FieldRefEntry(short index, ClassEntry classEntry, NameAndTypeEntry nameAndTypeEntry) {
+    FieldRefEntry(short index, short classEntryIndex, NameAndTypeEntry nameAndTypeEntry) {
         super(index, TAG);
-        this.classEntry = classEntry;
+        this.classEntryIndex = classEntryIndex;
         this.nameAndTypeEntry = nameAndTypeEntry;
     }
 
@@ -18,7 +17,7 @@ public class FieldRefEntry extends ConstantPoolEntry {
     byte[] getBytes() {
         return ByteBuffer.allocate(5)
                 .put(TAG)
-                .putShort(classEntry.index)
+                .putShort(classEntryIndex)
                 .putShort(nameAndTypeEntry.index)
                 .array();
     }

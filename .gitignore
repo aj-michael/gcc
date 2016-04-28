@@ -15,3 +15,5 @@ gradlew
 gradlew.bat
 *.ipr
 *.iws
+*.class
+install.sh
