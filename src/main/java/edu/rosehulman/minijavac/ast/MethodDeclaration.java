@@ -118,7 +118,7 @@ public class MethodDeclaration {
         for(Statement statement : statements) {
             depth = Math.max(depth, statement.maxBlockDepth());
         }
-        return depth + 1;
+        return depth + 2;
     }
 
     public byte[] getBytes(ConstantPool cp) {
