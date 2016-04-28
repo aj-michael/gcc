@@ -121,7 +121,7 @@ public class MethodDeclaration {
         for(Statement statement : statements) {
             depth = Math.max(depth, statement.maxBlockDepth());
         }
-        return depth + 1;
+        return depth + 2;
     }
 
     public byte[] getBytes(ConstantPool cp) {
@@ -138,7 +138,10 @@ public class MethodDeclaration {
         for(Statement statement : statements) {
             codeBytes.addAll(statement.generateCode(cp, variableNameToIndex));
         }
-        codeBytes.addAll(returnExpression.generateCode(cp, variableNameToIndex));
+
+        if (returnExpression != null){
+            codeBytes.addAll(returnExpression.generateCode(cp, variableNameToIndex));
+        }
         codeBytes.add((byte) 169);
 
         int codeLength = codeBytes.size();
