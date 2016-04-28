@@ -40,6 +40,7 @@ public class PrintlnStatement implements Statement {
         List<Byte> expBytes = expression.generateCode(cp, variables);
         bytes.addAll(expBytes);
         bytes.add((byte) 182); // invokevirtual
+        bytes.add((byte) (cp.printlnEntry.index >> 8));
         bytes.add((byte) cp.printlnEntry.index);
         return bytes;
     }
