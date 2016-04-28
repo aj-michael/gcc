@@ -105,7 +105,7 @@ public class MethodDeclaration {
     }
 
     public int numLocalVariables(List<String> variableDeclarations) {
-        int num =  arguments.size() + 1;
+        int num =  numArguments() + 1;
         for(VariableDeclaration vd : arguments) {
             variableDeclarations.add(vd.name);
         }
@@ -142,7 +142,13 @@ public class MethodDeclaration {
         if (returnExpression != null){
             codeBytes.addAll(returnExpression.generateCode(cp, variableNameToIndex));
         }
-        codeBytes.add((byte) 169);
+        if (returnType == null) {
+            codeBytes.add((byte) 177);  // return
+        } else if (returnType.equals("int") || returnType.equals("boolean")) {
+            codeBytes.add((byte) 172);  // ireturn
+        } else {
+            codeBytes.add((byte) 176);  // areturn
+        }
 
         int codeLength = codeBytes.size();
         short exceptionTableLength = 0;
