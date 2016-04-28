@@ -2,7 +2,9 @@ package edu.rosehulman.minijavac.generator;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import edu.rosehulman.minijavac.ast.ClassDeclaration;
 import edu.rosehulman.minijavac.ast.MethodDeclaration;
+import edu.rosehulman.minijavac.ast.VariableDeclaration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ public class ConstantPool {
     Map<String, ClassEntry> classEntryMap = new HashMap<>();
     Table<String, String, NameAndTypeEntry> nameAndTypeEntryTable = HashBasedTable.create();
     Map<NameAndTypeEntry, MethodRefEntry> methodRefEntryMap = new HashMap<>();
+    Map<NameAndTypeEntry, FieldRefEntry> fieldRefEntryMap = new HashMap<>();
 
     public Utf8Entry utf8Entry(String string) {
         if (utf8EntryMap.containsKey(string)) {
@@ -28,14 +31,27 @@ public class ConstantPool {
         }
     }
 
-    public ClassEntry classEntry(String className) {
-        if (classEntryMap.containsKey(className)) {
-            return classEntryMap.get(className);
+    public ClassEntry classEntry(ClassDeclaration cd) {
+        if (classEntryMap.containsKey(cd.name)) {
+            return classEntryMap.get(cd.name);
         } else {
-            Utf8Entry nameEntry = utf8Entry(className);
+            Utf8Entry nameEntry = utf8Entry(cd.name);
             ClassEntry classEntry = new ClassEntry(index++, nameEntry);
             entries.add(classEntry);
-            classEntryMap.put(className, classEntry);
+            classEntryMap.put(cd.name, classEntry);
+            classEntry(cd.getParentClass());
+            return classEntry;
+        }
+    }
+
+    public ClassEntry classEntry(String classDescriptor) {
+        if (classEntryMap.containsKey(classDescriptor)) {
+            return classEntryMap.get(classDescriptor);
+        } else {
+            Utf8Entry nameEntry = utf8Entry(classDescriptor);
+            ClassEntry classEntry = new ClassEntry(index++, nameEntry);
+            entries.add(classEntry);
+            classEntryMap.put(classDescriptor, classEntry);
             return classEntry;
         }
     }
@@ -49,6 +65,18 @@ public class ConstantPool {
             NameAndTypeEntry entry = new NameAndTypeEntry(index++, nameEntry, descriptorEntry);
             entries.add(entry);
             nameAndTypeEntryTable.put(name, descriptor, entry);
+            return entry;
+        }
+    }
+
+    public FieldRefEntry fieldRefEntry(ClassEntry classEntry, VariableDeclaration vd) {
+        NameAndTypeEntry nameAndTypeEntry = nameAndTypeEntry(vd.name, vd.getDescriptor());
+        if (fieldRefEntryMap.containsKey(nameAndTypeEntry)) {
+            return fieldRefEntryMap.get(nameAndTypeEntry);
+        } else {
+            FieldRefEntry entry = new FieldRefEntry(index++, classEntry, nameAndTypeEntry);
+            entries.add(entry);
+            fieldRefEntryMap.put(nameAndTypeEntry, entry);
             return entry;
         }
     }

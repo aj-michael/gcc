@@ -19,4 +19,14 @@ public class VariableDeclaration implements Statement {
         List<String> errors = new ArrayList<>();
         return errors;
     }
+
+    public String getDescriptor() {
+        if(type.equals("int")) {
+            return "I";
+        } else if(type.equals("boolean")) {
+            return "Z";
+        } else {
+            return "L" + type + ";";
+        }
+    }
 }

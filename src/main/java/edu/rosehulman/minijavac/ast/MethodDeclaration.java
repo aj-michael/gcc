@@ -79,7 +79,7 @@ public class MethodDeclaration {
         } else if (primitiveTypes.containsKey(type)) {
             return primitiveTypes.get(type);
         } else {
-            return "L" + type;
+            return "L" + type + ";";
         }
     }
 
@@ -87,8 +87,7 @@ public class MethodDeclaration {
         StringBuilder builder = new StringBuilder()
             .append("(");
         for (VariableDeclaration argument : arguments) {
-            builder.append(formatType(argument.type))
-                .append(";");
+            builder.append(formatType(argument.type));
         }
         builder.append(")")
             .append(formatType(returnType));

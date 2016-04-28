@@ -66,11 +66,23 @@ public class ClassDeclaration {
         return errors;
     }
 
+    public String getParentClass() {
+        if (parentClassName.isPresent()) {
+            return parentClassName.get();
+        } else {
+            return "java/lang/Object";
+        }
+    }
+
     public ConstantPool getConstantPool() {
         ConstantPool cp = new ConstantPool();
-        ClassEntry classEntry = cp.classEntry(name);
+        ClassEntry classEntry = cp.classEntry(this);
         for (MethodDeclaration md : methodDeclarations) {
             cp.methodRefEntry(classEntry, md);
+        }
+
+        for(VariableDeclaration vd : classVariableDeclarations) {
+            cp.fieldRefEntry(classEntry, vd);
         }
         return cp;
     }
