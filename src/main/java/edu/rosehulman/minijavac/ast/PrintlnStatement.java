@@ -27,7 +27,7 @@ public class PrintlnStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<VariableDeclaration> vd) {
+    public int numLocalVariables(List<String> vd) {
         return 0;
     }
 

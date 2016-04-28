@@ -104,9 +104,12 @@ public class MethodDeclaration {
         return (this instanceof MainMethodDeclaration) ? 1 + arguments.size() : arguments.size();
     }
 
-    public int numLocalVariables(List<VariableDeclaration> variableDeclarations) {
+    public int numLocalVariables(List<String> variableDeclarations) {
         int num =  arguments.size() + 1;
-        variableDeclarations.addAll(arguments);
+        for(VariableDeclaration vd : arguments) {
+            variableDeclarations.add(vd.name);
+        }
+
         for(Statement statement : statements) {
             num += statement.numLocalVariables(variableDeclarations);
         }
@@ -123,13 +126,13 @@ public class MethodDeclaration {
 
     public byte[] getBytes(ConstantPool cp) {
         short maxDepth = (short) maxBlockDepth();
-        List<VariableDeclaration> vds = new ArrayList<>();
+        List<String> vds = new ArrayList<>();
+        short numLocalVariables = (short) numLocalVariables(vds);
         Map<String, Integer> variableNameToIndex = new HashMap<>();
 
         for(int k = 0; k < vds.size(); k++) {
-            variableNameToIndex.put(vds.get(0).name, k + 1);
+            variableNameToIndex.put(vds.get(k), k + 1);
         }
-        short numLocalVariables = (short) numLocalVariables(vds);
 
         ArrayList<Byte> codeBytes = new ArrayList<>();
         for(Statement statement : statements) {

@@ -24,8 +24,8 @@ public class VariableDeclaration implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<VariableDeclaration> vd) {
-        vd.add(this);
+    public int numLocalVariables(List<String> vd) {
+        vd.add(name);
         return 1;
     }
 

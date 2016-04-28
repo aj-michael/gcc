@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface Statement {
     List<String> typecheck(Scope scope);
-    int numLocalVariables(List<VariableDeclaration> vd);
+    int numLocalVariables(List<String> vd);
     default int maxBlockDepth() { return 0; }
     List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables);
 }

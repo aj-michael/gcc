@@ -27,7 +27,7 @@ public class BlockStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<VariableDeclaration> vd) {
+    public int numLocalVariables(List<String> vd) {
         int num = 0;
         for(Statement statement : statements) {
             num += statement.numLocalVariables(vd);

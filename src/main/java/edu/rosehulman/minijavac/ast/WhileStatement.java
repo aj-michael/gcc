@@ -31,7 +31,7 @@ public class WhileStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<VariableDeclaration> vd) {
+    public int numLocalVariables(List<String> vd) {
         return statement.numLocalVariables(vd);
     }
 

@@ -36,7 +36,7 @@ public class IfStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<VariableDeclaration> vd) {
+    public int numLocalVariables(List<String> vd) {
         return trueStatement.numLocalVariables(vd) + falseStatement.numLocalVariables(vd);
     }
 

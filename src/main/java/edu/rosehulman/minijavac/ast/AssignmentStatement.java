@@ -57,8 +57,13 @@ public class AssignmentStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<VariableDeclaration> vd) {
-        return 0;
+    public int numLocalVariables(List<String> vd) {
+        if(isDeclaration()) {
+            vd.add(id);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
