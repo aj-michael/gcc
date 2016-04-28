@@ -2,8 +2,10 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -52,5 +54,26 @@ public class AssignmentStatement implements Statement {
             }
         }
         return errors;
+    }
+
+    @Override
+    public int numLocalVariables(List<VariableDeclaration> vd) {
+        return 0;
+    }
+
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        ArrayList<Byte> bytes = new ArrayList<>();
+        bytes.addAll(expression.generateCode(cp, variables));
+        if(cp.thisFieldRefEntryMap.containsKey(id)) {
+            bytes.add((byte) 181); // putfield
+            bytes.add((byte) (cp.thisFieldRefEntryMap.get(id).index >> 8));
+            bytes.add((byte) cp.thisFieldRefEntryMap.get(id).index);
+        } else if(variables.containsKey(id)) {
+            bytes.add((byte) 54); // istore
+            bytes.add(variables.get(id).byteValue());
+        } else {
+            throw new RuntimeException("Couldn't find variable " + id);
+        }
+        return bytes;
     }
 }

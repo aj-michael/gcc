@@ -1,9 +1,12 @@
 package edu.rosehulman.minijavac.ast;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Bytes;
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 
 public class MethodDeclaration {
@@ -99,5 +102,56 @@ public class MethodDeclaration {
 
     public int numArguments() {
         return (this instanceof MainMethodDeclaration) ? 1 + arguments.size() : arguments.size();
+    }
+
+    public int numLocalVariables(List<VariableDeclaration> variableDeclarations) {
+        int num =  arguments.size() + 1;
+        variableDeclarations.addAll(arguments);
+        for(Statement statement : statements) {
+            num += statement.numLocalVariables(variableDeclarations);
+        }
+        return num;
+    }
+
+    public int maxBlockDepth() {
+        int depth = 0;
+        for(Statement statement : statements) {
+            depth = Math.max(depth, statement.maxBlockDepth());
+        }
+        return depth + 1;
+    }
+
+    public byte[] getBytes(ConstantPool cp) {
+        short maxDepth = (short) maxBlockDepth();
+        List<VariableDeclaration> vds = new ArrayList<>();
+        Map<String, Integer> variableNameToIndex = new HashMap<>();
+
+        for(int k = 0; k < vds.size(); k++) {
+            variableNameToIndex.put(vds.get(0).name, k + 1);
+        }
+        short numLocalVariables = (short) numLocalVariables(vds);
+
+        ArrayList<Byte> codeBytes = new ArrayList<>();
+        for(Statement statement : statements) {
+            codeBytes.addAll(statement.generateCode(cp, variableNameToIndex));
+        }
+        codeBytes.addAll(returnExpression.generateCode(cp, variableNameToIndex));
+        codeBytes.add((byte) 169);
+
+        int codeLength = codeBytes.size();
+        short exceptionTableLength = 0;
+        short attributesCount = 0;
+        int attributeLength = 2 + 2 + 4 + codeLength + 2 + 2 + exceptionTableLength + attributesCount;
+        ByteBuffer bb = ByteBuffer.allocate(attributeLength + 6);
+        bb.putShort(cp.codeEntry.index);
+        bb.putInt(attributeLength);
+
+        bb.putShort(maxDepth);     // max_stack
+        bb.putShort(numLocalVariables);       // max_locals
+        bb.putInt(codeLength);
+        bb.put(Bytes.toArray(codeBytes));
+        bb.putShort(exceptionTableLength);
+        bb.putShort(attributesCount);
+        return bb.array();
     }
 }

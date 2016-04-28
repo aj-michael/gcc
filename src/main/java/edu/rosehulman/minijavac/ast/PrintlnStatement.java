@@ -2,7 +2,9 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -22,5 +24,23 @@ public class PrintlnStatement implements Statement {
             errors.add("In MiniJava, System.out.println only takes an int.  The expression has type " + expressionType);
         }
         return errors;
+    }
+
+    @Override
+    public int numLocalVariables(List<VariableDeclaration> vd) {
+        return 0;
+    }
+
+    @Override
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        ArrayList<Byte> bytes = new ArrayList<>();
+        bytes.add((byte) 178); // getstatic
+        bytes.add((byte) (cp.systemOutEntry.index >> 8));
+        bytes.add((byte) cp.systemOutEntry.index);
+        List<Byte> expBytes = expression.generateCode(cp, variables);
+        bytes.addAll(expBytes);
+        bytes.add((byte) 182); // invokevirtual
+        bytes.add((byte) cp.printlnEntry.index);
+        return bytes;
     }
 }

@@ -2,7 +2,10 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -30,5 +33,28 @@ public class IfStatement implements Statement {
         errors.addAll(trueStatement.typecheck(scope));
         errors.addAll(falseStatement.typecheck(scope));
         return errors;
+    }
+
+    @Override
+    public int numLocalVariables(List<VariableDeclaration> vd) {
+        return trueStatement.numLocalVariables(vd) + falseStatement.numLocalVariables(vd);
+    }
+
+    @Override
+    public int maxBlockDepth() {
+        return Math.max(trueStatement.maxBlockDepth(), falseStatement.maxBlockDepth());
+    }
+
+    @Override
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        List<Byte> trueBytes = trueStatement.generateCode(cp, variables);
+        List<Byte> falseBytes = falseStatement.generateCode(cp, variables);
+
+        ArrayList<Byte> bytes = new ArrayList<>();
+        bytes.addAll(ImmutableList.of()); // comparison
+        bytes.addAll(trueBytes);
+        bytes.addAll(ImmutableList.of()); // goto
+        bytes.addAll(falseBytes);
+        return bytes;
     }
 }

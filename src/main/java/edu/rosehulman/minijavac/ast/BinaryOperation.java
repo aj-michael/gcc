@@ -2,7 +2,9 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -42,26 +44,37 @@ public class BinaryOperation implements Expression {
         return operator.returnType;
     }
 
+    @Override
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        ArrayList<Byte> bytes = new ArrayList<>();
+        bytes.addAll(left.generateCode(cp, variables));
+        bytes.addAll(right.generateCode(cp, variables));
+        bytes.add(operator.byteCode);
+        return bytes;
+    }
+
     public enum BinaryOperator {
-        PLUS(Type.INT, Type.INT),
-        MINUS(Type.INT, Type.INT),
-        MULTIPLY(Type.INT, Type.INT),
-        DIVIDE(Type.INT, Type.INT),
-        LT(Type.INT, Type.BOOLEAN),
-        LTE(Type.INT, Type.BOOLEAN),
-        GT(Type.INT, Type.BOOLEAN),
-        GTE(Type.INT, Type.BOOLEAN),
-        AND(Type.BOOLEAN, Type.BOOLEAN),
-        OR(Type.BOOLEAN, Type.BOOLEAN),
-        EQ(null, Type.BOOLEAN),
-        NEQ(null, Type.BOOLEAN);
+        PLUS(Type.INT, Type.INT, (byte) 96),
+        MINUS(Type.INT, Type.INT, (byte) 100),
+        MULTIPLY(Type.INT, Type.INT, (byte) 104),
+        DIVIDE(Type.INT, Type.INT, (byte) 108),
+        LT(Type.INT, Type.BOOLEAN, (byte) 0), // TODO find me an opcode
+        LTE(Type.INT, Type.BOOLEAN, (byte) 0),
+        GT(Type.INT, Type.BOOLEAN, (byte) 0),
+        GTE(Type.INT, Type.BOOLEAN, (byte) 0),
+        AND(Type.BOOLEAN, Type.BOOLEAN, (byte) 0),
+        OR(Type.BOOLEAN, Type.BOOLEAN, (byte) 0),
+        EQ(null, Type.BOOLEAN, (byte) 0),
+        NEQ(null, Type.BOOLEAN, (byte) 0);
 
         Type operandType;
         Type returnType;
+        byte byteCode;
 
-        BinaryOperator(Type operandType, Type returnType) {
+        BinaryOperator(Type operandType, Type returnType, byte byteCode) {
             this.operandType = operandType;
             this.returnType = returnType;
+            this.byteCode = byteCode;
         }
     }
 

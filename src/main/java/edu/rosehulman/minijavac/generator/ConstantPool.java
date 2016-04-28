@@ -17,12 +17,13 @@ public class ConstantPool {
     Table<String, String, NameAndTypeEntry> nameAndTypeEntryTable = HashBasedTable.create();
     Map<NameAndTypeEntry, MethodRefEntry> methodRefEntryMap = new HashMap<>();
     Map<NameAndTypeEntry, FieldRefEntry> fieldRefEntryMap = new HashMap<>();
+    public Map<String, FieldRefEntry> thisFieldRefEntryMap = new HashMap<>();
 
-    final Utf8Entry codeEntry;
+    public final Utf8Entry codeEntry;
     final Utf8Entry constructorNameEntry;
     final Utf8Entry constructorDescriptorEntry;
-    final FieldRefEntry systemOutEntry;
-    final MethodRefEntry printlnEntry;
+    public final FieldRefEntry systemOutEntry;
+    public final MethodRefEntry printlnEntry;
     final MethodRefEntry objectConstructorEntry;
 
     public ConstantPool() {
@@ -107,5 +108,10 @@ public class ConstantPool {
             methodRefEntryMap.put(nameAndTypeEntry, entry);
             return entry;
         }
+    }
+
+    public void thisFieldRefEntry(String className, String fieldName, String fieldDescriptor) {
+        FieldRefEntry fieldEntry = fieldRefEntry(className, fieldName, fieldDescriptor);
+        thisFieldRefEntryMap.put(fieldName, fieldEntry);
     }
 }

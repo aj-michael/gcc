@@ -49,7 +49,8 @@ public class CodeGenerator {
             .putShort((short) cd.classVariableDeclarations.size())
             .array());
 
-        for (VariableDeclaration vd : cd.classVariableDeclarations) {
+        for (int k = 0; k < cd.classVariableDeclarations.size(); k++) {
+            VariableDeclaration vd = cd.classVariableDeclarations.get(k);
             out.write(ByteBuffer.allocate(8)
                 .putShort((short) 1)
                 .putShort(cp.utf8EntryMap.get(vd.name).index)
@@ -101,6 +102,7 @@ public class CodeGenerator {
             out.write(bb.array());
 
             // Code attribute
+            /*
             bb = ByteBuffer.allocate(6 + 2 + 2 + 4 + 8 + 2 + 2);
             bb.putShort(cp.codeEntry.index);
             int attributeLength = 2 + 2 + 4 + 8 + 2 + 2;
@@ -112,10 +114,12 @@ public class CodeGenerator {
             bb.putShort(cp.systemOutEntry.index);
             bb.putShort((short)0x07B6);
             bb.putShort(cp.printlnEntry.index);
-            bb.put((byte)0xB1);;
+            bb.put((byte)0xB1);
             bb.putShort((short) 0);
             bb.putShort((short) 0);
             out.write(bb.array());
+            */
+            out.write(md.getBytes(cp));
         }
 
         // attributes_count

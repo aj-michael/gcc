@@ -2,7 +2,10 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class VariableDeclaration implements Statement {
@@ -18,6 +21,17 @@ public class VariableDeclaration implements Statement {
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
         return errors;
+    }
+
+    @Override
+    public int numLocalVariables(List<VariableDeclaration> vd) {
+        vd.add(this);
+        return 1;
+    }
+
+    @Override
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        return ImmutableList.of();
     }
 
     public String getDescriptor() {

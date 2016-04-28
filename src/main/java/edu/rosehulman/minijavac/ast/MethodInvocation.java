@@ -2,7 +2,10 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -58,5 +61,10 @@ public class MethodInvocation implements CallExpression {
         } catch (NullPointerException e) {
             return Type.NULL;
         }
+    }
+
+    @Override
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        return ImmutableList.of();
     }
 }

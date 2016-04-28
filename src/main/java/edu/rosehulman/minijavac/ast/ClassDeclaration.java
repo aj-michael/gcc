@@ -2,7 +2,6 @@ package edu.rosehulman.minijavac.ast;
 
 import edu.rosehulman.minijavac.generator.ClassEntry;
 import edu.rosehulman.minijavac.generator.ConstantPool;
-import edu.rosehulman.minijavac.generator.Utf8Entry;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -82,7 +81,7 @@ public class ClassDeclaration {
         }
 
         for(VariableDeclaration vd : classVariableDeclarations) {
-            cp.fieldRefEntry(name, vd.name, vd.getDescriptor());
+            cp.thisFieldRefEntry(name, vd.name, vd.getDescriptor());
         }
         return cp;
     }

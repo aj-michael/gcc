@@ -2,7 +2,10 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -23,6 +26,11 @@ public enum LiteralKeyword implements LiteralExpression {
                 return new Type(scope.className);
             }
         }
+
+        @Override
+        public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+            return ImmutableList.of((byte) 42); // aload_0
+        }
     }, NULL {
         @Override
         public List<String> typecheck(Scope scope) {
@@ -33,6 +41,11 @@ public enum LiteralKeyword implements LiteralExpression {
         @Override
         public Type getType(Scope scope) {
             return Type.NULL;
+        }
+
+        @Override
+        public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+            return ImmutableList.of((byte) 1); // aconst_null
         }
     }
 }

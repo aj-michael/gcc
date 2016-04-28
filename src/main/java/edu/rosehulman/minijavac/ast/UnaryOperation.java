@@ -1,10 +1,12 @@
 package edu.rosehulman.minijavac.ast;
 
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UnaryOperation implements Expression {
     public final List<UnaryOperator> operators;
@@ -26,6 +28,28 @@ public class UnaryOperation implements Expression {
             return expression.getType(scope);
         } else {
             return operators.get(0).type;
+        }
+    }
+
+    @Override
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        if(operators.size() % 2 == 0) {
+            return expression.generateCode(cp, variables);
+        } else if(operators.get(0).equals(UnaryOperator.MINUS)) {
+            ArrayList<Byte> bytes = new ArrayList<>();
+            bytes.addAll(expression.generateCode(cp, variables));
+            bytes.add((byte) 116); // ineg
+            return bytes;
+        } else {
+            ArrayList<Byte> bytes = new ArrayList<>();
+            bytes.addAll(expression.generateCode(cp, variables));
+            bytes.add((byte) 154); // ifne
+            bytes.add((byte) 0);
+            bytes.add((byte) 4); // iconst_1
+            bytes.add((byte) 167); // goto
+            bytes.add((byte) 0);
+            bytes.add((byte) 3); // iconst_0
+            return bytes;
         }
     }
 

@@ -2,7 +2,9 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -23,5 +25,10 @@ public class ParenthesisExpression implements LiteralExpression {
     @Override
     public Type getType(Scope scope) {
         return expression.getType(scope);
+    }
+
+    @Override
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        return expression.generateCode(cp, variables);
     }
 }

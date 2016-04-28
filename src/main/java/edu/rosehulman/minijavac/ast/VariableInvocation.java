@@ -2,7 +2,9 @@ package edu.rosehulman.minijavac.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -28,6 +30,25 @@ public class VariableInvocation implements LiteralExpression {
             return scope.getVariableType(name);
         } else {
             return Type.NULL;
+        }
+    }
+
+    @Override
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+        if(cp.thisFieldRefEntryMap.containsKey(name)) {
+            ArrayList<Byte> bytes = new ArrayList<>();
+            bytes.add((byte) 42);
+            bytes.add((byte) 180);
+            bytes.add((byte) (cp.thisFieldRefEntryMap.get(name).index >> 8));
+            bytes.add((byte) cp.thisFieldRefEntryMap.get(name).index);
+            return bytes;
+        } else if(variables.containsKey(name)) {
+            ArrayList<Byte> bytes = new ArrayList<>();
+            bytes.add((byte) 21); // iload
+            bytes.add(variables.get(name).byteValue());
+            return bytes;
+        } else {
+            throw new RuntimeException("Could not find variable: " + name);
         }
     }
 }
