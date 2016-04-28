@@ -135,7 +135,10 @@ public class MethodDeclaration {
         for(Statement statement : statements) {
             codeBytes.addAll(statement.generateCode(cp, variableNameToIndex));
         }
-        codeBytes.addAll(returnExpression.generateCode(cp, variableNameToIndex));
+
+        if (returnExpression != null){
+            codeBytes.addAll(returnExpression.generateCode(cp, variableNameToIndex));
+        }
         codeBytes.add((byte) 169);
 
         int codeLength = codeBytes.size();
