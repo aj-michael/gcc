@@ -14,7 +14,13 @@ public class LiteralValue implements LiteralExpression {
     public final Object value;
 
     public LiteralValue(String type, Object value) {
-        this.type = new Type(type);
+        if (type.equals(Type.INT.toString())) {
+            this.type = Type.INT;
+        } else if (type.equals(Type.BOOLEAN.toString())) {
+            this.type = Type.BOOLEAN;
+        } else {
+            this.type = new Type(type);
+        }
         this.value = value;
     }
 
@@ -47,7 +53,7 @@ public class LiteralValue implements LiteralExpression {
                 throw new RuntimeException("Integer out of range " + integer);
             }
         } else {
-            throw new RuntimeException("Illegal literal value");
+            throw new RuntimeException("Illegal literal value of type " + type.toString());
         }
     }
 }
