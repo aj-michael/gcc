@@ -6,6 +6,7 @@ import com.google.common.io.Files;
 import edu.rosehulman.minijavac.ast.Program;
 import edu.rosehulman.minijavac.generated.Lexer;
 import edu.rosehulman.minijavac.generated.Parser;
+import edu.rosehulman.minijavac.generator.CodeGenerator;
 import edu.rosehulman.minijavac.typechecker.TypeChecker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +14,14 @@ import org.junit.runners.Parameterized;
 
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Method;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 

@@ -42,7 +42,7 @@ public class CodeGenerator {
         }
 
         out.write(ByteBuffer.allocate(10)
-            .putShort((short) 0x0020)
+            .putShort((short) 0x0021)   // Class access level
             .putShort(cp.classEntryMap.get(cd.name).index)
             .putShort(cp.classEntryMap.get(cd.getParentClass()).index)
             .putShort((short) 0)
