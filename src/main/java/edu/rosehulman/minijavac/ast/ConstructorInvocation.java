@@ -37,7 +37,7 @@ public class ConstructorInvocation implements CallExpression {
     @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         List<Byte> newObjectBytes = new ArrayList<>();
-        newObjectBytes.add((byte) 187)  // new
+        newObjectBytes.add((byte) 187);  // new
         ClassEntry classEntry = cp.classEntry("L" + className + ";");
         newObjectBytes.add((byte) (classEntry.index >> 8));
         newObjectBytes.add((byte) classEntry.index);
