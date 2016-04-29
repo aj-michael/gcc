@@ -58,14 +58,14 @@ public class BinaryOperation implements Expression {
         MINUS(Type.INT, Type.INT, (byte) 100),
         MULTIPLY(Type.INT, Type.INT, (byte) 104),
         DIVIDE(Type.INT, Type.INT, (byte) 108),
-        LT(Type.INT, Type.BOOLEAN, (byte) 0), // TODO find me an opcode
-        LTE(Type.INT, Type.BOOLEAN, (byte) 0),
-        GT(Type.INT, Type.BOOLEAN, (byte) 0),
-        GTE(Type.INT, Type.BOOLEAN, (byte) 0),
-        AND(Type.BOOLEAN, Type.BOOLEAN, (byte) 0),
-        OR(Type.BOOLEAN, Type.BOOLEAN, (byte) 0),
-        EQ(null, Type.BOOLEAN, (byte) 0),
-        NEQ(null, Type.BOOLEAN, (byte) 0);
+        LT(Type.INT, Type.BOOLEAN, (byte) 162),
+        LTE(Type.INT, Type.BOOLEAN, (byte) 163),
+        GT(Type.INT, Type.BOOLEAN, (byte) 164),
+        GTE(Type.INT, Type.BOOLEAN, (byte) 161),
+        AND(Type.BOOLEAN, Type.BOOLEAN, (byte) 126),
+        OR(Type.BOOLEAN, Type.BOOLEAN, (byte) 128),
+        EQ(null, Type.BOOLEAN, (byte) 165),
+        NEQ(null, Type.BOOLEAN, (byte) 166);
 
         Type operandType;
         Type returnType;

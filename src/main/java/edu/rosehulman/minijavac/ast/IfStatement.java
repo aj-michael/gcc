@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
@@ -49,19 +48,30 @@ public class IfStatement implements Statement {
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         List<Byte> trueBytes = trueStatement.generateCode(cp, variables);
         List<Byte> falseBytes = falseStatement.generateCode(cp, variables);
+        List<Byte> conditionBytes = condition.generateCode(cp, variables);
 
         ArrayList<Byte> bytes = new ArrayList<>();
-        bytes.addAll(ImmutableList.of()); // comparison
-        bytes.addAll(trueBytes);
-        bytes.add((byte) 167); // goto
-        int jumpLength = 3 + falseBytes.size();
+        bytes.addAll(conditionBytes); // comparison
 
-        if(jumpLength > Short.MAX_VALUE) {
+        int gotoLength = 3;
+        int ifLength = 3;
+        int jumpOverTrueLength = ifLength + gotoLength + trueBytes.size();
+        if(jumpOverTrueLength > Short.MAX_VALUE) {
+            throw new RuntimeException("Branch length too big");
+        }
+
+        int jumpOverFalseLength = gotoLength + falseBytes.size();
+        if(jumpOverFalseLength > Short.MAX_VALUE) {
             throw new RuntimeException("Goto length too big");
         }
 
-        bytes.add((byte) (jumpLength >> 8));
-        bytes.add((byte) jumpLength);
+        bytes.add((byte) (jumpOverTrueLength >> 8));
+        bytes.add((byte) jumpOverTrueLength);
+        bytes.addAll(trueBytes);
+        bytes.add((byte) 167); // goto
+
+        bytes.add((byte) (jumpOverFalseLength >> 8));
+        bytes.add((byte) jumpOverFalseLength);
 
         bytes.addAll(falseBytes);
         return bytes;

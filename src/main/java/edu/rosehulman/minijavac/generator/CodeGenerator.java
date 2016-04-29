@@ -31,7 +31,7 @@ public class CodeGenerator {
         ConstantPool cp = cd.getConstantPool();
         byte[] header = ByteBuffer.allocate(8)
                 .putInt(0xCAFEBABE)     // Magic number
-                .putInt(0x00000034)     // java version 8
+                .putInt(0x00000031)     // java version 5
                 .array();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         out.write(header);
