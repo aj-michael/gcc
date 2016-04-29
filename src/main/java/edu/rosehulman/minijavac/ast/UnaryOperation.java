@@ -32,6 +32,11 @@ public class UnaryOperation implements Expression {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        expression.addIntegerEntries(cp);
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         if(operators.size() % 2 == 0) {
             return expression.generateCode(cp, variables);

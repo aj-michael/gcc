@@ -45,6 +45,12 @@ public class BinaryOperation implements Expression {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        left.addIntegerEntries(cp);
+        right.addIntegerEntries(cp);
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.addAll(left.generateCode(cp, variables));

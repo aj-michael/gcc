@@ -36,6 +36,13 @@ public class LiteralValue implements LiteralExpression {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        if (type.equals(Type.INT)) {
+            cp.integerEntry((Integer) value);
+        }
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         if(type.equals(Type.BOOLEAN)) {
             if(value.equals(Boolean.FALSE)) {
@@ -50,7 +57,7 @@ public class LiteralValue implements LiteralExpression {
             } else if(integer >= Byte.MIN_VALUE && integer <= Byte.MAX_VALUE) {
                 return ImmutableList.of((byte) 16, integer.byteValue());
             } else {
-                throw new RuntimeException("Integer out of range " + integer);
+                return ImmutableList.of((byte) 18, (byte) cp.integerEntry((Integer) value).index);
             }
         } else {
             throw new RuntimeException("Illegal literal value of type " + type.toString());

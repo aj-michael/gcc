@@ -17,6 +17,7 @@ public class ConstantPool {
     Table<String, String, NameAndTypeEntry> nameAndTypeEntryTable = HashBasedTable.create();
     Map<NameAndTypeEntry, MethodRefEntry> methodRefEntryMap = new HashMap<>();
     Map<NameAndTypeEntry, FieldRefEntry> fieldRefEntryMap = new HashMap<>();
+    Map<Integer, IntegerEntry> integerEntryMap = new HashMap<>();
     public Map<String, FieldRefEntry> thisFieldRefEntryMap = new HashMap<>();
 
     public final Utf8Entry codeEntry;
@@ -56,6 +57,17 @@ public class ConstantPool {
             classEntryMap.put(cd.name, classEntry);
             classEntry(cd.getParentClass());
             return classEntry;
+        }
+    }
+
+    public IntegerEntry integerEntry(int value) {
+        if (integerEntryMap.containsKey(value)) {
+            return integerEntryMap.get(value);
+        } else {
+            IntegerEntry entry = new IntegerEntry(index++, value);
+            entries.add(entry);
+            integerEntryMap.put(value, entry);
+            return entry;
         }
     }
 

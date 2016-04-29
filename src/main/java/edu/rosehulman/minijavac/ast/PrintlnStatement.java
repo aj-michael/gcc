@@ -32,6 +32,11 @@ public class PrintlnStatement implements Statement {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        expression.addIntegerEntries(cp);
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.add((byte) 178); // getstatic
@@ -43,5 +48,10 @@ public class PrintlnStatement implements Statement {
         bytes.add((byte) (cp.printlnEntry.index >> 8));
         bytes.add((byte) cp.printlnEntry.index);
         return bytes;
+    }
+
+    @Override
+    public int maxBlockDepth() {
+        return 1;
     }
 }

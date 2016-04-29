@@ -102,23 +102,6 @@ public class CodeGenerator {
             out.write(bb.array());
 
             // Code attribute
-            /*
-            bb = ByteBuffer.allocate(6 + 2 + 2 + 4 + 8 + 2 + 2);
-            bb.putShort(cp.codeEntry.index);
-            int attributeLength = 2 + 2 + 4 + 8 + 2 + 2;
-            bb.putInt(attributeLength);
-            bb.putShort((short) (1 + md.numArguments()));     // max_stack
-            bb.putShort((short) 1);       // max_locals
-            bb.putInt(8);
-            bb.put((byte) 0xB2);
-            bb.putShort(cp.systemOutEntry.index);
-            bb.putShort((short)0x07B6);
-            bb.putShort(cp.printlnEntry.index);
-            bb.put((byte)0xB1);
-            bb.putShort((short) 0);
-            bb.putShort((short) 0);
-            out.write(bb.array());
-            */
             out.write(md.getBytes(cp));
         }
 

@@ -66,6 +66,11 @@ public class AssignmentStatement implements Statement {
         }
     }
 
+    @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        expression.addIntegerEntries(cp);
+    }
+
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.addAll(expression.generateCode(cp, variables));

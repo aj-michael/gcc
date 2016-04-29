@@ -45,6 +45,13 @@ public class IfStatement implements Statement {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        condition.addIntegerEntries(cp);
+        trueStatement.addIntegerEntries(cp);
+        falseStatement.addIntegerEntries(cp);
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         List<Byte> trueBytes = trueStatement.generateCode(cp, variables);
         List<Byte> falseBytes = falseStatement.generateCode(cp, variables);

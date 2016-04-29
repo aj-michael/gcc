@@ -41,6 +41,12 @@ public class WhileStatement implements Statement {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        condition.addIntegerEntries(cp);
+        statement.addIntegerEntries(cp);
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         return ImmutableList.of();
     }

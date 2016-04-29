@@ -34,6 +34,10 @@ public class VariableInvocation implements LiteralExpression {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         if(cp.thisFieldRefEntryMap.containsKey(name)) {
             ArrayList<Byte> bytes = new ArrayList<>();

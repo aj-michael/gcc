@@ -30,6 +30,10 @@ public class VariableDeclaration implements Statement {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         return ImmutableList.of();
     }

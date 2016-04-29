@@ -45,6 +45,11 @@ public class BlockStatement implements Statement {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        statements.forEach(s -> s.addIntegerEntries(cp));
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         for(Statement statement : statements) {

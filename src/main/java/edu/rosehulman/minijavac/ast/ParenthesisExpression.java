@@ -28,6 +28,11 @@ public class ParenthesisExpression implements LiteralExpression {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        expression.addIntegerEntries(cp);
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         return expression.generateCode(cp, variables);
     }

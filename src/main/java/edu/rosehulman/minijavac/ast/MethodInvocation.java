@@ -64,6 +64,12 @@ public class MethodInvocation implements CallExpression {
     }
 
     @Override
+    public void addIntegerEntries(ConstantPool cp) {
+        subject.addIntegerEntries(cp);
+        arguments.forEach(a -> a.addIntegerEntries(cp));
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         return ImmutableList.of();
     }

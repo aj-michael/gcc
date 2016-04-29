@@ -78,9 +78,10 @@ public class ClassDeclaration {
         ClassEntry classEntry = cp.classEntry(this);
         for (MethodDeclaration md : methodDeclarations) {
             cp.methodRefEntry(name, md.name, md.getDescriptor());
+            md.addIntegerEntries(cp);
         }
 
-        for(VariableDeclaration vd : classVariableDeclarations) {
+        for (VariableDeclaration vd : classVariableDeclarations) {
             cp.thisFieldRefEntry(name, vd.name, vd.getDescriptor());
         }
         return cp;

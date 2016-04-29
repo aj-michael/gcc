@@ -130,12 +130,12 @@ public class MethodDeclaration {
         short numLocalVariables = (short) numLocalVariables(vds);
         Map<String, Integer> variableNameToIndex = new HashMap<>();
 
-        for(int k = 0; k < vds.size(); k++) {
+        for (int k = 0; k < vds.size(); k++) {
             variableNameToIndex.put(vds.get(k), k + 1);
         }
 
         ArrayList<Byte> codeBytes = new ArrayList<>();
-        for(Statement statement : statements) {
+        for (Statement statement : statements) {
             codeBytes.addAll(statement.generateCode(cp, variableNameToIndex));
         }
 
@@ -165,5 +165,9 @@ public class MethodDeclaration {
         bb.putShort(exceptionTableLength);
         bb.putShort(attributesCount);
         return bb.array();
+    }
+
+    public void addIntegerEntries(ConstantPool cp) {
+        statements.forEach(s -> s.addIntegerEntries(cp));
     }
 }

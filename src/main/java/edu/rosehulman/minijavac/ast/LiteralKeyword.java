@@ -28,6 +28,10 @@ public enum LiteralKeyword implements LiteralExpression {
         }
 
         @Override
+        public void addIntegerEntries(ConstantPool cp) {
+        }
+
+        @Override
         public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
             return ImmutableList.of((byte) 42); // aload_0
         }
@@ -41,6 +45,10 @@ public enum LiteralKeyword implements LiteralExpression {
         @Override
         public Type getType(Scope scope) {
             return Type.NULL;
+        }
+
+        @Override
+        public void addIntegerEntries(ConstantPool cp) {
         }
 
         @Override
