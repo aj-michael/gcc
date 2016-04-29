@@ -53,7 +53,16 @@ public class IfStatement implements Statement {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.addAll(ImmutableList.of()); // comparison
         bytes.addAll(trueBytes);
-        bytes.addAll(ImmutableList.of()); // goto
+        bytes.add((byte) 167); // goto
+        int jumpLength = 3 + falseBytes.size();
+
+        if(jumpLength > Short.MAX_VALUE) {
+            throw new RuntimeException("Goto length too big");
+        }
+
+        bytes.add((byte) (jumpLength >> 8));
+        bytes.add((byte) jumpLength);
+
         bytes.addAll(falseBytes);
         return bytes;
     }
