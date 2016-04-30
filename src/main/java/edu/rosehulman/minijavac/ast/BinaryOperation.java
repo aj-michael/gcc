@@ -88,8 +88,8 @@ public class BinaryOperation implements Expression {
         GTE(Type.INT, Type.BOOLEAN, ImmutableList.of((byte) 161/*162*/, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3)),
         AND(Type.BOOLEAN, Type.BOOLEAN, ImmutableList.of((byte) 126)),
         OR(Type.BOOLEAN, Type.BOOLEAN, ImmutableList.of((byte) 128)),
-        EQ(null, Type.BOOLEAN, ImmutableList.of((byte) 165, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3)),
-        NEQ(null, Type.BOOLEAN, ImmutableList.of((byte) 166, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3));
+        EQ(null, Type.BOOLEAN, ImmutableList.of((byte) 160, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3)),
+        NEQ(null, Type.BOOLEAN, ImmutableList.of((byte) 159, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3));
 
         Type operandType;
         Type returnType;
