@@ -52,6 +52,6 @@ public class PrintlnStatement implements Statement {
 
     @Override
     public int maxBlockDepth() {
-        return 1;
+        return 0;
     }
 }

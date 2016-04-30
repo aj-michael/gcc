@@ -4,9 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
+
+import static edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator.EQ;
+import static edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator.GT;
+import static edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator.GTE;
+import static edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator.LT;
+import static edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator.LTE;
+import static edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator.NEQ;
 
 public class BinaryOperation implements Expression {
     public final BinaryOperator operator;
@@ -55,29 +63,39 @@ public class BinaryOperation implements Expression {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.addAll(left.generateCode(cp, variables));
         bytes.addAll(right.generateCode(cp, variables));
-        bytes.add(operator.byteCode);
+        bytes.addAll(operator.byteCode);
         return bytes;
     }
 
+    @Override
+    public int maxBlockDepth() {
+        BinaryOperator o = operator;
+        if(o == LT || o == LTE || o == GT || o == GTE || o == EQ || o == NEQ) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     public enum BinaryOperator {
-        PLUS(Type.INT, Type.INT, (byte) 96),
-        MINUS(Type.INT, Type.INT, (byte) 100),
-        MULTIPLY(Type.INT, Type.INT, (byte) 104),
-        DIVIDE(Type.INT, Type.INT, (byte) 108),
-        LT(Type.INT, Type.BOOLEAN, (byte) 162),
-        LTE(Type.INT, Type.BOOLEAN, (byte) 163),
-        GT(Type.INT, Type.BOOLEAN, (byte) 164),
-        GTE(Type.INT, Type.BOOLEAN, (byte) 161),
-        AND(Type.BOOLEAN, Type.BOOLEAN, (byte) 126),
-        OR(Type.BOOLEAN, Type.BOOLEAN, (byte) 128),
-        EQ(null, Type.BOOLEAN, (byte) 165),
-        NEQ(null, Type.BOOLEAN, (byte) 166);
+        PLUS(Type.INT, Type.INT, ImmutableList.of((byte) 96)),
+        MINUS(Type.INT, Type.INT, ImmutableList.of((byte) 100)),
+        MULTIPLY(Type.INT, Type.INT, ImmutableList.of((byte) 104)),
+        DIVIDE(Type.INT, Type.INT, ImmutableList.of((byte) 108)),
+        LT(Type.INT, Type.BOOLEAN, ImmutableList.of((byte) 162/*161*/, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3)),
+        LTE(Type.INT, Type.BOOLEAN, ImmutableList.of((byte) 163/*164*/, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3)),
+        GT(Type.INT, Type.BOOLEAN, ImmutableList.of((byte) 164/*163*/, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3)),
+        GTE(Type.INT, Type.BOOLEAN, ImmutableList.of((byte) 161/*162*/, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3)),
+        AND(Type.BOOLEAN, Type.BOOLEAN, ImmutableList.of((byte) 126)),
+        OR(Type.BOOLEAN, Type.BOOLEAN, ImmutableList.of((byte) 128)),
+        EQ(null, Type.BOOLEAN, ImmutableList.of((byte) 165, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3)),
+        NEQ(null, Type.BOOLEAN, ImmutableList.of((byte) 166, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3));
 
         Type operandType;
         Type returnType;
-        byte byteCode;
+        List<Byte> byteCode;
 
-        BinaryOperator(Type operandType, Type returnType, byte byteCode) {
+        BinaryOperator(Type operandType, Type returnType, List<Byte> byteCode) {
             this.operandType = operandType;
             this.returnType = returnType;
             this.byteCode = byteCode;

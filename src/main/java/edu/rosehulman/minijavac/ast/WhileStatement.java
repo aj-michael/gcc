@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
@@ -37,7 +36,7 @@ public class WhileStatement implements Statement {
 
     @Override
     public int maxBlockDepth() {
-        return statement.maxBlockDepth();
+        return Math.max(statement.maxBlockDepth(), condition.maxBlockDepth());
     }
 
     @Override
@@ -48,6 +47,28 @@ public class WhileStatement implements Statement {
 
     @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
-        return ImmutableList.of();
+        ArrayList<Byte> bytes = new ArrayList<>();
+        List<Byte> conditionBytes = condition.generateCode(cp, variables);
+        bytes.addAll(conditionBytes);
+        List<Byte> statementBytes = statement.generateCode(cp, variables);
+        bytes.add((byte) 153); // ifeq
+
+        int ifLength = 3;
+        int gotoLength = 3;
+        int jumpOverLength = ifLength + gotoLength + statementBytes.size();
+        if(jumpOverLength > Short.MAX_VALUE) {
+            throw new RuntimeException("Branch length too big");
+        }
+
+        int jumpBackLength = -(jumpOverLength + conditionBytes.size() - gotoLength);
+
+        bytes.add((byte) (jumpOverLength >> 8));
+        bytes.add((byte) jumpOverLength);
+        bytes.addAll(statementBytes);
+        bytes.add((byte) 167); // goto
+        bytes.add((byte) (jumpBackLength >> 8));
+        bytes.add((byte) jumpBackLength);
+
+        return bytes;
     }
 }

@@ -38,6 +38,11 @@ public class VariableInvocation implements LiteralExpression {
     }
 
     @Override
+    public int maxBlockDepth() {
+        return 1;
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         if(cp.thisFieldRefEntryMap.containsKey(name)) {
             ArrayList<Byte> bytes = new ArrayList<>();

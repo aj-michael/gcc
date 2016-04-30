@@ -39,9 +39,9 @@ public class BlockStatement implements Statement {
     public int maxBlockDepth() {
         int depth = 0;
         for(Statement statement : statements) {
-            depth = Math.max(depth, statement.maxBlockDepth());
+            depth += statement.maxBlockDepth();
         }
-        return depth + 1;
+        return depth;
     }
 
     @Override

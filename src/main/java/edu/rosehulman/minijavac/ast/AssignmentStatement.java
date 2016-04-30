@@ -67,6 +67,11 @@ public class AssignmentStatement implements Statement {
     }
 
     @Override
+    public int maxBlockDepth() {
+        return expression.maxBlockDepth();
+    }
+
+    @Override
     public void addIntegerEntries(ConstantPool cp) {
         expression.addIntegerEntries(cp);
     }

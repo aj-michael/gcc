@@ -43,17 +43,22 @@ public class LiteralValue implements LiteralExpression {
     }
 
     @Override
+    public int maxBlockDepth() {
+        return 1;
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         if(type.equals(Type.BOOLEAN)) {
             if(value.equals(Boolean.FALSE)) {
-                return ImmutableList.of((byte) 3);
+                return ImmutableList.of((byte) 3); // iconst_0
             } else {
-                return ImmutableList.of((byte) 4);
+                return ImmutableList.of((byte) 4); // iconst_1
             }
         } else if(type.equals(Type.INT)) {
             Integer integer = (Integer) value;
             if(integer >= -1 && integer <= 5) {
-                return ImmutableList.of((byte) (3 + integer));
+                return ImmutableList.of((byte) (3 + integer)); // iconst_m1 through iconst_5
             } else if(integer >= Byte.MIN_VALUE && integer <= Byte.MAX_VALUE) {
                 return ImmutableList.of((byte) 16, integer.byteValue());
             } else {

@@ -41,7 +41,8 @@ public class IfStatement implements Statement {
 
     @Override
     public int maxBlockDepth() {
-        return Math.max(trueStatement.maxBlockDepth(), falseStatement.maxBlockDepth());
+        int trueFalseMax = Math.max(trueStatement.maxBlockDepth(), falseStatement.maxBlockDepth());
+        return condition.maxBlockDepth() + trueFalseMax;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class IfStatement implements Statement {
         if(jumpOverFalseLength > Short.MAX_VALUE) {
             throw new RuntimeException("Goto length too big");
         }
-
+        bytes.add((byte) 153); // ifeq
         bytes.add((byte) (jumpOverTrueLength >> 8));
         bytes.add((byte) jumpOverTrueLength);
         bytes.addAll(trueBytes);

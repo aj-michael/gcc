@@ -18,6 +18,11 @@ public enum LiteralKeyword implements LiteralExpression {
         }
 
         @Override
+        public int maxBlockDepth() {
+            return 1;
+        }
+
+        @Override
         public Type getType(Scope scope) {
             if (scope.className.equals(scope.program.mainClassDeclaration.name)) {
                 // Cannot use `this` in main.
@@ -40,6 +45,11 @@ public enum LiteralKeyword implements LiteralExpression {
         public List<String> typecheck(Scope scope) {
             List<String> errors = new ArrayList<>();
             return errors;
+        }
+
+        @Override
+        public int maxBlockDepth() {
+            return 1;
         }
 
         @Override

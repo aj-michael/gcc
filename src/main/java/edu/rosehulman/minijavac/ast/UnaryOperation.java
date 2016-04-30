@@ -37,6 +37,11 @@ public class UnaryOperation implements Expression {
     }
 
     @Override
+    public int maxBlockDepth() {
+        return expression.maxBlockDepth();
+    }
+
+    @Override
     public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
         if(operators.size() % 2 == 0) {
             return expression.generateCode(cp, variables);
