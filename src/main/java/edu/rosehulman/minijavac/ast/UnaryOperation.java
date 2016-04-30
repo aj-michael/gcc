@@ -55,9 +55,11 @@ public class UnaryOperation implements Expression {
             bytes.addAll(expression.generateCode(cp, variables));
             bytes.add((byte) 154); // ifne
             bytes.add((byte) 0);
+            bytes.add((byte) 7);
             bytes.add((byte) 4); // iconst_1
             bytes.add((byte) 167); // goto
             bytes.add((byte) 0);
+            bytes.add((byte) 4);
             bytes.add((byte) 3); // iconst_0
             return bytes;
         }
