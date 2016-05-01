@@ -39,7 +39,7 @@ public class Program {
                     errors.add("Superclass name " + cd.parentClassName.get() + " not in scope.");
                     parentScope = programScope;
                 }
-                Scope classScope = new Scope(parentScope, cd.name);
+                Scope classScope = new Scope(parentScope, cd);
                 programScope.classes.put(cd.name, classScope);
                 validClasses.add(cd);
                 programScope.classes.put(cd.name, classScope);

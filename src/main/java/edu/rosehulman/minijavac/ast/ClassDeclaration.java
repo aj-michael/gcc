@@ -15,6 +15,7 @@ public class ClassDeclaration {
     public final Optional<String> parentClassName;
     public final List<VariableDeclaration> classVariableDeclarations;
     public final List<MethodDeclaration> methodDeclarations;
+    public Optional<ClassDeclaration> parentClass;
 
     public ClassDeclaration(String name, Optional<String> parentClassName, List<VariableDeclaration> classVariableDeclarations,
             List<MethodDeclaration> methodDeclarations) {
@@ -25,6 +26,7 @@ public class ClassDeclaration {
     }
 
     public List<String> typecheck(Scope scope) {
+        parentClass = scope.getParent();
         List<String> errors = new ArrayList<>();
         for (MethodDeclaration md : methodDeclarations) {
             if (scope.methods.containsKey(md.name)) {
@@ -81,9 +83,16 @@ public class ClassDeclaration {
             md.addConstantPoolEntries(cp);
         }
 
-        for (VariableDeclaration vd : classVariableDeclarations) {
+        for (VariableDeclaration vd : getAllClassVariableDeclarations()) {
             cp.thisFieldRefEntry(name, vd.name, vd.getDescriptor());
         }
         return cp;
+    }
+
+    public List<VariableDeclaration> getAllClassVariableDeclarations() {
+        List<VariableDeclaration> vds = new ArrayList<>();
+        vds.addAll(classVariableDeclarations);
+        parentClass.map(pc -> vds.addAll(pc.getAllClassVariableDeclarations()));
+        return vds;
     }
 }

@@ -157,7 +157,7 @@ public class MethodDeclaration {
         bb.putShort(cp.codeEntry.index);
         bb.putInt(attributeLength);
 
-        bb.putShort((short) 100);     // max_stack
+        bb.putShort(Short.MAX_VALUE);     // max_stack
         bb.putShort(numLocalVariables);       // max_locals
         bb.putInt(codeLength);
         bb.put(Bytes.toArray(codeBytes));

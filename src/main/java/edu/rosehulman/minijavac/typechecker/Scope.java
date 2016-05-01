@@ -1,5 +1,6 @@
 package edu.rosehulman.minijavac.typechecker;
 
+import edu.rosehulman.minijavac.ast.ClassDeclaration;
 import edu.rosehulman.minijavac.ast.MethodDeclaration;
 import edu.rosehulman.minijavac.ast.Program;
 
@@ -16,6 +17,7 @@ public class Scope {
     public final Program program;
     public final String className;
     public final boolean isClass;
+    public ClassDeclaration classDeclaration;
 
     public Scope(Program program) {
         this(program, Optional.empty(), null, false);
@@ -33,6 +35,19 @@ public class Scope {
 
     public Scope(Scope parent, String className) {
         this(parent.program, Optional.of(parent), className, true);
+    }
+
+    public Scope(Scope parent, ClassDeclaration cd) {
+        this(parent, cd.name);
+        this.classDeclaration = cd;
+    }
+
+    public Optional<ClassDeclaration> getParent() {
+        if (parent.isPresent() && parent.get().classDeclaration != null) {
+            return Optional.of(parent.get().classDeclaration);
+        } else {
+            return Optional.empty();
+        }
     }
 
     private Scope(Program program, Optional<Scope> parent, String className, boolean isClass) {
