@@ -130,8 +130,9 @@ public class MethodDeclaration {
         short maxDepth = (short) maxBlockDepth();
         List<Variable> vds = new ArrayList<>();
         short numLocalVariables = (short) numLocalVariables(vds);
-        Map<String, Variable> variableNameToIndex =
-            vds.stream().collect(toMap(Variable::getName, Function.identity()));
+        Map<String, Variable> variableNameToIndex = vds.stream()
+                .distinct()
+                .collect(toMap(Variable::getName, Function.identity()));
 
         ArrayList<Byte> codeBytes = new ArrayList<>();
         for (Statement statement : statements) {

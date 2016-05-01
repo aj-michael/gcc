@@ -28,4 +28,14 @@ public class Variable {
     public Integer getPosition() {
         return position;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return (other instanceof Variable) && ((Variable) other).getName().equals(getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
 }
