@@ -81,6 +81,7 @@ public class MethodInvocation implements CallExpression {
     public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         List<Byte> bytes = new ArrayList<>();
         bytes.addAll(subject.generateCode(cp, variables));
+        arguments.forEach(a -> bytes.addAll(a.generateCode(cp, variables)));
         bytes.add((byte) 182);      // invokevirtual
         MethodRefEntry methodRefEntry =
             cp.methodRefEntry(subjectType.getDescriptor(), methodName, methodDescriptor);
