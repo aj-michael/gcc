@@ -78,7 +78,7 @@ public class ClassDeclaration {
         ConstantPool cp = new ConstantPool();
         ClassEntry classEntry = cp.classEntry(this);
         cp.methodRefEntry(getParentClass(), "<init>", "()V");
-        for (MethodDeclaration md : methodDeclarations) {
+        for (MethodDeclaration md : getAllMethodDeclarations()) {
             cp.methodRefEntry(name, md.name, md.getDescriptor());
             md.addConstantPoolEntries(cp);
         }
@@ -94,5 +94,11 @@ public class ClassDeclaration {
         vds.addAll(classVariableDeclarations);
         parentClass.map(pc -> vds.addAll(pc.getAllClassVariableDeclarations()));
         return vds;
+    }
+
+    public List<MethodDeclaration> getAllMethodDeclarations() {
+        List<MethodDeclaration> mds = new ArrayList<>(methodDeclarations);
+        parentClass.map(pc -> mds.addAll(pc.getAllMethodDeclarations()));
+        return mds;
     }
 }
