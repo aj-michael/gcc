@@ -42,12 +42,10 @@ public class VariableDeclaration implements Statement {
     }
 
     public String getDescriptor() {
-        if(type.equals("int")) {
-            return "I";
-        } else if(type.equals("boolean")) {
-            return "Z";
+        if (type == Type.NULL || type.isPrimitiveType()) {
+            return type.getDescriptor();
         } else {
-            return "L" + type + ";";
+            return "L" + type.getDescriptor() + ";";
         }
     }
 }

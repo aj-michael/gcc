@@ -80,13 +80,15 @@ public class AssignmentStatement implements Statement {
 
     public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
-        bytes.addAll(expression.generateCode(cp, variables));
         if (cp.thisFieldRefEntryMap.containsKey(id)) {
+            bytes.add((byte) 42);   // aload_0
+            bytes.addAll(expression.generateCode(cp, variables));
             bytes.add((byte) 181); // putfield
             bytes.add((byte) (cp.thisFieldRefEntryMap.get(id).index >> 8));
             bytes.add((byte) cp.thisFieldRefEntryMap.get(id).index);
         } else if(variables.containsKey(id)) {
             Variable v = variables.get(id);
+            bytes.addAll(expression.generateCode(cp, variables));
             if (v.getType().isPrimitiveType()) {
                 bytes.add((byte) 54); // istore
             } else {
