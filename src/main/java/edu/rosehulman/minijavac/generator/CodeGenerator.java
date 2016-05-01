@@ -8,6 +8,7 @@ import edu.rosehulman.minijavac.ast.VariableDeclaration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,25 +34,11 @@ public class CodeGenerator {
                 .putInt(0xCAFEBABE)     // Magic number
                 .putInt(0x00000031)     // java version 5
                 .array();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        out.write(header);
 
-        out.write(ByteBuffer.allocate(2).putShort((short) (cp.entries.size()+1)).array());
-        for (ConstantPoolEntry entry : cp.entries) {
-            out.write(entry.getBytes());
-        }
-
-        out.write(ByteBuffer.allocate(10)
-            .putShort((short) 0x0021)   // Class access level
-            .putShort(cp.classEntryMap.get(cd.name).index)
-            .putShort(cp.classEntryMap.get(cd.getParentClass()).index)
-            .putShort((short) 0)
-            .putShort((short) cd.classVariableDeclarations.size())
-            .array());
-
+        ByteArrayOutputStream fields = new ByteArrayOutputStream();
         for (int k = 0; k < cd.classVariableDeclarations.size(); k++) {
             VariableDeclaration vd = cd.classVariableDeclarations.get(k);
-            out.write(ByteBuffer.allocate(8)
+            fields.write(ByteBuffer.allocate(8)
                 .putShort((short) 1)
                 .putShort(cp.utf8EntryMap.get(vd.name).index)
                 .putShort(cp.utf8EntryMap.get(vd.getDescriptor()).index)
@@ -59,7 +46,8 @@ public class CodeGenerator {
                 .array());
         }
 
-        out.write(ByteBuffer.allocate(2).putShort((short) (1  + cd.methodDeclarations.size())).array());
+        ByteArrayOutputStream methods = new ByteArrayOutputStream();
+        methods.write(ByteBuffer.allocate(2).putShort((short) (1  + cd.methodDeclarations.size())).array());
 
         // Constructor
         {
@@ -84,7 +72,7 @@ public class CodeGenerator {
             bb.putShort((short) 0);
             // attributes_count
             bb.putShort((short) 0);
-            out.write(bb.array());
+            methods.write(bb.array());
         }
 
 
@@ -100,15 +88,34 @@ public class CodeGenerator {
             bb.putShort(cp.utf8EntryMap.get(md.getDescriptor()).index); // descriptor_index
 
             bb.putShort((short) 1);     // attributes_count
-            out.write(bb.array());
+            methods.write(bb.array());
 
             // Code attribute
-            out.write(md.getBytes(cp));
+            methods.write(md.getBytes(cp));
         }
 
         // attributes_count
-        out.write(ByteBuffer.allocate(2).putShort((short) 0).array());
+        ByteArrayOutputStream attributes = new ByteArrayOutputStream();
+        attributes.write(ByteBuffer.allocate(2).putShort((short) 0).array());
 
-        return out.toByteArray();
+        ByteArrayOutputStream finalOut = new ByteArrayOutputStream();
+        finalOut.write(header);
+
+        finalOut.write(ByteBuffer.allocate(2).putShort((short) (cp.entries.size()+1)).array());
+        for (ConstantPoolEntry entry : cp.entries) {
+            finalOut.write(entry.getBytes());
+        }
+
+        finalOut.write(ByteBuffer.allocate(10)
+                .putShort((short) 0x0021)   // Class access level
+                .putShort(cp.classEntryMap.get(cd.name).index)
+                .putShort(cp.classEntryMap.get(cd.getParentClass()).index)
+                .putShort((short) 0)
+                .putShort((short) cd.classVariableDeclarations.size())
+                .array());
+        finalOut.write(fields.toByteArray());
+        finalOut.write(methods.toByteArray());
+        finalOut.write(attributes.toByteArray());
+        return finalOut.toByteArray();
     }
 }
