@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -27,17 +28,17 @@ public class PrintlnStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<String> vd) {
+    public int numLocalVariables(List<Variable> vd) {
         return 0;
     }
 
     @Override
     public void addConstantPoolEntries(ConstantPool cp) {
-        expression.addIntegerEntries(cp);
+        expression.addConstantPoolEntries(cp);
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.add((byte) 178); // getstatic
         bytes.add((byte) (cp.systemOutEntry.index >> 8));

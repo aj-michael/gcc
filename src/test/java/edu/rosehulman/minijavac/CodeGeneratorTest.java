@@ -6,6 +6,7 @@ import edu.rosehulman.minijavac.ast.Program;
 import edu.rosehulman.minijavac.generated.Lexer;
 import edu.rosehulman.minijavac.generated.Parser;
 import edu.rosehulman.minijavac.generator.CodeGenerator;
+import edu.rosehulman.minijavac.typechecker.TypeChecker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(value = Parameterized.class)
 public class CodeGeneratorTest {
@@ -71,6 +73,10 @@ public class CodeGeneratorTest {
     public void test() throws Exception {
         Parser parser = new Parser(new Lexer(new FileReader(testFile)));
         Program program = parser.parseProgram();
+        TypeChecker typeChecker = new TypeChecker();
+        if (!typeChecker.isValid(program)) {
+            fail("Program failed to typecheck: " + typeChecker.getTypeCheckerLog());
+        }
         Map<String, byte[]> classDefinitions = new CodeGenerator(program).generate();
         ClassLoader programClassLoader = new ByteClassLoader(classDefinitions);
         Class mainClass = programClassLoader.loadClass(program.mainClassDeclaration.name);

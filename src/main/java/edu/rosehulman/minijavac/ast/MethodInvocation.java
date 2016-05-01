@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.MethodRefEntry;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -13,6 +15,8 @@ public class MethodInvocation implements CallExpression {
     public final CallExpression subject;
     public final String methodName;
     public final List<Expression> arguments;
+    public Type subjectType;
+    public String methodDescriptor;
 
     public MethodInvocation(CallExpression subject, String methodName, List<Expression> arguments) {
         this.subject = subject;
@@ -40,6 +44,9 @@ public class MethodInvocation implements CallExpression {
             errors.add("No method named " + methodName + " found for class " + subject.getType(scope));
         } else {
             MethodDeclaration md = classScope.getMethod(methodName);
+            subjectType = subject.getType(scope);
+            methodDescriptor = md.getDescriptor();
+
             for (int argIndex = 0; argIndex < arguments.size() && argIndex < md.arguments.size(); argIndex++) {
                 Type realType = arguments.get(argIndex).getType(scope);
                 Type requiredType = md.arguments.get(argIndex).type;
@@ -64,13 +71,21 @@ public class MethodInvocation implements CallExpression {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
-        subject.addIntegerEntries(cp);
-        arguments.forEach(a -> a.addIntegerEntries(cp));
+    public void addConstantPoolEntries(ConstantPool cp) {
+        subject.addConstantPoolEntries(cp);
+        arguments.forEach(a -> a.addConstantPoolEntries(cp));
+        cp.methodRefEntry(subjectType.getDescriptor(), methodName, methodDescriptor);
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
-        return ImmutableList.of();
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
+        List<Byte> bytes = new ArrayList<>();
+        bytes.addAll(subject.generateCode(cp, variables));
+        bytes.add((byte) 182);      // invokevirtual
+        MethodRefEntry methodRefEntry =
+            cp.methodRefEntry(subjectType.getDescriptor(), methodName, methodDescriptor);
+        bytes.add((byte) (methodRefEntry.index >> 8));
+        bytes.add((byte) methodRefEntry.index);
+        return bytes;
     }
 }

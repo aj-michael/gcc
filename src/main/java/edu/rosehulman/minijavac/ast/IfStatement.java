@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -35,7 +36,7 @@ public class IfStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<String> vd) {
+    public int numLocalVariables(List<Variable> vd) {
         return trueStatement.numLocalVariables(vd) + falseStatement.numLocalVariables(vd);
     }
 
@@ -47,13 +48,13 @@ public class IfStatement implements Statement {
 
     @Override
     public void addConstantPoolEntries(ConstantPool cp) {
-        condition.addIntegerEntries(cp);
+        condition.addConstantPoolEntries(cp);
         trueStatement.addConstantPoolEntries(cp);
         falseStatement.addConstantPoolEntries(cp);
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         List<Byte> trueBytes = trueStatement.generateCode(cp, variables);
         List<Byte> falseBytes = falseStatement.generateCode(cp, variables);
         List<Byte> conditionBytes = condition.generateCode(cp, variables);

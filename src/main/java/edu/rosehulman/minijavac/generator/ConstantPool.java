@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class ConstantPool {
     private short index = 1;
-    List<ConstantPoolEntry> entries = new ArrayList<>();
+    public List<ConstantPoolEntry> entries = new ArrayList<>();
     Map<String, Utf8Entry> utf8EntryMap = new HashMap<>();
     Map<String, ClassEntry> classEntryMap = new HashMap<>();
     Table<String, String, NameAndTypeEntry> nameAndTypeEntryTable = HashBasedTable.create();
-    Map<NameAndTypeEntry, MethodRefEntry> methodRefEntryMap = new HashMap<>();
+    Table<ClassEntry, NameAndTypeEntry, MethodRefEntry> methodRefEntryTable = HashBasedTable.create();
     Map<NameAndTypeEntry, FieldRefEntry> fieldRefEntryMap = new HashMap<>();
     Map<Integer, IntegerEntry> integerEntryMap = new HashMap<>();
     public Map<String, FieldRefEntry> thisFieldRefEntryMap = new HashMap<>();
@@ -112,12 +112,12 @@ public class ConstantPool {
     public MethodRefEntry methodRefEntry(String className, String methodName, String methodDescriptor) {
         ClassEntry classEntry = classEntry(className);
         NameAndTypeEntry nameAndTypeEntry = nameAndTypeEntry(methodName, methodDescriptor);
-        if (methodRefEntryMap.containsKey(nameAndTypeEntry)) {
-            return methodRefEntryMap.get(nameAndTypeEntry);
+        if (methodRefEntryTable.contains(classEntry, nameAndTypeEntry)) {
+            return methodRefEntryTable.get(classEntry, nameAndTypeEntry);
         } else {
             MethodRefEntry entry = new MethodRefEntry(index++, classEntry, nameAndTypeEntry);
             entries.add(entry);
-            methodRefEntryMap.put(nameAndTypeEntry, entry);
+            methodRefEntryTable.put(classEntry, nameAndTypeEntry, entry);
             return entry;
         }
     }

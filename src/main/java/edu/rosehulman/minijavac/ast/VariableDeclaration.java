@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -25,8 +26,8 @@ public class VariableDeclaration implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<String> vd) {
-        vd.add(name);
+    public int numLocalVariables(List<Variable> vd) {
+        vd.add(new Variable(name, type, vd.size()+1));
         return 1;
     }
 
@@ -36,7 +37,7 @@ public class VariableDeclaration implements Statement {
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         return ImmutableList.of();
     }
 

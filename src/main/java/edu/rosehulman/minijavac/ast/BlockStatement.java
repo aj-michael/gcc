@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 
 public class BlockStatement implements Statement {
@@ -27,7 +28,7 @@ public class BlockStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<String> vd) {
+    public int numLocalVariables(List<Variable> vd) {
         int num = 0;
         for(Statement statement : statements) {
             num += statement.numLocalVariables(vd);
@@ -50,7 +51,7 @@ public class BlockStatement implements Statement {
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         for(Statement statement : statements) {
            bytes.addAll(statement.generateCode(cp, variables));

@@ -31,15 +31,13 @@ public class Type {
     }
 
     public boolean isA(Type otherType, Scope scope) {
-        if (isPrimitiveType() || otherType.isPrimitiveType()) {
-           return type.equals(otherType.type);
-        }
-
-        if (type.equals("null")) {
+        if (this == Type.NULL && !otherType.isPrimitiveType()) {
             return true;
-        }
-
-        if (type.equals(otherType.type)) {
+        } else if (isPrimitiveType() || otherType.isPrimitiveType()) {
+           return type.equals(otherType.type);
+        } else if (type.equals("null")) {
+            return true;
+        } else if (type.equals(otherType.type)) {
             return true;
         } else {
             Scope classScope = scope.getClassScope(type);
@@ -57,7 +55,7 @@ public class Type {
     }
 
     public boolean isPrimitiveType() {
-        return (this == NULL) || (this == INT) || (this == BOOLEAN);
+        return (this == INT) || (this == BOOLEAN);
     }
 
     @Override
@@ -73,7 +71,7 @@ public class Type {
         } else if (type.equals("null")) {
             return "V";
         } else {
-            return "L" + type;
+            return type;
         }
     }
 }

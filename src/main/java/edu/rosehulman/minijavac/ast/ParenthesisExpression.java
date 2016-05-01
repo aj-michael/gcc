@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -28,12 +29,12 @@ public class ParenthesisExpression implements LiteralExpression {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
-        expression.addIntegerEntries(cp);
+    public void addConstantPoolEntries(ConstantPool cp) {
+        expression.addConstantPoolEntries(cp);
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         return expression.generateCode(cp, variables);
     }
 }

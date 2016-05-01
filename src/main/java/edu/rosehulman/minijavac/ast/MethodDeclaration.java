@@ -3,11 +3,15 @@ package edu.rosehulman.minijavac.ast;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Bytes;
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
 
 public class MethodDeclaration {
     public final String name;
@@ -77,10 +81,10 @@ public class MethodDeclaration {
     );
 
     private static String formatType(Type type) {
-        if (type.isPrimitiveType()) {
+        if (type == Type.NULL || type.isPrimitiveType()) {
             return type.getDescriptor();
         } else {
-            return type.getDescriptor() + ";";
+            return "L" + type.getDescriptor() + ";";
         }
     }
 
@@ -102,13 +106,13 @@ public class MethodDeclaration {
         return (this instanceof MainMethodDeclaration) ? 1 + arguments.size() : arguments.size();
     }
 
-    public int numLocalVariables(List<String> variableDeclarations) {
+    public int numLocalVariables(List<Variable> variableDeclarations) {
         int num =  numArguments() + 1;
-        for(VariableDeclaration vd : arguments) {
-            variableDeclarations.add(vd.name);
+        for (VariableDeclaration vd : arguments) {
+            variableDeclarations.add(new Variable(vd.name, vd.type, variableDeclarations.size()+1));
         }
 
-        for(Statement statement : statements) {
+        for (Statement statement : statements) {
             num += statement.numLocalVariables(variableDeclarations);
         }
         return num;
@@ -124,13 +128,10 @@ public class MethodDeclaration {
 
     public byte[] getBytes(ConstantPool cp) {
         short maxDepth = (short) maxBlockDepth();
-        List<String> vds = new ArrayList<>();
+        List<Variable> vds = new ArrayList<>();
         short numLocalVariables = (short) numLocalVariables(vds);
-        Map<String, Integer> variableNameToIndex = new HashMap<>();
-
-        for (int k = 0; k < vds.size(); k++) {
-            variableNameToIndex.put(vds.get(k), k + 1);
-        }
+        Map<String, Variable> variableNameToIndex =
+            vds.stream().collect(toMap(Variable::getName, Function.identity()));
 
         ArrayList<Byte> codeBytes = new ArrayList<>();
         for (Statement statement : statements) {
@@ -156,7 +157,7 @@ public class MethodDeclaration {
         bb.putShort(cp.codeEntry.index);
         bb.putInt(attributeLength);
 
-        bb.putShort(maxDepth);     // max_stack
+        bb.putShort((short) 100);     // max_stack
         bb.putShort(numLocalVariables);       // max_locals
         bb.putInt(codeLength);
         bb.put(Bytes.toArray(codeBytes));

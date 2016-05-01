@@ -19,8 +19,12 @@ public class Scope {
 
     public Scope(Program program) {
         this(program, Optional.empty(), null, false);
+        classes.put("I", null);
         classes.put("int", null);
+        classes.put("Z", null);
         classes.put("boolean", null);
+        classes.put("null", null);
+        classes.put("V", null);
     }
 
     public Scope(Scope parent) {

@@ -1,6 +1,7 @@
 package edu.rosehulman.minijavac.ast;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -32,8 +33,8 @@ public class UnaryOperation implements Expression {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
-        expression.addIntegerEntries(cp);
+    public void addConstantPoolEntries(ConstantPool cp) {
+        expression.addConstantPoolEntries(cp);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class UnaryOperation implements Expression {
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         if(operators.size() % 2 == 0) {
             return expression.generateCode(cp, variables);
         } else if(operators.get(0).equals(UnaryOperator.MINUS)) {

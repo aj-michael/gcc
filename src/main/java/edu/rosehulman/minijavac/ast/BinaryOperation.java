@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -53,13 +54,13 @@ public class BinaryOperation implements Expression {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
-        left.addIntegerEntries(cp);
-        right.addIntegerEntries(cp);
+    public void addConstantPoolEntries(ConstantPool cp) {
+        left.addConstantPoolEntries(cp);
+        right.addConstantPoolEntries(cp);
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.addAll(left.generateCode(cp, variables));
         bytes.addAll(right.generateCode(cp, variables));

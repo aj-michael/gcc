@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -34,7 +35,7 @@ public class VariableInvocation implements LiteralExpression {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
+    public void addConstantPoolEntries(ConstantPool cp) {
     }
 
     @Override
@@ -43,7 +44,7 @@ public class VariableInvocation implements LiteralExpression {
     }
 
     @Override
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         if(cp.thisFieldRefEntryMap.containsKey(name)) {
             ArrayList<Byte> bytes = new ArrayList<>();
             bytes.add((byte) 42);
@@ -53,8 +54,13 @@ public class VariableInvocation implements LiteralExpression {
             return bytes;
         } else if(variables.containsKey(name)) {
             ArrayList<Byte> bytes = new ArrayList<>();
-            bytes.add((byte) 21); // iload
-            bytes.add(variables.get(name).byteValue());
+            Variable variable = variables.get(name);
+            if (variable.getType().isPrimitiveType()) {
+                bytes.add((byte) 21); // iload
+            } else {
+                bytes.add((byte) 25); // aload
+            }
+            bytes.add(variables.get(name).getPosition().byteValue());
             return bytes;
         } else {
             throw new RuntimeException("Could not find variable: " + name);

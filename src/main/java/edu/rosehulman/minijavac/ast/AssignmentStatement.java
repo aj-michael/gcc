@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
+import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -57,9 +58,9 @@ public class AssignmentStatement implements Statement {
     }
 
     @Override
-    public int numLocalVariables(List<String> vd) {
-        if(isDeclaration()) {
-            vd.add(id);
+    public int numLocalVariables(List<Variable> vd) {
+        if (isDeclaration()) {
+            vd.add(new Variable(id, type.get(), vd.size()+1));
             return 1;
         } else {
             return 0;
@@ -74,19 +75,24 @@ public class AssignmentStatement implements Statement {
     @Override
     public void addConstantPoolEntries(ConstantPool cp) {
         type.map(t -> cp.classEntry(t.getDescriptor()));
-        expression.addIntegerEntries(cp);
+        expression.addConstantPoolEntries(cp);
     }
 
-    public List<Byte> generateCode(ConstantPool cp, Map<String, Integer> variables) {
+    public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.addAll(expression.generateCode(cp, variables));
-        if(cp.thisFieldRefEntryMap.containsKey(id)) {
+        if (cp.thisFieldRefEntryMap.containsKey(id)) {
             bytes.add((byte) 181); // putfield
             bytes.add((byte) (cp.thisFieldRefEntryMap.get(id).index >> 8));
             bytes.add((byte) cp.thisFieldRefEntryMap.get(id).index);
         } else if(variables.containsKey(id)) {
-            bytes.add((byte) 54); // istore
-            bytes.add(variables.get(id).byteValue());
+            Variable v = variables.get(id);
+            if (v.getType().isPrimitiveType()) {
+                bytes.add((byte) 54); // istore
+            } else {
+                bytes.add((byte) 58); // astore
+            }
+            bytes.add(v.getPosition().byteValue());
         } else {
             throw new RuntimeException("Couldn't find variable " + id);
         }
