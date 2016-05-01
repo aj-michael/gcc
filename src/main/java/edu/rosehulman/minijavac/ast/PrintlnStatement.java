@@ -32,7 +32,7 @@ public class PrintlnStatement implements Statement {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
+    public void addConstantPoolEntries(ConstantPool cp) {
         expression.addIntegerEntries(cp);
     }
 

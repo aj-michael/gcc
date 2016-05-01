@@ -45,8 +45,8 @@ public class BlockStatement implements Statement {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
-        statements.forEach(s -> s.addIntegerEntries(cp));
+    public void addConstantPoolEntries(ConstantPool cp) {
+        statements.forEach(s -> s.addConstantPoolEntries(cp));
     }
 
     @Override

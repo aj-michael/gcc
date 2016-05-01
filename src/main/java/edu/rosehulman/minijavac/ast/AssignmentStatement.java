@@ -15,7 +15,7 @@ public class AssignmentStatement implements Statement {
     public final Expression expression;
 
     public AssignmentStatement(String type, String id, Expression expression) {
-        this.type = Optional.of(new Type(type));
+        this.type = Optional.of(Type.of(type));
         this.id = id;
         this.expression = expression;
     }
@@ -72,7 +72,8 @@ public class AssignmentStatement implements Statement {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
+    public void addConstantPoolEntries(ConstantPool cp) {
+        type.map(t -> cp.classEntry(t.getDescriptor()));
         expression.addIntegerEntries(cp);
     }
 

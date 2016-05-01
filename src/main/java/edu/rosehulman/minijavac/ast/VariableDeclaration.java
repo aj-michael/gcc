@@ -7,14 +7,15 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 public class VariableDeclaration implements Statement {
     public final String name;
-    public final String type;
+    final Type type;
 
     public VariableDeclaration(String name, String type) {
         this.name = name;
-        this.type = type;
+        this.type = Type.of(type);
     }
 
     @Override
@@ -30,7 +31,8 @@ public class VariableDeclaration implements Statement {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
+    public void addConstantPoolEntries(ConstantPool cp) {
+        cp.classEntry(type.getDescriptor());
     }
 
     @Override

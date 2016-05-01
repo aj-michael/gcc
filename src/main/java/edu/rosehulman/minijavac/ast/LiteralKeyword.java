@@ -28,7 +28,7 @@ public enum LiteralKeyword implements LiteralExpression {
                 // Cannot use `this` in main.
                 return null;
             } else {
-                return new Type(scope.className);
+                return Type.of(scope.className);
             }
         }
 

@@ -3,7 +3,6 @@ package edu.rosehulman.minijavac.ast;
 import edu.rosehulman.minijavac.generator.ClassEntry;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.typechecker.Scope;
-import edu.rosehulman.minijavac.typechecker.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class ClassDeclaration {
 
     public List<String> typecheckMore(Scope scope) {
         List<String> errors = methodDeclarations.stream()
-                .filter(md -> !(md instanceof MainMethodDeclaration) && !scope.containsClass(md.returnType))
+                .filter(md -> !(md instanceof MainMethodDeclaration) && !scope.containsClass(md.returnType.getDescriptor()))
                 .map(md -> "Cannot find class named " + md.returnType)
                 .collect(toList());
         return errors;
@@ -53,10 +52,10 @@ public class ClassDeclaration {
         for (VariableDeclaration cvd : classVariableDeclarations) {
             if (scope.containsVariable(cvd.name)) {
                 errors.add("The class variable " + cvd.name + " is already declared.  Redeclaration and shadowing are not allowed.");
-            } else if (!scope.containsClass(cvd.type)) {
+            } else if (!scope.containsClass(cvd.type.getDescriptor())) {
                 errors.add("Cannot find class named " + cvd.type);
             } else {
-                scope.declaredVariables.put(cvd.name, new Type(cvd.type));
+                scope.declaredVariables.put(cvd.name, cvd.type);
             }
         }
         for (MethodDeclaration md : methodDeclarations) {
@@ -78,7 +77,7 @@ public class ClassDeclaration {
         ClassEntry classEntry = cp.classEntry(this);
         for (MethodDeclaration md : methodDeclarations) {
             cp.methodRefEntry(name, md.name, md.getDescriptor());
-            md.addIntegerEntries(cp);
+            md.addConstantPoolEntries(cp);
         }
 
         for (VariableDeclaration vd : classVariableDeclarations) {

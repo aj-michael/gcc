@@ -40,9 +40,9 @@ public class WhileStatement implements Statement {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
+    public void addConstantPoolEntries(ConstantPool cp) {
         condition.addIntegerEntries(cp);
-        statement.addIntegerEntries(cp);
+        statement.addConstantPoolEntries(cp);
     }
 
     @Override

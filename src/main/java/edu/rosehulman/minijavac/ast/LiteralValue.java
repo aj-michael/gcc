@@ -14,13 +14,7 @@ public class LiteralValue implements LiteralExpression {
     public final Object value;
 
     public LiteralValue(String type, Object value) {
-        if (type.equals(Type.INT.toString())) {
-            this.type = Type.INT;
-        } else if (type.equals(Type.BOOLEAN.toString())) {
-            this.type = Type.BOOLEAN;
-        } else {
-            this.type = new Type(type);
-        }
+        this.type = Type.of(type);
         this.value = value;
     }
 

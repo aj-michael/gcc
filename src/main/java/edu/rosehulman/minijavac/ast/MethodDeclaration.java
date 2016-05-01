@@ -11,7 +11,7 @@ import java.util.*;
 
 public class MethodDeclaration {
     public final String name;
-    public final String returnType;
+    public final Type returnType;
     public final List<VariableDeclaration> arguments;
     public final List<Statement> statements;
     public final Expression returnExpression;
@@ -22,7 +22,7 @@ public class MethodDeclaration {
 
     public MethodDeclaration(String name, List<VariableDeclaration> arguments, List<Statement> statements, String returnType, Expression returnExpression) {
         this.name = name;
-        this.returnType = returnType;
+        this.returnType = Type.of(returnType);
         this.arguments = arguments;
         this.statements = statements;
         this.returnExpression = returnExpression;
@@ -49,10 +49,10 @@ public class MethodDeclaration {
         for (VariableDeclaration argument : arguments) {
             if (argumentNames.contains(argument.name)) {
                 errors.add("Formal parameter named " + argument.name + " duplicates the name of another formal parameter.");
-            } else if (!scope.containsClass(argument.type)) {
+            } else if (!scope.containsClass(argument.type.type)) {
                 errors.add("Cannot find class named " + argument.type);
             } else {
-                scope.declaredVariables.put(argument.name, new Type(argument.type));
+                scope.declaredVariables.put(argument.name, argument.type);
             }
             argumentNames.add(argument.name);
         }
@@ -62,7 +62,7 @@ public class MethodDeclaration {
         if (returnExpression != null) {
             errors.addAll(returnExpression.typecheck(scope));
         }
-        if ((returnExpression != null) && !returnExpression.getType(scope).isA(new Type(returnType), scope)) {
+        if ((returnExpression != null) && !returnExpression.getType(scope).isA(returnType, scope)) {
             errors.add(
                 "Actual return type " + returnExpression.getType(scope) + " of method " + name +
                     " does not match declared type " + returnType);
@@ -76,13 +76,11 @@ public class MethodDeclaration {
             "boolean", "Z"
     );
 
-    private static String formatType(String type) {
-        if (type == null) {
-            return "V";
-        } else if (primitiveTypes.containsKey(type)) {
-            return primitiveTypes.get(type);
+    private static String formatType(Type type) {
+        if (type.isPrimitiveType()) {
+            return type.getDescriptor();
         } else {
-            return "L" + type + ";";
+            return type.getDescriptor() + ";";
         }
     }
 
@@ -142,9 +140,9 @@ public class MethodDeclaration {
         if (returnExpression != null){
             codeBytes.addAll(returnExpression.generateCode(cp, variableNameToIndex));
         }
-        if (returnType == null) {
+        if (returnType == Type.NULL) {
             codeBytes.add((byte) 177);  // return
-        } else if (returnType.equals("int") || returnType.equals("boolean")) {
+        } else if ((returnType == Type.INT) || (returnType == Type.BOOLEAN)) {
             codeBytes.add((byte) 172);  // ireturn
         } else {
             codeBytes.add((byte) 176);  // areturn
@@ -167,7 +165,7 @@ public class MethodDeclaration {
         return bb.array();
     }
 
-    public void addIntegerEntries(ConstantPool cp) {
-        statements.forEach(s -> s.addIntegerEntries(cp));
+    public void addConstantPoolEntries(ConstantPool cp) {
+        statements.forEach(s -> s.addConstantPoolEntries(cp));
     }
 }

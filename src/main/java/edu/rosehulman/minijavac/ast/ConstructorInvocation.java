@@ -27,7 +27,7 @@ public class ConstructorInvocation implements CallExpression {
 
     @Override
     public Type getType(Scope scope) {
-        return new Type(className);
+        return Type.of(className);
     }
 
     @Override

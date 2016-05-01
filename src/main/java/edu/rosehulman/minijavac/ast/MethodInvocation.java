@@ -42,7 +42,7 @@ public class MethodInvocation implements CallExpression {
             MethodDeclaration md = classScope.getMethod(methodName);
             for (int argIndex = 0; argIndex < arguments.size() && argIndex < md.arguments.size(); argIndex++) {
                 Type realType = arguments.get(argIndex).getType(scope);
-                Type requiredType = new Type(md.arguments.get(argIndex).type);
+                Type requiredType = md.arguments.get(argIndex).type;
                 if (arguments.get(argIndex).getType(scope) == null) {
                     // Already added `this not declared` error.
                 } else if (!realType.isA(requiredType, scope)) {
@@ -57,7 +57,7 @@ public class MethodInvocation implements CallExpression {
     @Override
     public Type getType(Scope scope) {
         try {
-            return new Type(scope.getClassScope(subject.getType(scope).type).getMethod(methodName).returnType);
+            return scope.getClassScope(subject.getType(scope).type).getMethod(methodName).returnType;
         } catch (NullPointerException e) {
             return Type.NULL;
         }

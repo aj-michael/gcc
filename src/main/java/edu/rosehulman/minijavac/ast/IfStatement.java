@@ -46,10 +46,10 @@ public class IfStatement implements Statement {
     }
 
     @Override
-    public void addIntegerEntries(ConstantPool cp) {
+    public void addConstantPoolEntries(ConstantPool cp) {
         condition.addIntegerEntries(cp);
-        trueStatement.addIntegerEntries(cp);
-        falseStatement.addIntegerEntries(cp);
+        trueStatement.addConstantPoolEntries(cp);
+        falseStatement.addConstantPoolEntries(cp);
     }
 
     @Override
