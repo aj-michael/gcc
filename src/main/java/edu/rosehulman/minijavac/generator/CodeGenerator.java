@@ -76,7 +76,8 @@ public class CodeGenerator {
             bb.putInt(5);   //code_length
             // Start instructions
             bb.putShort((short) 0x2AB7);
-            bb.putShort(cp.objectConstructorEntry.index);
+
+            bb.putShort(cp.methodRefEntry(cd.getParentClass(), "<init>", "()V").index);
             bb.put((byte) 0xB1);
             // End instructions
             // Exception table length
