@@ -13,7 +13,7 @@ To install, download and unzip the most recent [release](https://github.com/aj-m
 
 ## Running instructions
 
-Minijavac has three commands: `lex`, `parse` and `typecheck`. Each takes exactly one file and writes to standard out.
+Minijavac has four commands: `generate`, `lex`, `parse` and `typecheck`. Each takes exactly one file as a command line argument. `generate` will create one `.class` file for each Java class in the source file. The other commands write to standard out.
 
     $ minijavac
     usage: minijavac <command> [<args>]
@@ -26,4 +26,4 @@ Minijavac has three commands: `lex`, `parse` and `typecheck`. Each takes exactly
 
     See 'minijavac help <command>' for more information on a specific command.
 
-Minijavac requires Java 1.5 or later to run.
+Minijavac requires Java 1.5 or execute the bytecode from the `generate` command.
