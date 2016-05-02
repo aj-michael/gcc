@@ -8,7 +8,6 @@ import edu.rosehulman.minijavac.ast.VariableDeclaration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;

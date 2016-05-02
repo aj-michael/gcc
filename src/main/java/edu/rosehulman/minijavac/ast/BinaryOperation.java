@@ -1,14 +1,14 @@
 package edu.rosehulman.minijavac.ast;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator.EQ;
 import static edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator.GT;
@@ -70,8 +70,27 @@ public class BinaryOperation implements Expression {
     public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.addAll(left.generateCode(cp, variables));
-        bytes.addAll(right.generateCode(cp, variables));
-        bytes.addAll(operatorBytes);
+        List<Byte> rightBytes = right.generateCode(cp, variables);
+        if (operator == BinaryOperator.AND) {
+            bytes.add((byte) 89);   // dup
+            bytes.add((byte) 153);  // ifeq means top of stack is zero
+            int jumpLength = rightBytes.size() + operatorBytes.size() + 3;
+            bytes.add((byte) (jumpLength >> 8));
+            bytes.add((byte) jumpLength);
+            bytes.addAll(rightBytes);
+            bytes.addAll(operatorBytes);
+        } else if (operator == BinaryOperator.OR) {
+            bytes.add((byte) 89);   // dup
+            bytes.add((byte) 154);  // ifne means top of stack is not zero
+            int jumpLength = rightBytes.size() + operatorBytes.size() + 3;
+            bytes.add((byte) (jumpLength >> 8));
+            bytes.add((byte) jumpLength);
+            bytes.addAll(rightBytes);
+            bytes.addAll(operatorBytes);
+        } else {
+            bytes.addAll(rightBytes);
+            bytes.addAll(operatorBytes);
+        }
         return bytes;
     }
 
