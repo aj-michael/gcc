@@ -1,7 +1,7 @@
 # Minijavac
 
 [![Build Status](https://img.shields.io/travis/aj-michael/minijavac.svg)](https://travis-ci.org/aj-michael/minijavac)
-[![Code Coverage](https://img.shields.io/codecov/c/github/aj-michael/minijavac.svg)](https://codecov.io/github/aj-michael/minijavac)
+[![codecov](https://codecov.io/gh/aj-michael/minijavac/branch/master/graph/badge.svg)](https://codecov.io/gh/aj-michael/minijavac)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/aj-michael/minijavac/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/aj-michael/minijavac.svg)](https://github.com/aj-michael/minijavac/releases)
 
