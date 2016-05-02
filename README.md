@@ -19,8 +19,11 @@ Minijavac has three commands: `lex`, `parse` and `typecheck`. Each takes exactly
     usage: minijavac <command> [<args>]
 
     The most commonly used minijavac commands are:
+        generate    Generate bytecode for Minijava programs
         lex         Lexical analysis of Minijava program
         parse       Parse Minijava program
         typecheck   Typecheck Minijava program
 
     See 'minijavac help <command>' for more information on a specific command.
+
+Minijavac requires Java 1.5 or later to run.
