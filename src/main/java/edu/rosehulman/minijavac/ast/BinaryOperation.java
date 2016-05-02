@@ -21,10 +21,13 @@ public class BinaryOperation implements Expression {
     public final BinaryOperator operator;
     public final Expression left;
     public final Expression right;
+    List<Byte> operatorBytes;
 
     @Override
     public List<String> typecheck(Scope scope) {
         List<String> errors = new ArrayList<>();
+        operatorBytes = new ArrayList<>();
+        operatorBytes.addAll(operator.byteCode);
         if (operator == BinaryOperator.EQ || operator == BinaryOperator.NEQ) {
             errors.addAll(left.typecheck(scope));
             errors.addAll(right.typecheck(scope));
@@ -32,6 +35,10 @@ public class BinaryOperation implements Expression {
             Type rightType = right.getType(scope);
             if (leftType.isPrimitiveType() ^ rightType.isPrimitiveType()) {
                 errors.add("The operand types, " + leftType + " and " + rightType + ", are not compatible for equality comparison");
+            }
+            if (!leftType.isPrimitiveType()) {
+                // if_acmpeq instead of if_icmpeq
+                operatorBytes.set(0, (byte) (operatorBytes.get(0) + 6));
             }
         } else {
             if (!left.getType(scope).isA(operator.operandType, scope)) {
@@ -64,7 +71,7 @@ public class BinaryOperation implements Expression {
         ArrayList<Byte> bytes = new ArrayList<>();
         bytes.addAll(left.generateCode(cp, variables));
         bytes.addAll(right.generateCode(cp, variables));
-        bytes.addAll(operator.byteCode);
+        bytes.addAll(operatorBytes);
         return bytes;
     }
 
