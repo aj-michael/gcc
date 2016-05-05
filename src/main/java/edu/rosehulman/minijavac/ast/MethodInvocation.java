@@ -10,7 +10,7 @@ import edu.rosehulman.minijavac.generator.Variable;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
-public class MethodInvocation implements CallExpression {
+public class MethodInvocation implements CallExpression, Statement {
     public final CallExpression subject;
     public final String methodName;
     public final List<Expression> arguments;
@@ -61,6 +61,11 @@ public class MethodInvocation implements CallExpression {
     }
 
     @Override
+    public int numLocalVariables(List<Variable> vd) {
+        return 0;
+    }
+
+    @Override
     public Type getType(Scope scope) {
         try {
             return scope.getClassScope(subject.getType(scope).type).getMethod(methodName).returnType;
@@ -87,5 +92,10 @@ public class MethodInvocation implements CallExpression {
         bytes.add((byte) (methodRefEntry.index >> 8));
         bytes.add((byte) methodRefEntry.index);
         return bytes;
+    }
+
+    @Override
+    public int maxBlockDepth() {
+        return 0;
     }
 }
