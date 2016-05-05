@@ -36,6 +36,7 @@ public class Scope {
             super(scope, "java/lang/Thread");
             methods.put("start", new MethodDeclaration("start", ImmutableList.of()));
             methods.put("run", new MethodDeclaration("run", ImmutableList.of()));
+            methods.put("join", new MethodDeclaration("join", ImmutableList.of()));
         }
     }
 
