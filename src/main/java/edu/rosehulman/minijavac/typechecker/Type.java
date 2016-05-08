@@ -7,11 +7,15 @@ public class Type {
 
     public static final Type INT = new Type("int");
     public static final Type BOOLEAN = new Type("boolean");
+    public static final Type DOUBLE = new Type("double");
+    public static final Type FLOAT = new Type("float");
     public static final Type NULL = new Type("null");
     private static Map<String, Type> types = new HashMap<>();
     static {
         types.put("int", INT);
         types.put("boolean", BOOLEAN);
+        types.put("double", DOUBLE);
+        types.put("float", FLOAT);
         types.put("null", NULL);
     }
 
@@ -68,6 +72,10 @@ public class Type {
             return "I";
         } else if (type.equals("boolean")) {
             return "Z";
+        } else if(type.equals("double")) {
+            return "D";
+        } else if(type.equals("float")) {
+            return "F";
         } else if (type.equals("null")) {
             return "V";
         } else {

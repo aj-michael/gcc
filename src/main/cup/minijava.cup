@@ -66,10 +66,12 @@ terminal Class;
 terminal Comma;
 terminal Divide;
 terminal Dot;
+terminal Double;
 terminal Else;
 terminal Equals;
 terminal Extends;
 terminal False;
+terminal Float;
 terminal GreaterThan;
 terminal GreaterThanOrEqual;
 terminal If;
@@ -269,6 +271,15 @@ Type ::= Int
     {:
         output.add("Type ::= BOOLEAN");
         RESULT = "boolean";
+    :}
+    | Double {:
+        output.add("Type ::= DOUBLE");
+        RESULT = "double";
+    :}
+    | Float
+    {:
+        output.add("Type ::= FLOAT");
+        RESULT = "float";
     :}
     | ID:name
     {:
