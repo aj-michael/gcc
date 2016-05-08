@@ -228,6 +228,11 @@ MethodDecl ::= Public Type:returnType ID:name LeftParenthesis OptFormalList:ofl 
         output.add("MethodDecl ::= ... ");
         RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e);
     :}
+    | Public Void ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl RightBrace
+    {:
+        output.add("MethodDecl ::= ... ");
+        RESULT = new MethodDeclaration(name.value, ofl, sl, "null", null);
+    :}
     ;
 OptFormalList ::= FormalList:fl
     {:
@@ -305,6 +310,11 @@ Stmt ::= Type:type ID:id Assignment Expr:expression Semicolon
     {:
         output.add("Stmt ::= ID GETS Expr SEMI");
         RESULT = new AssignmentStatement(id.value, expression);
+    :}
+    | CallExpr:ce Dot ID:methodName LeftParenthesis OptExprList:el RightParenthesis Semicolon
+    {:
+        output.add("Stmt ::= CallExpr DOT ID LPAREN OptExprList RPAREN");
+        RESULT = new MethodInvocation(ce, methodName.value, el);
     :}
     | error Semicolon
     ;

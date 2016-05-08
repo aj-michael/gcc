@@ -1,5 +1,6 @@
 package edu.rosehulman.minijavac.typechecker;
 
+import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.ast.ClassDeclaration;
 import edu.rosehulman.minijavac.ast.MethodDeclaration;
 import edu.rosehulman.minijavac.ast.Program;
@@ -27,6 +28,16 @@ public class Scope {
         classes.put("boolean", null);
         classes.put("null", null);
         classes.put("V", null);
+        classes.put("Thread", new ThreadScope(this));
+    }
+
+    static class ThreadScope extends Scope {
+        public ThreadScope(Scope scope) {
+            super(scope, "java/lang/Thread");
+            methods.put("start", new MethodDeclaration("start", ImmutableList.of()));
+            methods.put("run", new MethodDeclaration("run", ImmutableList.of()));
+            methods.put("join", new MethodDeclaration("join", ImmutableList.of()));
+        }
     }
 
     public Scope(Scope parent) {
