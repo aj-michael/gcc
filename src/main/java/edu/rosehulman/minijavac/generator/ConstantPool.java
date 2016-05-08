@@ -34,6 +34,7 @@ public class ConstantPool {
         constructorDescriptorEntry = utf8Entry("()V");
         printlnEntry = methodRefEntry("java/io/PrintStream", "println", "(I)V");
         objectConstructorEntry = methodRefEntry("java/lang/Object", "<init>", "()V");
+        classEntry("java/lang/Thread");
     }
 
     public Utf8Entry utf8Entry(String string) {
@@ -74,6 +75,8 @@ public class ConstantPool {
     public ClassEntry classEntry(String classDescriptor) {
         if (classEntryMap.containsKey(classDescriptor)) {
             return classEntryMap.get(classDescriptor);
+        } else if (classEntryMap.containsKey("java/lang/" + classDescriptor)) {
+            return classEntryMap.get("java/lang/" + classDescriptor);
         } else {
             Utf8Entry nameEntry = utf8Entry(classDescriptor);
             ClassEntry classEntry = new ClassEntry(index++, nameEntry);

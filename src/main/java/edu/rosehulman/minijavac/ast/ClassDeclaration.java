@@ -76,8 +76,9 @@ public class ClassDeclaration {
 
     public ConstantPool getConstantPool() {
         ConstantPool cp = new ConstantPool();
-        ClassEntry classEntry = cp.classEntry(this);
-        cp.methodRefEntry(getParentClass(), "<init>", "()V");
+        cp.classEntry(this);
+        ClassEntry parentClassEntry = cp.classEntry(getParentClass());
+        cp.methodRefEntry(parentClassEntry.nameEntry.string, "<init>", "()V");
         for (MethodDeclaration md : getAllMethodDeclarations()) {
             cp.methodRefEntry(name, md.name, md.getDescriptor());
             md.addConstantPoolEntries(cp);
