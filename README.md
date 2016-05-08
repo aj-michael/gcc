@@ -26,4 +26,4 @@ Minijavac has four commands: `generate`, `lex`, `parse` and `typecheck`. Each ta
 
     See 'minijavac help <command>' for more information on a specific command.
 
-Minijavac requires Java 1.5 or execute the bytecode from the `generate` command.
+Minijavac requires Java 1.5 to execute the bytecode from the `generate` command.
