@@ -119,6 +119,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 "boolean"                      { return symbol(Symbols.Boolean, TokenDisplayName.ReservedWord, yytext()); }
 "double"                       { return symbol(Symbols.Double, TokenDisplayName.ReservedWord, yytext()); }
 "float"                        { return symbol(Symbols.Float, TokenDisplayName.ReservedWord, yytext()); }
+"long"                         { return symbol(Symbols.Long, TokenDisplayName.ReservedWord, yytext()); }
 "if"                           { return symbol(Symbols.If, TokenDisplayName.ReservedWord, yytext()); }
 "else"                         { return symbol(Symbols.Else, TokenDisplayName.ReservedWord, yytext()); }
 "while"                        { return symbol(Symbols.While, TokenDisplayName.ReservedWord, yytext()); }

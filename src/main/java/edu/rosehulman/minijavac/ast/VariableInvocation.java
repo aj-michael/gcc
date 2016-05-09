@@ -47,20 +47,15 @@ public class VariableInvocation implements LiteralExpression {
     public List<Byte> generateCode(ConstantPool cp, Map<String, Variable> variables) {
         if(cp.thisFieldRefEntryMap.containsKey(name)) {
             ArrayList<Byte> bytes = new ArrayList<>();
-            bytes.add((byte) 42);
-            bytes.add((byte) 180);
+            bytes.add((byte) 42); // aload_0
+            bytes.add((byte) 180); // getfield
             bytes.add((byte) (cp.thisFieldRefEntryMap.get(name).index >> 8));
             bytes.add((byte) cp.thisFieldRefEntryMap.get(name).index);
             return bytes;
         } else if(variables.containsKey(name)) {
             ArrayList<Byte> bytes = new ArrayList<>();
             Variable variable = variables.get(name);
-            if (variable.getType().isPrimitiveType()) {
-                bytes.add((byte) 21); // iload
-            } else {
-                bytes.add((byte) 25); // aload
-            }
-            bytes.add(variables.get(name).getPosition().byteValue());
+            bytes.addAll(variable.getType().load(variable.getPosition().byteValue()));
             return bytes;
         } else {
             throw new RuntimeException("Could not find variable: " + name);

@@ -74,12 +74,6 @@ public class MethodDeclaration {
         return errors;
     }
 
-    private static Map<String, String> primitiveTypes = ImmutableMap.of(
-            "int", "I",
-            "null", "V",
-            "boolean", "Z"
-    );
-
     private static String formatType(Type type) {
         if (type == Type.NULL || type.isPrimitiveType()) {
             return type.getDescriptor();
@@ -142,13 +136,7 @@ public class MethodDeclaration {
         if (returnExpression != null){
             codeBytes.addAll(returnExpression.generateCode(cp, variableNameToIndex));
         }
-        if (returnType == Type.NULL) {
-            codeBytes.add((byte) 177);  // return
-        } else if ((returnType == Type.INT) || (returnType == Type.BOOLEAN)) {
-            codeBytes.add((byte) 172);  // ireturn
-        } else {
-            codeBytes.add((byte) 176);  // areturn
-        }
+        codeBytes.addAll(returnType.returnValue());
 
         int codeLength = codeBytes.size();
         short exceptionTableLength = 0;

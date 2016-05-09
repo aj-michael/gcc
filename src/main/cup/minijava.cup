@@ -82,6 +82,7 @@ terminal LeftBracket;
 terminal LeftParenthesis;
 terminal LessThan;
 terminal LessThanOrEqual;
+terminal Long;
 terminal Main;
 terminal Minus;
 terminal Multiply;
@@ -281,6 +282,10 @@ Type ::= Int
         output.add("Type ::= FLOAT");
         RESULT = "float";
     :}
+    | Long
+    {:
+        output.add(Type ::= Long");
+        RESULT = "long";
     | ID:name
     {:
         output.add("Type ::= ID");

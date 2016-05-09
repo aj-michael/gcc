@@ -89,12 +89,7 @@ public class AssignmentStatement implements Statement {
         } else if(variables.containsKey(id)) {
             Variable v = variables.get(id);
             bytes.addAll(expression.generateCode(cp, variables));
-            if (v.getType().isPrimitiveType()) {
-                bytes.add((byte) 54); // istore
-            } else {
-                bytes.add((byte) 58); // astore
-            }
-            bytes.add(v.getPosition().byteValue());
+            bytes.addAll(v.getType().store(v.getPosition().byteValue()));
         } else {
             throw new RuntimeException("Couldn't find variable " + id);
         }

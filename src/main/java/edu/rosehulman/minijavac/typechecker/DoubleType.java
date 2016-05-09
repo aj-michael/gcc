@@ -4,29 +4,29 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-public class BooleanType extends PrimitiveType {
+public class DoubleType extends PrimitiveType {
 
-    BooleanType() {
-        super("boolean");
+    DoubleType() {
+        super("double");
     }
 
     @Override
     public String getDescriptor() {
-        return "Z";
+        return "D";
     }
 
     @Override
     public List<Byte> load(int index) {
-        return getMemoryOperationBytes(index, (byte) 26, (byte) 21);
+        return getMemoryOperationBytes(index, (byte) 38, (byte) 24);
     }
 
     @Override
     public List<Byte> store(int index) {
-        return getMemoryOperationBytes(index, (byte) 59, (byte) 54);
+        return getMemoryOperationBytes(index, (byte) 71, (byte) 57);
     }
 
     @Override
     public List<Byte> returnValue() {
-        return ImmutableList.of((byte) 172);
+        return ImmutableList.of((byte) 175);
     }
 }

@@ -33,7 +33,7 @@ public class BinaryOperation implements Expression {
             errors.addAll(right.typecheck(scope));
             Type leftType = left.getType(scope);
             Type rightType = right.getType(scope);
-            if (leftType.isPrimitiveType() ^ rightType.isPrimitiveType()) {
+            if (leftType.isPrimitiveType() != rightType.isPrimitiveType()) {
                 errors.add("The operand types, " + leftType + " and " + rightType + ", are not compatible for equality comparison");
             }
             if (!leftType.isPrimitiveType()) {
