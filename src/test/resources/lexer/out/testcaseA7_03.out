@@ -27,10 +27,10 @@ ReservedWord, public
 ReservedWord, void
 ID, fill
 Delimiter, (
-ID, double
+ReservedWord, double
 ID, value
 Delimiter, ,
-ID, double
+ReservedWord, double
 ID, weight
 Delimiter, )
 Delimiter, {
