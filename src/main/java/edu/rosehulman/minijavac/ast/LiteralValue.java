@@ -57,7 +57,34 @@ public class LiteralValue implements LiteralExpression {
             } else if(integer >= Byte.MIN_VALUE && integer <= Byte.MAX_VALUE) {
                 return ImmutableList.of((byte) 16, integer.byteValue());
             } else {
-                return ImmutableList.of((byte) 18, (byte) cp.integerEntry((Integer) value).index);
+                return ImmutableList.of((byte) 18, (byte) cp.integerEntry(integer).index);
+            }
+        } else if(type.equals(Type.DOUBLE)) {
+            Double d = (Double) value;
+            if(d == 0.0) {
+                return ImmutableList.of((byte) 14); // dconst_0
+            } else if(d == 1.0) {
+                return ImmutableList.of((byte) 15); // dconst_1
+            } else {
+                return ImmutableList.of((byte) 20, (byte) 0, (byte) cp.doubleEntry(d).index);
+            }
+        } else if(type.equals(Type.FLOAT)) {
+            Float f = (Float) value;
+            if(f == 0.0) {
+                return ImmutableList.of((byte) 11); // fconst_0
+            } else if(f == 1.0) {
+                return ImmutableList.of((byte) 12); // fconst_1
+            } else if(f == 2.0) {
+                return ImmutableList.of((byte) 13); // fconst_2
+            } else {
+                return ImmutableList.of((byte) 18, (byte) cp.floatEntry(f).index);
+            }
+        } else if(type.equals(Type.LONG)) {
+            Long l = (Long) value;
+            if(l == 0 || l == 1) {
+                return ImmutableList.of((byte) (9 + l)); // lconst_0 and lconst_1
+            } else {
+                return ImmutableList.of((byte) 20, (byte) 0, (byte) cp.longEntry(l).index);
             }
         } else {
             throw new RuntimeException("Illegal literal value of type " + type.toString());

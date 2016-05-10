@@ -284,8 +284,9 @@ Type ::= Int
     :}
     | Long
     {:
-        output.add(Type ::= Long");
+        output.add("Type ::= Long");
         RESULT = "long";
+    :}
     | ID:name
     {:
         output.add("Type ::= ID");

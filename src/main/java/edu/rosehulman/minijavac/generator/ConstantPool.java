@@ -18,6 +18,9 @@ public class ConstantPool {
     Table<ClassEntry, NameAndTypeEntry, MethodRefEntry> methodRefEntryTable = HashBasedTable.create();
     Map<NameAndTypeEntry, FieldRefEntry> fieldRefEntryMap = new HashMap<>();
     Map<Integer, IntegerEntry> integerEntryMap = new HashMap<>();
+    Map<Double, DoubleEntry> doubleEntryMap = new HashMap<>();
+    Map<Float, FloatEntry> floatEntryMap = new HashMap<>();
+    Map<Long, LongEntry> longEntryMap = new HashMap<>();
     public Map<String, FieldRefEntry> thisFieldRefEntryMap = new HashMap<>();
 
     public final Utf8Entry codeEntry;
@@ -67,6 +70,39 @@ public class ConstantPool {
             IntegerEntry entry = new IntegerEntry(index++, value);
             entries.add(entry);
             integerEntryMap.put(value, entry);
+            return entry;
+        }
+    }
+
+    public DoubleEntry doubleEntry(double value) {
+        if (doubleEntryMap.containsKey(value)) {
+            return doubleEntryMap.get(value);
+        } else {
+            DoubleEntry entry = new DoubleEntry(index++, value);
+            entries.add(entry);
+            doubleEntryMap.put(value, entry);
+            return entry;
+        }
+    }
+
+    public FloatEntry floatEntry(float value) {
+        if (floatEntryMap.containsKey(value)) {
+            return floatEntryMap.get(value);
+        } else {
+            FloatEntry entry = new FloatEntry(index++, value);
+            entries.add(entry);
+            floatEntryMap.put(value, entry);
+            return entry;
+        }
+    }
+
+    public LongEntry longEntry(long value) {
+        if (longEntryMap.containsKey(value)) {
+            return longEntryMap.get(value);
+        } else {
+            LongEntry entry = new LongEntry(index++, value);
+            entries.add(entry);
+            longEntryMap.put(value, entry);
             return entry;
         }
     }
