@@ -3,6 +3,7 @@ package edu.rosehulman.minijavac.generator;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import edu.rosehulman.minijavac.ast.ClassDeclaration;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class ConstantPool {
     final Utf8Entry constructorNameEntry;
     final Utf8Entry constructorDescriptorEntry;
     public final FieldRefEntry systemOutEntry;
-    public final MethodRefEntry printlnEntry;
+    public final Map<Type,MethodRefEntry> printlnEntries;
     final MethodRefEntry objectConstructorEntry;
 
     public ConstantPool() {
@@ -35,7 +36,12 @@ public class ConstantPool {
         systemOutEntry = fieldRefEntry("java/lang/System", "out", "Ljava/io/PrintStream;");
         constructorNameEntry = utf8Entry("<init>");
         constructorDescriptorEntry = utf8Entry("()V");
-        printlnEntry = methodRefEntry("java/io/PrintStream", "println", "(I)V");
+        printlnEntries = new HashMap<Type, MethodRefEntry>();
+        printlnEntries.put(Type.INT, methodRefEntry("java/io/PrintStream", "println", "(I)V"));
+        printlnEntries.put(Type.BOOLEAN, methodRefEntry("java/io/PrintStream", "println", "(Z)V"));
+        printlnEntries.put(Type.DOUBLE, methodRefEntry("java/io/PrintStream", "println", "(D)V"));
+        printlnEntries.put(Type.LONG, methodRefEntry("java/io/PrintStream", "println", "(J)V"));
+        printlnEntries.put(Type.FLOAT, methodRefEntry("java/io/PrintStream", "println", "(F)V"));
         objectConstructorEntry = methodRefEntry("java/lang/Object", "<init>", "()V");
     }
 

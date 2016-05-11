@@ -72,6 +72,7 @@ terminal Equals;
 terminal Extends;
 terminal False;
 terminal Float;
+terminal Lexer.DisplayableValue<Float> FloatValue;
 terminal GreaterThan;
 terminal GreaterThanOrEqual;
 terminal If;
@@ -425,6 +426,11 @@ LiteralExpr ::= ID:variableName
     {:
         output.add("LiteralExpr ::= INTEGER");
         RESULT = new LiteralValue("int", i.value);
+    :}
+    | FloatValue:f
+    {:
+        output.add("LiteralExpr ::= FLOAT");
+        RESULT = new LiteralValue("float", f.value);
     :}
     | True
     {:
