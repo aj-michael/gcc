@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConstantPool {
-    private short index = 1;
+    short index = 1;
     public List<ConstantPoolEntry> entries = new ArrayList<>();
     Map<String, Utf8Entry> utf8EntryMap = new HashMap<>();
     Map<String, ClassEntry> classEntryMap = new HashMap<>();
@@ -85,6 +85,7 @@ public class ConstantPool {
             return doubleEntryMap.get(value);
         } else {
             DoubleEntry entry = new DoubleEntry(index++, value);
+            index++;
             entries.add(entry);
             doubleEntryMap.put(value, entry);
             return entry;
@@ -107,6 +108,7 @@ public class ConstantPool {
             return longEntryMap.get(value);
         } else {
             LongEntry entry = new LongEntry(index++, value);
+            index++;
             entries.add(entry);
             longEntryMap.put(value, entry);
             return entry;

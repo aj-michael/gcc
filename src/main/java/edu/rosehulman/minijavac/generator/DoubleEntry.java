@@ -7,7 +7,6 @@ public class DoubleEntry extends ConstantPoolEntry {
 
     final double value;
 
-
     DoubleEntry(short index, double value) {
         super(index, TAG);
         this.value = value;

@@ -67,6 +67,7 @@ terminal Comma;
 terminal Divide;
 terminal Dot;
 terminal Double;
+terminal Lexer.DisplayableValue<Double> DoubleValue;
 terminal Else;
 terminal Equals;
 terminal Extends;
@@ -84,6 +85,7 @@ terminal LeftParenthesis;
 terminal LessThan;
 terminal LessThanOrEqual;
 terminal Long;
+terminal Lexer.DisplayableValue<Long> LongValue;
 terminal Main;
 terminal Minus;
 terminal Multiply;
@@ -427,10 +429,20 @@ LiteralExpr ::= ID:variableName
         output.add("LiteralExpr ::= INTEGER");
         RESULT = new LiteralValue("int", i.value);
     :}
+    | LongValue:l
+    {:
+        output.add("LiteralExpr ::= LONG");
+        RESULT = new LiteralValue("long", l.value);
+    :}
     | FloatValue:f
     {:
         output.add("LiteralExpr ::= FLOAT");
         RESULT = new LiteralValue("float", f.value);
+    :}
+    | DoubleValue:d
+    {:
+        output.add("LiteralExpr ::= DOUBLE");
+        RESULT = new LiteralValue("double", d.value);
     :}
     | True
     {:

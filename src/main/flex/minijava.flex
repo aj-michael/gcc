@@ -51,7 +51,9 @@ import java.util.Optional;
     Delimiter,
     ID,
     Integer,
+    LongValue,
     FloatValue,
+    DoubleValue,
     Operator,
     ReservedWord;
   }
@@ -105,7 +107,9 @@ BadSystemOutPrintln = "System.out.println" [:jletterdigit:]+
 Identifier = [:jletter:] [:jletterdigit:]*
 
 DecIntegerLiteral = 0 | [1-9][0-9]*
-DecFloatLiteral = [0-9][0-9]*.[0-9][0-9]*
+DecFloatLiteral = [0-9][0-9]*\.[0-9][0-9]*f
+DecDoubleLiteral = [0-9][0-9]*\.[0-9][0-9]*
+DecLongLiteral = 0L | [1-9][0-9]*L
 
 %state STRING
 
@@ -163,6 +167,9 @@ DecFloatLiteral = [0-9][0-9]*.[0-9][0-9]*
 "]"                            { return symbol(Symbols.RightBracket, TokenDisplayName.Delimiter, yytext()); }
 
 {DecIntegerLiteral}            { return symbol(Symbols.Integer, TokenDisplayName.Integer, new Integer(yytext())); }
+{DecLongLiteral}               { String text = yytext();
+                                 return symbol(Symbols.LongValue, TokenDisplayName.LongValue, new Long(text.substring(0, text.length() - 1))); }
+{DecDoubleLiteral}             { return symbol(Symbols.DoubleValue, TokenDisplayName.DoubleValue, new Double(yytext())); }
 {DecFloatLiteral}              { return symbol(Symbols.FloatValue, TokenDisplayName.FloatValue, new Float(yytext())); }
 {Identifier}                   { return symbol(Symbols.ID, TokenDisplayName.ID, yytext()); }
 {BadSystemOutPrintln}          { yypushback(yylength() - "System".length());
