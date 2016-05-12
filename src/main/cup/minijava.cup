@@ -4,9 +4,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 import edu.rosehulman.minijavac.ast.*;
-import edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator;
 import edu.rosehulman.minijavac.ast.UnaryOperation.UnaryOperator;
-
+import edu.rosehulman.minijavac.operators.*;
 import java_cup.runtime.*;
 
 import java.util.LinkedList;
@@ -331,62 +330,62 @@ Stmt ::= Type:type ID:id Assignment Expr:expression Semicolon
 Expr ::= Expr:e1 Plus Expr:e2
     {:
         output.add("Expr ::= Expr PLUS Expr");
-        RESULT = new BinaryOperation(BinaryOperator.PLUS, e1, e2);
+        RESULT = new BinaryOperation(new Plus(), e1, e2);
     :}
     | Expr:e1 Minus Expr:e2
     {:
         output.add("Expr ::= Expr MINUS Expr");
-        RESULT = new BinaryOperation(BinaryOperator.MINUS, e1, e2);
+        RESULT = new BinaryOperation(new Minus(), e1, e2);
     :}
     | Expr:e1 Multiply Expr:e2
     {:
         output.add("Expr ::= Expr TIMES Expr");
-        RESULT = new BinaryOperation(BinaryOperator.MULTIPLY, e1, e2);
+        RESULT = new BinaryOperation(new Multiply(), e1, e2);
     :}
     | Expr:e1 Divide Expr:e2
     {:
         output.add("Expr ::= Expr DIVIDE Expr");
-        RESULT = new BinaryOperation(BinaryOperator.DIVIDE, e1, e2);
+        RESULT = new BinaryOperation(new Divide(), e1, e2);
     :}
     | Expr:e1 LessThan Expr:e2
     {:
         output.add("Expr ::= Expr LT Expr");
-        RESULT = new BinaryOperation(BinaryOperator.LT, e1, e2);
+        RESULT = new BinaryOperation(new LessThan(), e1, e2);
     :}
     | Expr:e1 LessThanOrEqual Expr:e2
     {:
         output.add("Expr ::= Expr LTE Expr");
-        RESULT = new BinaryOperation(BinaryOperator.LTE, e1, e2);
+        RESULT = new BinaryOperation(new LessThanOrEqualTo(), e1, e2);
     :}
     | Expr:e1 GreaterThanOrEqual Expr:e2
     {:
         output.add("Expr ::= Expr GTE Expr");
-        RESULT = new BinaryOperation(BinaryOperator.GTE, e1, e2);
+        RESULT = new BinaryOperation(new GreaterThanOrEqualTo(), e1, e2);
     :}
     | Expr:e1 GreaterThan Expr:e2
     {:
         output.add("Expr ::= Expr GT Expr");
-        RESULT = new BinaryOperation(BinaryOperator.GT, e1, e2);
+        RESULT = new BinaryOperation(new GreaterThan(), e1, e2);
     :}
     | Expr:e1 Equals Expr:e2
     {:
         output.add("Expr ::= Expr EQ Expr");
-        RESULT = new BinaryOperation(BinaryOperator.EQ, e1, e2);
+        RESULT = new BinaryOperation(new EqualsEquals(), e1, e2);
     :}
     | Expr:e1 NotEquals Expr:e2
     {:
         output.add("Expr ::= Expr NE Expr");
-        RESULT = new BinaryOperation(BinaryOperator.NEQ, e1, e2);
+        RESULT = new BinaryOperation(new NotEquals(), e1, e2);
     :}
     | Expr:e1 And Expr:e2
     {:
         output.add("Expr ::= Expr AND Expr");
-        RESULT = new BinaryOperation(BinaryOperator.AND, e1, e2);
+        RESULT = new BinaryOperation(new And(), e1, e2);
     :}
     | Expr:e1 Or Expr:e2
     {:
         output.add("Expr ::= Expr OR Expr");
-        RESULT = new BinaryOperation(BinaryOperator.OR, e1, e2);
+        RESULT = new BinaryOperation(new Or(), e1, e2);
     :}
     | UnaryExpr:ue
     {:

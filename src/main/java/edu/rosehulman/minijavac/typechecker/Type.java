@@ -86,4 +86,40 @@ public abstract class Type {
     public abstract List<Byte> load(int index);
     public abstract List<Byte> store(int index);
     public abstract List<Byte> returnValue();
+
+    public abstract List<Byte> plus();
+    public abstract boolean isPlusSupported();
+
+    public abstract List<Byte> minus();
+    public abstract boolean isMinusSupported();
+
+    public abstract List<Byte> multiply();
+    public abstract boolean isMultiplySupported();
+
+    public abstract List<Byte> divide();
+    public abstract boolean isDivideSupported();
+
+    public abstract List<Byte> equalsEquals();
+    public abstract boolean isEqualsEqualsSupported();
+
+    public abstract List<Byte> notEquals();
+    public abstract boolean isNotEqualsSupported();
+
+    public abstract List<Byte> greaterThan();
+    public abstract boolean isGreaterThanSupported();
+
+    public abstract List<Byte> greaterThanOrEqualTo();
+    public abstract boolean isGreaterThanOrEqualToSupported();
+
+    public abstract List<Byte> lessThan();
+    public abstract boolean isLessThanSupported();
+
+    public abstract List<Byte> lessThanOrEqualTo();
+    public abstract boolean isLessThanOrEqualToSupported();
+
+    public abstract List<Byte> and();
+    public abstract boolean isAndSupported();
+
+    public abstract List<Byte> or();
+    public abstract boolean isOrSupported();
 }
