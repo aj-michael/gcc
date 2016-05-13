@@ -1,9 +1,12 @@
 package edu.rosehulman.minijavac.ast;
 
-import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.generator.Variable;
-import edu.rosehulman.minijavac.operators.*;
+import edu.rosehulman.minijavac.operators.And;
+import edu.rosehulman.minijavac.operators.EqualsEquals;
+import edu.rosehulman.minijavac.operators.NotEquals;
+import edu.rosehulman.minijavac.operators.Operator;
+import edu.rosehulman.minijavac.operators.Or;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
