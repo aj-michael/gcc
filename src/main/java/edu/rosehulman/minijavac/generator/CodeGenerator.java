@@ -100,7 +100,7 @@ public class CodeGenerator {
         ByteArrayOutputStream finalOut = new ByteArrayOutputStream();
         finalOut.write(header);
 
-        finalOut.write(ByteBuffer.allocate(2).putShort((short) cp.index).array());
+        finalOut.write(ByteBuffer.allocate(2).putShort(cp.index).array());
         for (ConstantPoolEntry entry : cp.entries) {
             finalOut.write(entry.getBytes());
         }
