@@ -2,11 +2,7 @@ package edu.rosehulman.minijavac.ast;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.generator.Variable;
-import edu.rosehulman.minijavac.operators.And;
-import edu.rosehulman.minijavac.operators.EqualsEquals;
-import edu.rosehulman.minijavac.operators.NotEquals;
-import edu.rosehulman.minijavac.operators.Operator;
-import edu.rosehulman.minijavac.operators.Or;
+import edu.rosehulman.minijavac.operators.*;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -40,22 +36,30 @@ public class BinaryOperation implements Expression {
                 errors.add("The operand types, " + leftType + " and " + rightType + ", are not compatible for equality comparison");
             }
         } else {
+
             if (!operator.isOperationSupported(left.getType(scope))) {
-                errors.add("Left argument of type " + left.getType(scope) + " does not match expected type for operator " + operator);
+                if(operator instanceof Plus || operator instanceof Minus || operator instanceof Divide || operator instanceof Multiply) {
+                    errors.add("Left argument of type " + left.getType(scope) + " does not match expected type int for operator " + operator);
+                } else if(operator instanceof LessThan || operator instanceof LessThanOrEqualTo || operator instanceof GreaterThan || operator instanceof GreaterThanOrEqualTo) {
+                    errors.add("Left argument of type " + left.getType(scope) + " does not match expected type int for operator " + operator);
+                } else if(operator instanceof Or || operator instanceof And) {
+                    errors.add("Left argument of type " + left.getType(scope) + " does not match expected type boolean for operator " + operator);
+                }
             }
             errors.addAll(left.typecheck(scope));
-            if (!operator.isOperationSupported(right.getType(scope))) {
-                errors.add("Right argument of type " + right.getType(scope) + " does not match expected type for operator " + operator);
-            }
 
+            if (!operator.isOperationSupported(right.getType(scope))) {
+                if(operator instanceof Plus || operator instanceof Minus || operator instanceof Divide || operator instanceof Multiply) {
+                    errors.add("Right argument of type " + right.getType(scope) + " does not match expected type int for operator " + operator);
+                } else if(operator instanceof LessThan || operator instanceof LessThanOrEqualTo || operator instanceof GreaterThan || operator instanceof GreaterThanOrEqualTo) {
+                    errors.add("Right argument of type " + right.getType(scope) + " does not match expected type int for operator " + operator);
+                } else if(operator instanceof Or || operator instanceof And) {
+                    errors.add("Right argument of type " + right.getType(scope) + " does not match expected type boolean for operator " + operator);
+                }
+            }
             errors.addAll(right.typecheck(scope));
         }
-        Type leftType = left.getType(scope);
-        Type rightType = right.getType(scope);
-        type = leftType;
-        if(leftType.isPrimitiveType() && rightType.isPrimitiveType() && leftType != rightType) {
-            errors.add("The operand type, " + leftType + " and " + rightType + ", are not compatible");
-        }
+        type = left.getType(scope);
         return errors;
     }
 
