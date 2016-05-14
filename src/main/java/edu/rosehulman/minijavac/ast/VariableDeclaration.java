@@ -7,6 +7,8 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.generator.Variable;
+import edu.rosehulman.minijavac.typechecker.DoubleType;
+import edu.rosehulman.minijavac.typechecker.LongType;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -28,6 +30,10 @@ public class VariableDeclaration implements Statement {
     @Override
     public int numLocalVariables(List<Variable> vd) {
         vd.add(new Variable(name, type, vd.size()+1));
+        if(type instanceof DoubleType || type instanceof LongType) {
+            vd.add(null);
+            return 2;
+        }
         return 1;
     }
 

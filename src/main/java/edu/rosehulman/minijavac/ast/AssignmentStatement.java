@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.generator.Variable;
+import edu.rosehulman.minijavac.typechecker.DoubleType;
+import edu.rosehulman.minijavac.typechecker.LongType;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -61,6 +63,10 @@ public class AssignmentStatement implements Statement {
     public int numLocalVariables(List<Variable> vd) {
         if (isDeclaration()) {
             vd.add(new Variable(id, type.get(), vd.size()+1));
+            if(type.get() instanceof DoubleType || type.get() instanceof LongType) {
+                vd.add(null);
+                return 2;
+            }
             return 1;
         } else {
             return 0;

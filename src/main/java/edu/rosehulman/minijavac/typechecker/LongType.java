@@ -72,8 +72,7 @@ public class LongType extends PrimitiveType {
 
     @Override
     public List<Byte> equalsEquals() {
-        //TODO
-        return null;
+        return ImmutableList.of((byte) 148, (byte) 153, (byte) 0, (byte) 7, (byte) 3, (byte) 167, (byte) 0, (byte) 4, (byte) 4);
     }
 
     @Override
@@ -83,8 +82,7 @@ public class LongType extends PrimitiveType {
 
     @Override
     public List<Byte> notEquals() {
-        //TODO
-        return null;
+        return ImmutableList.of((byte) 148, (byte) 153, (byte) 0, (byte) 7, (byte) 4, (byte) 167, (byte) 0, (byte) 4, (byte) 3);
     }
 
     @Override
@@ -94,8 +92,7 @@ public class LongType extends PrimitiveType {
 
     @Override
     public List<Byte> greaterThan() {
-        //TODO
-        return null;
+        return ImmutableList.of((byte) 148, (byte) 157, (byte) 0, (byte) 7, (byte) 3, (byte) 167, (byte) 0, (byte) 4, (byte) 4);
     }
 
     @Override
@@ -105,8 +102,7 @@ public class LongType extends PrimitiveType {
 
     @Override
     public List<Byte> greaterThanOrEqualTo() {
-        //TODO
-        return null;
+        return ImmutableList.of((byte) 148, (byte) 156, (byte) 0, (byte) 7, (byte) 3, (byte) 167, (byte) 0, (byte) 4, (byte) 4);
     }
 
     @Override
@@ -116,8 +112,7 @@ public class LongType extends PrimitiveType {
 
     @Override
     public List<Byte> lessThan() {
-        //TODO
-        return null;
+        return ImmutableList.of((byte) 148, (byte) 155, (byte) 0, (byte) 7, (byte) 3, (byte) 167, (byte) 0, (byte) 4, (byte) 4);
     }
 
     @Override
@@ -127,8 +122,7 @@ public class LongType extends PrimitiveType {
 
     @Override
     public List<Byte> lessThanOrEqualTo() {
-        //TODO
-        return null;
+        return ImmutableList.of((byte) 148, (byte) 158, (byte) 0, (byte) 7, (byte) 3, (byte) 167, (byte) 0, (byte) 4, (byte) 4);
     }
 
     @Override

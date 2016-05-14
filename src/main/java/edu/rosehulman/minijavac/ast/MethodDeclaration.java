@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Bytes;
 import edu.rosehulman.minijavac.generator.ConstantPool;
 import edu.rosehulman.minijavac.generator.Variable;
+import edu.rosehulman.minijavac.typechecker.DoubleType;
+import edu.rosehulman.minijavac.typechecker.LongType;
 import edu.rosehulman.minijavac.typechecker.Scope;
 import edu.rosehulman.minijavac.typechecker.Type;
 
@@ -104,6 +106,10 @@ public class MethodDeclaration {
         int num =  numArguments() + 1;
         for (VariableDeclaration vd : arguments) {
             variableDeclarations.add(new Variable(vd.name, vd.type, variableDeclarations.size()+1));
+            if(vd.type instanceof DoubleType || vd.type instanceof LongType) {
+                variableDeclarations.add(null);
+                num++;
+            }
         }
 
         for (Statement statement : statements) {
@@ -125,6 +131,7 @@ public class MethodDeclaration {
         List<Variable> vds = new ArrayList<>();
         short numLocalVariables = (short) numLocalVariables(vds);
         Map<String, Variable> variableNameToIndex = vds.stream()
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(toMap(Variable::getName, Function.identity()));
 
