@@ -3,6 +3,7 @@ package edu.rosehulman.minijavac.generator;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import edu.rosehulman.minijavac.ast.ClassDeclaration;
+import edu.rosehulman.minijavac.typechecker.Type;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConstantPool {
-    private short index = 1;
+    short index = 1;
     public List<ConstantPoolEntry> entries = new ArrayList<>();
     Map<String, Utf8Entry> utf8EntryMap = new HashMap<>();
     Map<String, ClassEntry> classEntryMap = new HashMap<>();
@@ -18,13 +19,16 @@ public class ConstantPool {
     Table<ClassEntry, NameAndTypeEntry, MethodRefEntry> methodRefEntryTable = HashBasedTable.create();
     Map<NameAndTypeEntry, FieldRefEntry> fieldRefEntryMap = new HashMap<>();
     Map<Integer, IntegerEntry> integerEntryMap = new HashMap<>();
+    Map<Double, DoubleEntry> doubleEntryMap = new HashMap<>();
+    Map<Float, FloatEntry> floatEntryMap = new HashMap<>();
+    Map<Long, LongEntry> longEntryMap = new HashMap<>();
     public Map<String, FieldRefEntry> thisFieldRefEntryMap = new HashMap<>();
 
     public final Utf8Entry codeEntry;
     final Utf8Entry constructorNameEntry;
     final Utf8Entry constructorDescriptorEntry;
     public final FieldRefEntry systemOutEntry;
-    public final MethodRefEntry printlnEntry;
+    public final Map<Type,MethodRefEntry> printlnEntries;
     final MethodRefEntry objectConstructorEntry;
 
     public ConstantPool() {
@@ -32,7 +36,12 @@ public class ConstantPool {
         systemOutEntry = fieldRefEntry("java/lang/System", "out", "Ljava/io/PrintStream;");
         constructorNameEntry = utf8Entry("<init>");
         constructorDescriptorEntry = utf8Entry("()V");
-        printlnEntry = methodRefEntry("java/io/PrintStream", "println", "(I)V");
+        printlnEntries = new HashMap<Type, MethodRefEntry>();
+        printlnEntries.put(Type.INT, methodRefEntry("java/io/PrintStream", "println", "(I)V"));
+        printlnEntries.put(Type.BOOLEAN, methodRefEntry("java/io/PrintStream", "println", "(Z)V"));
+        printlnEntries.put(Type.DOUBLE, methodRefEntry("java/io/PrintStream", "println", "(D)V"));
+        printlnEntries.put(Type.LONG, methodRefEntry("java/io/PrintStream", "println", "(J)V"));
+        printlnEntries.put(Type.FLOAT, methodRefEntry("java/io/PrintStream", "println", "(F)V"));
         objectConstructorEntry = methodRefEntry("java/lang/Object", "<init>", "()V");
         classEntry("java/lang/Thread");
     }
@@ -68,6 +77,41 @@ public class ConstantPool {
             IntegerEntry entry = new IntegerEntry(index++, value);
             entries.add(entry);
             integerEntryMap.put(value, entry);
+            return entry;
+        }
+    }
+
+    public DoubleEntry doubleEntry(double value) {
+        if (doubleEntryMap.containsKey(value)) {
+            return doubleEntryMap.get(value);
+        } else {
+            DoubleEntry entry = new DoubleEntry(index++, value);
+            index++;
+            entries.add(entry);
+            doubleEntryMap.put(value, entry);
+            return entry;
+        }
+    }
+
+    public FloatEntry floatEntry(float value) {
+        if (floatEntryMap.containsKey(value)) {
+            return floatEntryMap.get(value);
+        } else {
+            FloatEntry entry = new FloatEntry(index++, value);
+            entries.add(entry);
+            floatEntryMap.put(value, entry);
+            return entry;
+        }
+    }
+
+    public LongEntry longEntry(long value) {
+        if (longEntryMap.containsKey(value)) {
+            return longEntryMap.get(value);
+        } else {
+            LongEntry entry = new LongEntry(index++, value);
+            index++;
+            entries.add(entry);
+            longEntryMap.put(value, entry);
             return entry;
         }
     }

@@ -4,9 +4,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 import edu.rosehulman.minijavac.ast.*;
-import edu.rosehulman.minijavac.ast.BinaryOperation.BinaryOperator;
 import edu.rosehulman.minijavac.ast.UnaryOperation.UnaryOperator;
-
+import edu.rosehulman.minijavac.operators.*;
 import java_cup.runtime.*;
 
 import java.util.LinkedList;
@@ -66,10 +65,14 @@ terminal Class;
 terminal Comma;
 terminal Divide;
 terminal Dot;
+terminal Double;
+terminal Lexer.DisplayableValue<Double> DoubleValue;
 terminal Else;
 terminal Equals;
 terminal Extends;
 terminal False;
+terminal Float;
+terminal Lexer.DisplayableValue<Float> FloatValue;
 terminal GreaterThan;
 terminal GreaterThanOrEqual;
 terminal If;
@@ -80,6 +83,8 @@ terminal LeftBracket;
 terminal LeftParenthesis;
 terminal LessThan;
 terminal LessThanOrEqual;
+terminal Long;
+terminal Lexer.DisplayableValue<Long> LongValue;
 terminal Main;
 terminal Minus;
 terminal Multiply;
@@ -275,6 +280,20 @@ Type ::= Int
         output.add("Type ::= BOOLEAN");
         RESULT = "boolean";
     :}
+    | Double {:
+        output.add("Type ::= DOUBLE");
+        RESULT = "double";
+    :}
+    | Float
+    {:
+        output.add("Type ::= FLOAT");
+        RESULT = "float";
+    :}
+    | Long
+    {:
+        output.add("Type ::= Long");
+        RESULT = "long";
+    :}
     | ID:name
     {:
         output.add("Type ::= ID");
@@ -321,62 +340,62 @@ Stmt ::= Type:type ID:id Assignment Expr:expression Semicolon
 Expr ::= Expr:e1 Plus Expr:e2
     {:
         output.add("Expr ::= Expr PLUS Expr");
-        RESULT = new BinaryOperation(BinaryOperator.PLUS, e1, e2);
+        RESULT = new BinaryOperation(new Plus(), e1, e2);
     :}
     | Expr:e1 Minus Expr:e2
     {:
         output.add("Expr ::= Expr MINUS Expr");
-        RESULT = new BinaryOperation(BinaryOperator.MINUS, e1, e2);
+        RESULT = new BinaryOperation(new Minus(), e1, e2);
     :}
     | Expr:e1 Multiply Expr:e2
     {:
         output.add("Expr ::= Expr TIMES Expr");
-        RESULT = new BinaryOperation(BinaryOperator.MULTIPLY, e1, e2);
+        RESULT = new BinaryOperation(new Multiply(), e1, e2);
     :}
     | Expr:e1 Divide Expr:e2
     {:
         output.add("Expr ::= Expr DIVIDE Expr");
-        RESULT = new BinaryOperation(BinaryOperator.DIVIDE, e1, e2);
+        RESULT = new BinaryOperation(new Divide(), e1, e2);
     :}
     | Expr:e1 LessThan Expr:e2
     {:
         output.add("Expr ::= Expr LT Expr");
-        RESULT = new BinaryOperation(BinaryOperator.LT, e1, e2);
+        RESULT = new BinaryOperation(new LessThan(), e1, e2);
     :}
     | Expr:e1 LessThanOrEqual Expr:e2
     {:
         output.add("Expr ::= Expr LTE Expr");
-        RESULT = new BinaryOperation(BinaryOperator.LTE, e1, e2);
+        RESULT = new BinaryOperation(new LessThanOrEqualTo(), e1, e2);
     :}
     | Expr:e1 GreaterThanOrEqual Expr:e2
     {:
         output.add("Expr ::= Expr GTE Expr");
-        RESULT = new BinaryOperation(BinaryOperator.GTE, e1, e2);
+        RESULT = new BinaryOperation(new GreaterThanOrEqualTo(), e1, e2);
     :}
     | Expr:e1 GreaterThan Expr:e2
     {:
         output.add("Expr ::= Expr GT Expr");
-        RESULT = new BinaryOperation(BinaryOperator.GT, e1, e2);
+        RESULT = new BinaryOperation(new GreaterThan(), e1, e2);
     :}
     | Expr:e1 Equals Expr:e2
     {:
         output.add("Expr ::= Expr EQ Expr");
-        RESULT = new BinaryOperation(BinaryOperator.EQ, e1, e2);
+        RESULT = new BinaryOperation(new EqualsEquals(), e1, e2);
     :}
     | Expr:e1 NotEquals Expr:e2
     {:
         output.add("Expr ::= Expr NE Expr");
-        RESULT = new BinaryOperation(BinaryOperator.NEQ, e1, e2);
+        RESULT = new BinaryOperation(new NotEquals(), e1, e2);
     :}
     | Expr:e1 And Expr:e2
     {:
         output.add("Expr ::= Expr AND Expr");
-        RESULT = new BinaryOperation(BinaryOperator.AND, e1, e2);
+        RESULT = new BinaryOperation(new And(), e1, e2);
     :}
     | Expr:e1 Or Expr:e2
     {:
         output.add("Expr ::= Expr OR Expr");
-        RESULT = new BinaryOperation(BinaryOperator.OR, e1, e2);
+        RESULT = new BinaryOperation(new Or(), e1, e2);
     :}
     | UnaryExpr:ue
     {:
@@ -418,6 +437,21 @@ LiteralExpr ::= ID:variableName
     {:
         output.add("LiteralExpr ::= INTEGER");
         RESULT = new LiteralValue("int", i.value);
+    :}
+    | LongValue:l
+    {:
+        output.add("LiteralExpr ::= LONG");
+        RESULT = new LiteralValue("long", l.value);
+    :}
+    | FloatValue:f
+    {:
+        output.add("LiteralExpr ::= FLOAT");
+        RESULT = new LiteralValue("float", f.value);
+    :}
+    | DoubleValue:d
+    {:
+        output.add("LiteralExpr ::= DOUBLE");
+        RESULT = new LiteralValue("double", d.value);
     :}
     | True
     {:

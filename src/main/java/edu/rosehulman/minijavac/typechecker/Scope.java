@@ -26,6 +26,10 @@ public class Scope {
         classes.put("int", null);
         classes.put("Z", null);
         classes.put("boolean", null);
+        classes.put("D", null);
+        classes.put("double", null);
+        classes.put("F", null);
+        classes.put("float", null);
         classes.put("null", null);
         classes.put("V", null);
         classes.put("Thread", new ThreadScope(this));

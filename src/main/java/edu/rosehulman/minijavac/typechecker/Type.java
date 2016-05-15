@@ -1,31 +1,42 @@
 package edu.rosehulman.minijavac.typechecker;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class Type {
+public abstract class Type {
 
-    public static final Type INT = new Type("int");
-    public static final Type BOOLEAN = new Type("boolean");
-    public static final Type NULL = new Type("null");
+    public static final BooleanType BOOLEAN = new BooleanType();
+    public static final IntType INT = new IntType();
+    public static final DoubleType DOUBLE = new DoubleType();
+    public static final FloatType FLOAT = new FloatType();
+    public static final LongType LONG = new LongType();
+    public static final NullType NULL = new NullType();
+
     private static Map<String, Type> types = new HashMap<>();
+
     static {
-        types.put("int", INT);
         types.put("boolean", BOOLEAN);
+        types.put("int", INT);
+        types.put("double", DOUBLE);
+        types.put("float", FLOAT);
+        types.put("long", LONG);
         types.put("null", NULL);
     }
 
     public final String type;
 
-    private Type(String type) {
+    Type(String type) {
         this.type = type;
     }
 
     public static Type of(String type) {
         if (type == null) {
-            return NULL;
+            return Type.NULL;
         } else if (!types.containsKey(type)) {
-            types.put(type, new Type(type));
+            types.put(type, new ReferenceType(type));
         }
         return types.get(type);
     }
@@ -35,7 +46,7 @@ public class Type {
             return true;
         } else if (isPrimitiveType() || otherType.isPrimitiveType()) {
            return type.equals(otherType.type);
-        } else if (type.equals("null")) {
+        } else if (this == NullType.NULL) {
             return true;
         } else if (type.equals(otherType.type)) {
             return true;
@@ -47,15 +58,11 @@ public class Type {
 
             Scope parentScope = classScope.parent.get();
             if (parentScope.parent.isPresent()) {
-                return new Type(parentScope.className).isA(otherType, scope);
+                return new ReferenceType(parentScope.className).isA(otherType, scope);
             } else {
                 return false;
             }
         }
-    }
-
-    public boolean isPrimitiveType() {
-        return (this == INT) || (this == BOOLEAN);
     }
 
     @Override
@@ -63,15 +70,56 @@ public class Type {
         return type;
     }
 
-    public String getDescriptor() {
-        if (type.equals("int")) {
-            return "I";
-        } else if (type.equals("boolean")) {
-            return "Z";
-        } else if (type.equals("null")) {
-            return "V";
+    List<Byte> getMemoryOperationBytes(int index, byte nByte, byte longByte) {
+        if(index < 0) {
+            throw new IndexOutOfBoundsException("Index less than zero is no allowed");
+        } else if(index <= 3) {
+            return ImmutableList.of((byte) (nByte + index));
         } else {
-            return type;
+            return ImmutableList.of(longByte, (byte) index);
         }
     }
+
+    public abstract boolean isPrimitiveType();
+    public abstract String getDescriptor();
+
+    public abstract List<Byte> load(int index);
+    public abstract List<Byte> store(int index);
+    public abstract List<Byte> returnValue();
+
+    public abstract List<Byte> plus();
+    public abstract boolean isPlusSupported();
+
+    public abstract List<Byte> minus();
+    public abstract boolean isMinusSupported();
+
+    public abstract List<Byte> multiply();
+    public abstract boolean isMultiplySupported();
+
+    public abstract List<Byte> divide();
+    public abstract boolean isDivideSupported();
+
+    public abstract List<Byte> equalsEquals();
+    public abstract boolean isEqualsEqualsSupported();
+
+    public abstract List<Byte> notEquals();
+    public abstract boolean isNotEqualsSupported();
+
+    public abstract List<Byte> greaterThan();
+    public abstract boolean isGreaterThanSupported();
+
+    public abstract List<Byte> greaterThanOrEqualTo();
+    public abstract boolean isGreaterThanOrEqualToSupported();
+
+    public abstract List<Byte> lessThan();
+    public abstract boolean isLessThanSupported();
+
+    public abstract List<Byte> lessThanOrEqualTo();
+    public abstract boolean isLessThanOrEqualToSupported();
+
+    public abstract List<Byte> and();
+    public abstract boolean isAndSupported();
+
+    public abstract List<Byte> or();
+    public abstract boolean isOrSupported();
 }
