@@ -321,6 +321,11 @@ Stmt ::= Type:type ID:id Assignment Expr:expression Semicolon
         output.add("Stmt ::= LBRACE StmtList RBRACE");
         RESULT = new BlockStatement(sl);
     :}
+    | Synchronized LeftParenthesis Expr:lock RightParenthesis LeftBrace StmtList:sl RightBrace
+    {:
+        output.add("Stmt ::= SYNCHRONIZED LPAREN Expr RPAREN LBRACE StmtList RBRACE");
+        RESULT = new SynchronizedBlockStatement(lock, sl);
+    :}
     | If LeftParenthesis Expr:condition RightParenthesis Stmt:trueStatement Else Stmt:falseStatement
     {:
         output.add("Stmt ::= IF LPAREN Expr RPAREN Stmt ELSE Stmt");
