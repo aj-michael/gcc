@@ -101,6 +101,7 @@ terminal RightBracket;
 terminal RightParenthesis;
 terminal Semicolon;
 terminal Static;
+terminal Synchronized;
 terminal Lexer.DisplayableValue<String> ID;
 terminal String;
 terminal SystemOutPrintln;
@@ -231,12 +232,22 @@ MethodDeclList ::= MethodDeclList:mdl MethodDecl:md
 MethodDecl ::= Public Type:returnType ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl Return Expr:e Semicolon RightBrace
     {:
         output.add("MethodDecl ::= ... ");
-        RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e);
+        RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e, true);
+    :}
+    | Public Synchronized Type:returnType ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl Return Expr:e Semicolon RightBrace
+    {:
+        output.add("MethodDecl ::= ... ");
+        RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e, true);
     :}
     | Public Void ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl RightBrace
     {:
         output.add("MethodDecl ::= ... ");
-        RESULT = new MethodDeclaration(name.value, ofl, sl, "null", null);
+        RESULT = new MethodDeclaration(name.value, ofl, sl, "null", null, false);
+    :}
+    | Public Synchronized Void ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl RightBrace
+    {:
+        output.add("MethodDecl ::= ... ");
+        RESULT = new MethodDeclaration(name.value, ofl, sl, "null", null, true);
     :}
     ;
 OptFormalList ::= FormalList:fl
@@ -309,6 +320,11 @@ Stmt ::= Type:type ID:id Assignment Expr:expression Semicolon
     {:
         output.add("Stmt ::= LBRACE StmtList RBRACE");
         RESULT = new BlockStatement(sl);
+    :}
+    | Synchronized LeftParenthesis Expr:lock RightParenthesis LeftBrace StmtList:sl RightBrace
+    {:
+        output.add("Stmt ::= SYNCHRONIZED LPAREN Expr RPAREN LBRACE StmtList RBRACE");
+        RESULT = new SynchronizedBlockStatement(lock, sl);
     :}
     | If LeftParenthesis Expr:condition RightParenthesis Stmt:trueStatement Else Stmt:falseStatement
     {:

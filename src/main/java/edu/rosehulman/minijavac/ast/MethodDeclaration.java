@@ -20,17 +20,19 @@ public class MethodDeclaration {
     public final List<VariableDeclaration> arguments;
     public final List<Statement> statements;
     public final Expression returnExpression;
+    public final boolean isSynchronized;
 
     public MethodDeclaration(String name, List<Statement> statements) {
-        this(name, new LinkedList<>(), statements, null, null);
+        this(name, new LinkedList<>(), statements, null, null, false);
     }
 
-    public MethodDeclaration(String name, List<VariableDeclaration> arguments, List<Statement> statements, String returnType, Expression returnExpression) {
+    public MethodDeclaration(String name, List<VariableDeclaration> arguments, List<Statement> statements, String returnType, Expression returnExpression, boolean isSynchronized) {
         this.name = name;
         this.returnType = Type.of(returnType);
         this.arguments = arguments;
         this.statements = statements;
         this.returnExpression = returnExpression;
+        this.isSynchronized = isSynchronized;
     }
 
     public boolean canOverride(MethodDeclaration other) {
@@ -163,5 +165,21 @@ public class MethodDeclaration {
 
     public void addConstantPoolEntries(ConstantPool cp) {
         statements.forEach(s -> s.addConstantPoolEntries(cp));
+    }
+
+    public boolean isStatic() {
+        return this instanceof MainMethodDeclaration;
+    }
+
+    public int getAccessFlags() {
+        int accessFlags = 0;
+        accessFlags |= 0x0001;  // public
+        if (isStatic()) {
+            accessFlags |= 0x0008;
+        }
+        if (isSynchronized) {
+            accessFlags |= 0x0020;
+        }
+        return accessFlags;
     }
 }
