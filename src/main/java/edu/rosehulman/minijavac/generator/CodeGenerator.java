@@ -78,11 +78,7 @@ public class CodeGenerator {
         // Class methods
         for (MethodDeclaration md : cd.methodDeclarations) {
             ByteBuffer bb = ByteBuffer.allocate(8);
-            if(md instanceof MainMethodDeclaration) {
-                bb.putShort((short) 9);
-            } else {
-                bb.putShort((short) 1);
-            }
+            bb.putShort((short) md.getAccessFlags());
             bb.putShort(cp.utf8EntryMap.get(md.name).index); // name_index
             bb.putShort(cp.utf8EntryMap.get(md.getDescriptor()).index); // descriptor_index
 
