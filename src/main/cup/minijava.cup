@@ -107,6 +107,7 @@ terminal Lexer.DisplayableValue<String> ID;
 terminal String;
 terminal SystemOutPrintln;
 terminal This;
+terminal ThreadSleep;
 terminal True;
 terminal Void;
 terminal Volatile;
@@ -352,6 +353,11 @@ Stmt ::= Type:type ID:id Assignment Expr:expression Semicolon
     {:
         output.add("Stmt ::= SYSTEMOUTPRINTLN LPAREN Expr RPAREN SEMI");
         RESULT = new PrintlnStatement(expression);
+    :}
+    | ThreadSleep LeftParenthesis Expr:expression RightParenthesis Semicolon
+    {:
+        output.add("Stmt ::= THREADSLEEP LPAREN Expr RPAREN SEMI");
+        RESULT = new ThreadSleepStatement(expression);
     :}
     | ID:id Assignment Expr:expression Semicolon
     {:

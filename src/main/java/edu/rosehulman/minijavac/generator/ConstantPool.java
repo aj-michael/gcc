@@ -32,6 +32,7 @@ public class ConstantPool {
     public final Map<Type,MethodRefEntry> printlnEntries;
     final MethodRefEntry objectConstructorEntry;
     public final MethodRefEntry loadLibraryEntry;
+    public final MethodRefEntry threadSleepEntry;
 
     public ConstantPool() {
         codeEntry = utf8Entry("Code");
@@ -47,6 +48,7 @@ public class ConstantPool {
         objectConstructorEntry = methodRefEntry("java/lang/Object", "<init>", "()V");
         classEntry("java/lang/Thread");
         loadLibraryEntry = methodRefEntry("java/lang/System", "loadLibrary", "(Ljava/lang/String;)V");
+        threadSleepEntry = methodRefEntry("java/lang/Thread", "sleep", "(J)V");
     }
 
     public Utf8Entry utf8Entry(String string) {

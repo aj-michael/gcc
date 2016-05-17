@@ -140,6 +140,7 @@ DecLongLiteral = 0L | [1-9][0-9]*L
 "synchronized"                 { return symbol(Symbols.Synchronized, TokenDisplayName.ReservedWord, yytext()); }
 "native"                       { return symbol(Symbols.Native, TokenDisplayName.ReservedWord, yytext()); }
 "System.out.println"           { return symbol(Symbols.SystemOutPrintln, TokenDisplayName.ReservedWord, yytext()); }
+"Thread.sleep"                 { return symbol(Symbols.ThreadSleep, TokenDisplayName.ReservedWord, yytext()); }
 "volatile"                     { return symbol(Symbols.Volatile, TokenDisplayName.ReservedWord, yytext()); }
 
 /* Operators */
