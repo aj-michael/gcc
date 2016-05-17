@@ -15,10 +15,16 @@ import edu.rosehulman.minijavac.typechecker.Type;
 public class VariableDeclaration implements Statement {
     public final String name;
     final Type type;
+    final boolean isVolatile;
 
     public VariableDeclaration(String name, String type) {
+        this(name, type, false);
+    }
+
+    public VariableDeclaration(String name, String type, boolean isVolatile) {
         this.name = name;
         this.type = Type.of(type);
+        this.isVolatile = isVolatile;
     }
 
     @Override
@@ -53,5 +59,14 @@ public class VariableDeclaration implements Statement {
         } else {
             return "L" + type.getDescriptor() + ";";
         }
+    }
+
+    public short getAccessFlags() {
+        short accessFlags = 0;
+        accessFlags |= 0x0001;      // public
+        if (isVolatile) {
+            accessFlags |= 0x0040;  // volatile
+        }
+        return accessFlags;
     }
 }

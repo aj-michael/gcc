@@ -109,6 +109,7 @@ terminal SystemOutPrintln;
 terminal This;
 terminal True;
 terminal Void;
+terminal Volatile;
 terminal While;
 
 terminal String UnmatchedCharacter;
@@ -216,6 +217,11 @@ ClassVarDecl ::= Type:type ID:name Semicolon
     {:
         output.add("ClassVarDecl ::= Type ID SEMI");
         RESULT = new VariableDeclaration(name.value, type);
+    :}
+    | Volatile Type:type ID:name Semicolon
+    {:
+        output.add("ClassVarDecl ::= Volatile Type ID SEMI");
+        RESULT = new VariableDeclaration(name.value, type, true);
     :}
     ;
 MethodDeclList ::= MethodDeclList:mdl MethodDecl:md
