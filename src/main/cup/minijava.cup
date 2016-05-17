@@ -88,6 +88,7 @@ terminal Lexer.DisplayableValue<Long> LongValue;
 terminal Main;
 terminal Minus;
 terminal Multiply;
+terminal Native;
 terminal New;
 terminal Not;
 terminal NotEquals;
@@ -232,22 +233,27 @@ MethodDeclList ::= MethodDeclList:mdl MethodDecl:md
 MethodDecl ::= Public Type:returnType ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl Return Expr:e Semicolon RightBrace
     {:
         output.add("MethodDecl ::= ... ");
-        RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e, true);
+        RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e, true, false);
     :}
     | Public Synchronized Type:returnType ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl Return Expr:e Semicolon RightBrace
     {:
         output.add("MethodDecl ::= ... ");
-        RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e, true);
+        RESULT = new MethodDeclaration(name.value, ofl, sl, returnType, e, true, false);
     :}
     | Public Void ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl RightBrace
     {:
         output.add("MethodDecl ::= ... ");
-        RESULT = new MethodDeclaration(name.value, ofl, sl, "null", null, false);
+        RESULT = new MethodDeclaration(name.value, ofl, sl, "null", null, false, false);
     :}
     | Public Synchronized Void ID:name LeftParenthesis OptFormalList:ofl RightParenthesis LeftBrace StmtList:sl RightBrace
     {:
         output.add("MethodDecl ::= ... ");
-        RESULT = new MethodDeclaration(name.value, ofl, sl, "null", null, true);
+        RESULT = new MethodDeclaration(name.value, ofl, sl, "null", null, true, false);
+    :}
+    | Public Native Type:returnType ID:name LeftParenthesis OptFormalList:ofl RightParenthesis Semicolon
+    {:
+        output.add("MethodDecl ::= ... ");
+        RESULT = new MethodDeclaration(name.value, ofl, ImmutableList.of(), returnType, null, false, true);
     :}
     ;
 OptFormalList ::= FormalList:fl
