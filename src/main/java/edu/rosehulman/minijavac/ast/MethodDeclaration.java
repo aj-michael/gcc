@@ -21,18 +21,20 @@ public class MethodDeclaration {
     public final List<Statement> statements;
     public final Expression returnExpression;
     public final boolean isSynchronized;
+    public final boolean isNative;
 
     public MethodDeclaration(String name, List<Statement> statements) {
-        this(name, new LinkedList<>(), statements, null, null, false);
+        this(name, new LinkedList<>(), statements, null, null, false, false);
     }
 
-    public MethodDeclaration(String name, List<VariableDeclaration> arguments, List<Statement> statements, String returnType, Expression returnExpression, boolean isSynchronized) {
+    public MethodDeclaration(String name, List<VariableDeclaration> arguments, List<Statement> statements, String returnType, Expression returnExpression, boolean isSynchronized, boolean isNative) {
         this.name = name;
         this.returnType = Type.of(returnType);
         this.arguments = arguments;
         this.statements = statements;
         this.returnExpression = returnExpression;
         this.isSynchronized = isSynchronized;
+        this.isNative = isNative;
     }
 
     public boolean canOverride(MethodDeclaration other) {
@@ -127,7 +129,7 @@ public class MethodDeclaration {
         return depth;
     }
 
-    public byte[] getBytes(ConstantPool cp) {
+    public byte[] getBytes(ConstantPool cp, List<String> libraries) {
         short maxDepth = (short) maxBlockDepth();
         List<Variable> vds = new ArrayList<>();
         short numLocalVariables = (short) numLocalVariables(vds);
@@ -137,6 +139,16 @@ public class MethodDeclaration {
                 .collect(toMap(Variable::getName, Function.identity()));
 
         ArrayList<Byte> codeBytes = new ArrayList<>();
+        if (this instanceof MainMethodDeclaration) {
+            // Inject native libraries
+            for (String library : libraries) {
+                codeBytes.add((byte) 18);   // ldc
+                codeBytes.add((byte) cp.stringEntry(library).index);
+                codeBytes.add((byte) 184);  // invokestatic
+                codeBytes.add((byte) (cp.loadLibraryEntry.index >> 8));
+                codeBytes.add((byte) cp.loadLibraryEntry.index);
+            }
+        }
         for (Statement statement : statements) {
             codeBytes.addAll(statement.generateCode(cp, variableNameToIndex));
         }
@@ -179,6 +191,9 @@ public class MethodDeclaration {
         }
         if (isSynchronized) {
             accessFlags |= 0x0020;
+        }
+        if (isNative) {
+            accessFlags |= 0x0100;
         }
         return accessFlags;
     }

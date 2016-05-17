@@ -22,6 +22,7 @@ public class ConstantPool {
     Map<Double, DoubleEntry> doubleEntryMap = new HashMap<>();
     Map<Float, FloatEntry> floatEntryMap = new HashMap<>();
     Map<Long, LongEntry> longEntryMap = new HashMap<>();
+    Map<String, StringEntry> stringEntryMap = new HashMap<>();
     public Map<String, FieldRefEntry> thisFieldRefEntryMap = new HashMap<>();
 
     public final Utf8Entry codeEntry;
@@ -30,6 +31,7 @@ public class ConstantPool {
     public final FieldRefEntry systemOutEntry;
     public final Map<Type,MethodRefEntry> printlnEntries;
     final MethodRefEntry objectConstructorEntry;
+    public final MethodRefEntry loadLibraryEntry;
 
     public ConstantPool() {
         codeEntry = utf8Entry("Code");
@@ -44,6 +46,7 @@ public class ConstantPool {
         printlnEntries.put(Type.FLOAT, methodRefEntry("java/io/PrintStream", "println", "(F)V"));
         objectConstructorEntry = methodRefEntry("java/lang/Object", "<init>", "()V");
         classEntry("java/lang/Thread");
+        loadLibraryEntry = methodRefEntry("java/lang/System", "loadLibrary", "(Ljava/lang/String;)V");
     }
 
     public Utf8Entry utf8Entry(String string) {
@@ -172,5 +175,15 @@ public class ConstantPool {
     public void thisFieldRefEntry(String className, String fieldName, String fieldDescriptor) {
         FieldRefEntry fieldEntry = fieldRefEntry(className, fieldName, fieldDescriptor);
         thisFieldRefEntryMap.put(fieldName, fieldEntry);
+    }
+
+    public StringEntry stringEntry(String string) {
+        if (!stringEntryMap.containsKey(string)) {
+            Utf8Entry utf8Entry = utf8Entry(string);
+            StringEntry stringEntry = new StringEntry(index++, utf8Entry.index);
+            entries.add(stringEntry);
+            stringEntryMap.put(string, stringEntry);
+        }
+        return stringEntryMap.get(string);
     }
 }

@@ -138,6 +138,7 @@ DecLongLiteral = 0L | [1-9][0-9]*L
 "String"                       { return symbol(Symbols.String, TokenDisplayName.ReservedWord, yytext()); }
 "main"                         { return symbol(Symbols.Main, TokenDisplayName.ReservedWord, yytext()); }
 "synchronized"                 { return symbol(Symbols.Synchronized, TokenDisplayName.ReservedWord, yytext()); }
+"native"                       { return symbol(Symbols.Native, TokenDisplayName.ReservedWord, yytext()); }
 "System.out.println"           { return symbol(Symbols.SystemOutPrintln, TokenDisplayName.ReservedWord, yytext()); }
 
 /* Operators */

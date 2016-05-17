@@ -1,7 +1,7 @@
 package edu.rosehulman.minijavac.generator;
 
+import com.google.common.collect.ImmutableList;
 import edu.rosehulman.minijavac.ast.ClassDeclaration;
-import edu.rosehulman.minijavac.ast.MainMethodDeclaration;
 import edu.rosehulman.minijavac.ast.MethodDeclaration;
 import edu.rosehulman.minijavac.ast.Program;
 import edu.rosehulman.minijavac.ast.VariableDeclaration;
@@ -10,13 +10,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CodeGenerator {
     private final Program program;
+    private final List<String> libraries;
 
     public CodeGenerator(Program program) {
+        this(program, ImmutableList.of());
+    }
+
+    public CodeGenerator(Program program, List<String> libraries) {
         this.program = program;
+        this.libraries = libraries;
     }
 
     public Map<String, byte[]> generate() throws IOException {
@@ -82,11 +89,13 @@ public class CodeGenerator {
             bb.putShort(cp.utf8EntryMap.get(md.name).index); // name_index
             bb.putShort(cp.utf8EntryMap.get(md.getDescriptor()).index); // descriptor_index
 
-            bb.putShort((short) 1);     // attributes_count
+            bb.putShort((short) (md.isNative ? 0 : 1));     // attributes_count
             methods.write(bb.array());
 
-            // Code attribute
-            methods.write(md.getBytes(cp));
+            if (!md.isNative) {
+                // Code attribute
+                methods.write(md.getBytes(cp, libraries));
+            }
         }
 
         // attributes_count
