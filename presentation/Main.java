@@ -42,7 +42,6 @@ class FibScheduler {
 
 class Math {
     public native double sqrt(double x);
-    public native double divide(double a, double b);
 
     public double exp(double x, int n) {
         double y = 1.0;
@@ -70,12 +69,12 @@ class FibThread extends Thread {
     public void run() {
         int n = scheduler.getNextFibNumber();
         Math math = new Math();
-        double phi = math.divide(1.0 + math.sqrt(5.0), 2.0);
-        double nphi = math.divide(1.0 - math.sqrt(5.0), 2.0);
+        double phi = (1.0 + math.sqrt(5.0)) / 2.0;
+        double nphi = (1.0 - math.sqrt(5.0)) / 2.0;
         while (n != -1) {
             double phin = math.exp(phi, n);
             double nphin = math.exp(nphi, n);
-            double fibn = math.divide(phin - nphin, math.sqrt(5.0));
+            double fibn = (phin - nphin) / math.sqrt(5.0);
             System.out.println(number);
             System.out.println(fibn);
             Thread.sleep(2000L);
