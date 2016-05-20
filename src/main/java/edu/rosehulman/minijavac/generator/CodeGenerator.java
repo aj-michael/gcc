@@ -45,7 +45,7 @@ public class CodeGenerator {
         for (int k = 0; k < cd.classVariableDeclarations.size(); k++) {
             VariableDeclaration vd = cd.classVariableDeclarations.get(k);
             fields.write(ByteBuffer.allocate(8)
-                .putShort((short) 1)
+                .putShort(vd.getAccessFlags())
                 .putShort(cp.utf8EntryMap.get(vd.name).index)
                 .putShort(cp.utf8EntryMap.get(vd.getDescriptor()).index)
                 .putShort((short) 0)
